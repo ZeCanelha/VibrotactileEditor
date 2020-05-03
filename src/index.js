@@ -1,17 +1,46 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import reducers from "./stores/storeReducers";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import StartConfig from "./components/Modal";
+import Toolbar from "./components/Toolbar";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+
+class Editor extends React.Component {
+  render() {
+    return (
+      <Provider store={createStore(reducers)}>
+        <Container fluid>
+          <StartConfig></StartConfig>
+          {/* Editor container */}
+          <Row className="align-items-center justify-content-around h-50"></Row>
+          {/* Timeline & Toolbar container */}
+          <Row className="justify-content-md-center flex-column h-50">
+            {/* Timeline */}
+            <Row></Row>
+            {/* Toolbar */}
+            <Row className="h-25 w-100 justify-content-around align-items-center">
+              <Button className="toolbar-size border rounded" variant="light">
+                Library
+              </Button>
+              <Toolbar></Toolbar>
+              <Button className="toolbar-size border rounded" variant="light">
+                Save
+              </Button>
+            </Row>
+          </Row>
+        </Container>
+      </Provider>
+    );
+  }
+}
+
+ReactDOM.render(<Editor />, document.getElementById("root"));
