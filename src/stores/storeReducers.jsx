@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import projectNameReducer from "./editor/editorReducer";
+import configReducer from "./editor/editorReducer";
 
 const reducers = combineReducers({
-  projectName: projectNameReducer,
+  config: configReducer,
 });
 
 export default reducers;
