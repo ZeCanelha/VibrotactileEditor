@@ -20,7 +20,7 @@ const timeline = (props) => {
       patterns={item.patterns}
     />
   ));
-  return <Row className="timeline-container no-gutters">{items}</Row>;
+  return <Row className="timeline-container no-gutters ">{items}</Row>;
 };
 
 export default connect(mapStateToProps)(timeline);

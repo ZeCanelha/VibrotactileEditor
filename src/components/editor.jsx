@@ -17,6 +17,7 @@ const editor = (props) => {
 
   return (
     <Container fluid className="my-container">
+      <Modal></Modal>
       <PatternEditor></PatternEditor>
       <Row className="timeline flex-column align-items-center justify-content-end">
         <Timeline></Timeline>

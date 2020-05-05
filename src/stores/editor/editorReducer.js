@@ -2,7 +2,7 @@ const INITIAL_STATE = {
   projectName: "New Project",
   hardwareDevice: "",
   deviceImage: null,
-  actuators: 0,
+  actuators: 1,
   timeline: {
     timeline_id: 1,
     channel: [
@@ -27,8 +27,14 @@ const INITIAL_STATE = {
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "CONFIG_CHANGE":
+    case "NAME_CHANGED":
       return { ...state, projectName: action.payload };
+    case "DEVICE_CHANGED":
+      return { ...state, hardwareDevice: action.payload };
+    case "ACTUATOR_CHANGED":
+      return { ...state, actuators: action.payload };
+    case "DEVICEIMAGE_CHANGED":
+      return { ...state, deviceImage: action.payload };
     case "REMOVE_CHANNEL":
       return {
         ...state,

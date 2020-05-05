@@ -2,7 +2,12 @@ import React, { useState } from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { changeProjectName } from "../stores/editor/editorActions";
+import {
+  changeProjectName,
+  changeProjectActuator,
+  changeProjectDevice,
+  changeDeviceImage,
+} from "../stores/editor/editorActions";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -11,22 +16,32 @@ import Image from "react-bootstrap/Image";
 
 function mapStateToProps(state) {
   return {
-    projectName: state.projectName.name,
+    projectName: state.config.projectName,
+    deviceImage: state.config.deviceImage,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeProjectName }, dispatch);
+  return bindActionCreators(
+    {
+      changeProjectName,
+      changeProjectActuator,
+      changeDeviceImage,
+      changeProjectDevice,
+    },
+    dispatch
+  );
 }
 
 function StartConfig(props) {
   const [show, setShow] = useState(true);
   const handleClose = () => setShow(false);
 
-  // let imagePreview;
-  // if (deviceImage) {
-  //   imagePreview = <Image src={deviceImage} thumbnail />;
-  // }
+  let imagePreview;
+  if (props.deviceImage) {
+    let preview = URL.createObjectURL(props.deviceImage);
+    imagePreview = <Image src={preview} thumbnail />;
+  }
   return (
     <Modal
       dialogClassName="modal-20w"
@@ -48,6 +63,7 @@ function StartConfig(props) {
             <Form.Control
               type="text"
               placeholder="Type were your microcontroller"
+              onChange={props.changeProjectDevice}
             />
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlInput2">
@@ -60,7 +76,7 @@ function StartConfig(props) {
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>Number of actuators</Form.Label>
-            <Form.Control as="select">
+            <Form.Control onChange={props.changeProjectActuator} as="select">
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -75,11 +91,11 @@ function StartConfig(props) {
           <Form.File
             id="custom-file"
             label="Upload your prototype image"
-            // onChange={this.handleImageUpload}
+            onChange={props.changeDeviceImage}
             custom
           />
         </Form>
-        {/* {imagePreview} */}
+        {imagePreview}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="dark" block>
@@ -92,8 +108,5 @@ function StartConfig(props) {
     </Modal>
   );
 }
-
-// handleImageUpload = (e) =>
-//   setDeviceImage(URL.createObjectURL(e.target.files[0]));
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartConfig);

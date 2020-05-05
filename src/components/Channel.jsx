@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const channel = (props) => {
   return (
-    <Row className="channel-row rounded border  no-gutters flex-column">
+    <Row className="channel-row no-gutters flex-column">
       <div className="channel-id border rounded">
         <Button
           className="remove-channel"
@@ -30,7 +30,7 @@ const channel = (props) => {
         <br></br>
         Actuators {props.actuators}
       </div>
-      <div className="channel-track rounded"></div>
+      <div className="channel-track border rounded"></div>
     </Row>
   );
 };
