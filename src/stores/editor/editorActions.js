@@ -5,3 +5,16 @@ export function changeProjectName(e) {
     payload: e.target.value,
   };
 }
+
+export function addChannel() {
+  return {
+    type: "NEW_CHANNEL",
+  };
+}
+
+export function removeChannel(id) {
+  return {
+    type: "REMOVE_CHANNEL",
+    payload: id,
+  };
+}
