@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import reducers from "./stores/storeReducers";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-import Editor from "./components/editor";
+import Editor from "./components/Editor";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";

@@ -14,25 +14,27 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({ removeChannel }, dispatch);
 };
 
-const channel = (props) => {
-  return (
-    <Row className="channel-row no-gutters flex-column">
-      <div className="channel-id border rounded">
-        <Button
-          className="remove-channel"
-          onClick={() => props.removeChannel(props.id)}
-          variant="light"
-          size="sm"
-        >
-          <FontAwesomeIcon icon={faTimesCircle} size="xs" />
-        </Button>
-        Channel {props.id}
-        <br></br>
-        Actuators {props.actuators}
-      </div>
-      <div className="channel-track border rounded"></div>
-    </Row>
-  );
-};
+class Channel extends React.Component {
+  render() {
+    return (
+      <Row className="channel-row no-gutters flex-column">
+        <div className="channel-id border rounded">
+          <Button
+            className="remove-channel"
+            onClick={() => this.props.removeChannel(this.props.id)}
+            variant="light"
+            size="sm"
+          >
+            <FontAwesomeIcon icon={faTimesCircle} size="xs" />
+          </Button>
+          Channel {this.props.id}
+          <br></br>
+          Actuators {this.props.actuators}
+        </div>
+        <div className="channel-track border rounded"></div>
+      </Row>
+    );
+  }
+}
 
-export default connect(null, mapDispatchToProps)(channel);
+export default connect(null, mapDispatchToProps)(Channel);

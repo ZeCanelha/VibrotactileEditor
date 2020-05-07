@@ -4,13 +4,12 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: rgb(173, 160, 172);
+  background-color: white;
 }
 
 .pattern-editor {
   width: 75%;
   height: 40%;
-  background-color: aqua;
 }
 
 .actuator-container {
@@ -38,6 +37,11 @@
 .hardware-container img {
   max-width: 100%;
   max-height: 85%;
+}
+
+.pattern-container {
+  width: 50%;
+  height: 100%;
 }
 
 .timeline {
