@@ -10,6 +10,7 @@
 .pattern-editor {
   width: 75%;
   height: 40%;
+  flex-direction: column;
 }
 
 .actuator-container {
@@ -87,4 +88,13 @@
 
 .toolbar-size {
   width: 17.5% !important;
+}
+
+/* Library CSS */
+
+.display-container {
+  height: 55vh;
+}
+.display-row {
+  height: 50%;
 }

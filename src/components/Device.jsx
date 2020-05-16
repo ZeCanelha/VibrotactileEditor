@@ -2,9 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import Actuator from "./Actuator";
-import Pattern from "./Pattern";
 
-import Row from "react-bootstrap/Row";
 import Image from "react-bootstrap/Image";
 
 const mapStateToProps = (state) => ({
@@ -25,17 +23,12 @@ class PatternEditor extends React.Component {
       imagePreview = <Image src={preview} />;
     }
     return (
-      <Row className="justify-content-start pattern-editor bg-light border rounded">
-        <div className="hardware-container bg-light border rounded">
-          <div className="actuator-container bg-light border rounded">
-            {actuatorList}
-          </div>
-          {this.props.deviceImage ? imagePreview : null}
+      <div className="hardware-container bg-light border rounded">
+        <div className="actuator-container bg-light border rounded">
+          {actuatorList}
         </div>
-        {/* <div className="pattern-container bg-light border rounded">
-        {<Pattern></Pattern> }
-      </div> */}
-      </Row>
+        {this.props.deviceImage ? imagePreview : null}
+      </div>
     );
   }
 }

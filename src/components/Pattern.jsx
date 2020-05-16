@@ -1,22 +1,16 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import * as d3 from "d3";
 
-const PatternEditor = (props) => {
-  const width = 100;
-  const height = 100;
+const width = 300;
+const height = 150;
+const margin = { top: 20, right: 5, bottom: 20, left: 35 };
 
-  const dummyData = [0, 1, 2, 3, 4, 5];
-  const xScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(dummyData)])
-    .range([0, width]);
+// TODO: Update scales acording to given xScale -> User may choose different times
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(dummyData)])
-    .range([height, 0]);
-
-  return <h1>PatternEditor</h1>;
-};
+class PatternEditor extends React.Component {
+  render() {
+    return <svg width={width} height={height} ref="pattern"></svg>;
+  }
+}
 
 export default PatternEditor;

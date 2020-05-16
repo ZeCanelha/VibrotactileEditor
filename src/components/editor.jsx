@@ -8,19 +8,23 @@ import DeviceEdior from "./Device";
 import Toolbar from "./Toolbar";
 import Modal from "./Startup";
 import Timeline from "./Timeline";
+import PatternEditor from "./Pattern";
+import Library from "./Library";
 
 class Editor extends React.Component {
   render() {
     return (
       <Container fluid className="my-container">
         <Modal></Modal>
-        <DeviceEdior></DeviceEdior>
+        <Row className="justify-content-start pattern-editor bg-light border rounded">
+          <DeviceEdior></DeviceEdior>
+          <PatternEditor></PatternEditor>
+        </Row>
+
         <Row className="timeline flex-column align-items-center justify-content-end">
           <Timeline></Timeline>
           <Row className="h-25 w-100 justify-content-around align-items-center">
-            <Button className="toolbar-size border rounded" variant="light">
-              Library
-            </Button>
+            <Library></Library>
             <Toolbar></Toolbar>
             <Button className="toolbar-size border rounded" variant="light">
               Save
