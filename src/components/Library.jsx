@@ -2,18 +2,21 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
 import { openLibraryModal, closeLibraryModal } from "../stores/gui/guiActions";
+import {
+  updateSearchQuery,
+  setCustomPatterns,
+} from "../stores/library/libraryActions";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Container from "react-bootstrap/Container";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+
+import LibraryFilter from "./LibraryFilter";
+import DummyPatterns from "../utils/customPresetsDummy.json";
 
 const mapStateToPros = (state) => ({
   setShow: state.gui.libraryModal,
@@ -22,13 +25,18 @@ const mapStateToPros = (state) => ({
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      setCustomPatterns,
       openLibraryModal,
       closeLibraryModal,
+      updateSearchQuery,
     },
     dispatch
   );
 
 class Library extends React.Component {
+  componentDidMount() {
+    this.props.setCustomPatterns(DummyPatterns);
+  }
   render() {
     return (
       <>
@@ -58,15 +66,13 @@ class Library extends React.Component {
                 type="text"
                 placeholder="Search"
                 className=" mr-sm-2"
+                onChange={this.props.updateSearchQuery}
               />
               <Button variant="dark">
                 <FontAwesomeIcon icon={faSearch} />
               </Button>
             </Form>
-            <Container className="mt-3 display-container">
-              <Row className="display-row border rounded mb-1"></Row>
-              <Row className="display-row border rounded mt-1"></Row>
-            </Container>
+            <LibraryFilter></LibraryFilter>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="dark" block onClick={this.props.closeLibraryModal}>
