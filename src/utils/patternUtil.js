@@ -16,7 +16,7 @@ class PatternUtils {
   ) {
     switch (scaleType) {
       case "xScale":
-        return d3.scaleLinear().range([margin.left, width - margin.rigth]);
+        return d3.scaleLinear().range([margin.left, width - margin.right]);
       case "yScale":
         return d3.scaleLinear().range([margin.top, height - margin.bottom]);
       default:

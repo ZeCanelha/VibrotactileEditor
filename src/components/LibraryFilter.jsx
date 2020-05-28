@@ -19,18 +19,17 @@ class LibraryFilter extends React.Component {
   }
 
   render() {
-    console.log(this.props);
-
     let data = this.filterSearch(this.props.query);
     console.log(data);
 
     const customPatternDisplay = [];
     for (let index = 0; index < data.length; index++) {
       customPatternDisplay.push(
-        <Col xs={6} md={4} style={{ padding: "5px" }}>
+        <Col key={index} xs={6} md={4} style={{ padding: "5px" }}>
           <PatternDisplay
-            key={data[index].pattern_id}
+            key={index}
             patternName={data[index].name}
+            description={data[index].description}
             path={data[index].path}
             width={this.props.size.width}
             height={this.props.size.height}

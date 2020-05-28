@@ -2,6 +2,7 @@ const INITIAL_STATE = {
   initialConfigModal: true,
   configDrawer: false,
   libraryModal: false,
+  libraryPatternModal: false,
   actuatorConfigModal: false,
   addChannelModal: false,
   addActuatorModal: false,
@@ -15,6 +16,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, libraryModal: true };
     case "CLOSE_LIBRARY_MODAL":
       return { ...state, libraryModal: false };
+    case "OPEN_PATTERN_MODAL":
+      return { ...state, libraryPatternModal: true };
+    case "CLOSE_PATTERN_MODAL":
+      return { ...state, libraryPatternModal: false };
     default:
       return state;
   }

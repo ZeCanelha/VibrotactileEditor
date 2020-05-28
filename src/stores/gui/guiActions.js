@@ -15,3 +15,15 @@ export function closeLibraryModal() {
     type: "CLOSE_LIBRARY_MODAL",
   };
 }
+
+export function openPatternModal() {
+  return {
+    type: "OPEN_PATTERN_MODAL",
+  };
+}
+
+export function closePatternModal() {
+  return {
+    type: "CLOSE_PATTERN_MODAL",
+  };
+}
