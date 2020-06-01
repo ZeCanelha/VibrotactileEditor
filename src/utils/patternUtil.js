@@ -24,6 +24,11 @@ class PatternUtils {
     }
   }
 
+  static getInsertionPoint(datapoints, time) {
+    let bisect = d3.bisector((d) => d.time).right;
+    return bisect(datapoints, time);
+  }
+
   static createAxis(axis, scale) {
     switch (axis) {
       case "y":
@@ -37,7 +42,6 @@ class PatternUtils {
 
   static createChart(
     chartType,
-    datapoints,
     xScale,
     yScale,
     height = 0,
@@ -48,13 +52,13 @@ class PatternUtils {
         let lineGenerator = d3.line();
         lineGenerator.x((d) => xScale(d.time));
         lineGenerator.y((d) => yScale(d.intensity));
-        return lineGenerator(datapoints);
+        return lineGenerator;
       case "area":
         let areaGenerator = d3.area();
         areaGenerator.x((d) => xScale(d.time));
         areaGenerator.y1((d) => yScale(d.intensity)); // Topline
         areaGenerator.y0(height - margin.bottom); // Baseline
-        return areaGenerator(datapoints);
+        return areaGenerator;
       default:
         return "AREA_TYPE_ERROR";
     }

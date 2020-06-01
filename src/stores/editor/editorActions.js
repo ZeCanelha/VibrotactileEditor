@@ -34,6 +34,13 @@ export function addChannel() {
   };
 }
 
+export function loadConfigs(config) {
+  return {
+    type: "CONFIG_LOADED",
+    payload: config,
+  };
+}
+
 export function removeChannel(id) {
   return {
     type: "REMOVE_CHANNEL",

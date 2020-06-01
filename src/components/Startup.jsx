@@ -7,6 +7,7 @@ import {
   changeProjectActuator,
   changeProjectDevice,
   changeDeviceImage,
+  loadConfigs,
 } from "../stores/editor/editorActions";
 
 import { closeInitialConfig } from "../stores/gui/guiActions";
@@ -32,15 +33,28 @@ function mapDispatchToProps(dispatch) {
       changeDeviceImage,
       changeProjectDevice,
       closeInitialConfig,
+      loadConfigs,
     },
     dispatch
   );
 }
 
 class StartConfig extends React.Component {
+  fetchConfigurations() {
+    console.log("Fetching configurations");
+    var theobject = this;
+
+    fetch("http://localhost:3003/api/configs", { method: "GET" })
+      .then((res) => res.json())
+      .then((data) => {
+        theobject.props.closeInitialConfig();
+        theobject.props.loadConfigs(data[0]);
+      });
+  }
+
   render() {
     let imagePreview;
-    if (this.props.deviceImage) {
+    if (this.props.deviceImage && this.props.setShow) {
       let preview = URL.createObjectURL(this.props.deviceImage);
       imagePreview = <Image src={preview} thumbnail />;
     }
@@ -102,7 +116,12 @@ class StartConfig extends React.Component {
           {imagePreview}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" block>
+          {/* Arrow function to bind the function to the componente to get props access when using this */}
+          <Button
+            variant="dark"
+            block
+            onClick={() => this.fetchConfigurations()}
+          >
             Load configuration
           </Button>
           <Button variant="dark" block onClick={this.props.closeInitialConfig}>

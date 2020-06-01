@@ -19,8 +19,10 @@ class PatternEditor extends React.Component {
 
     let imagePreview;
     if (this.props.deviceImage) {
-      let preview = URL.createObjectURL(this.props.deviceImage);
-      imagePreview = <Image src={preview} />;
+      console.log(this.props.deviceImage);
+
+      //let preview = URL.createObjectURL(this.props.deviceImage);
+      imagePreview = <Image src={this.props.deviceImage} fluid />;
     }
     return (
       <div className="hardware-container bg-light border rounded">

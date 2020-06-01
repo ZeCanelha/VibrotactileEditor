@@ -12,6 +12,7 @@ import {
 } from "../stores/pattern/patternActions";
 
 const margin = { top: 10, right: 0, bottom: 0, left: 40 };
+let fix = null;
 
 const mapStateToProps = (state) => ({
   datapoints: state.pattern.datapoints,
@@ -30,24 +31,61 @@ const mapDispatchToProps = (dispatch) =>
 class PatternEditor extends React.Component {
   xScale = null;
   yScale = null;
+  areaGenerator = null;
 
   addDatapoint(coords) {
     let newPoints = {
       time: Math.round(this.xScale.invert(coords[0])),
       intensity: Math.round(this.yScale.invert(coords[1])),
     };
-    // update datapoints in time
-    let datapoints = this.props.datapoints;
 
-    // Bisect function - Returns the insertion point for x in array to maintain sorted order
+    // Set the boundaries
+    // fix max value. rn fixed
+    if (
+      newPoints.time > 0 &&
+      newPoints.time < 350 &&
+      newPoints.intensity <= 100 &&
+      newPoints.intensity >= 0
+    ) {
+      // update datapoints in time
+      let datapoints = this.props.datapoints;
 
-    let bisect = d3.bisector((d) => d.time).right;
-    let index = bisect(datapoints, newPoints.time);
+      // Returns the insertion point for x in array to maintain sorted order
 
-    datapoints.splice(index, 0, newPoints);
-    this.props.updateDataPoints(datapoints);
+      let index = PatternUtils.getInsertionPoint(datapoints, newPoints.time);
+
+      datapoints.splice(index, 0, newPoints);
+      this.props.updateDataPoints(datapoints);
+    }
 
     // TODO assign the attributes to an object
+  }
+
+  handleMouseOver() {
+    d3.select(this).attr("r", "8");
+  }
+  handleMouseOut() {
+    d3.select(this).attr("r", "5");
+  }
+
+  dragStarted(d) {
+    console.log("started");
+  }
+  dragged(d) {
+    d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+  }
+  dragEnded(d) {
+    let index = PatternUtils.getInsertionPoint(
+      fix.props.datapoints,
+      d3.event.x
+    );
+    let newPoints = {
+      time: Math.round(fix.xScale.invert(d3.event.x)),
+      intensity: Math.round(fix.yScale.invert(d3.event.y)),
+    };
+    let datapoints = fix.props.datapoints;
+    datapoints.splice(index, 0, newPoints);
+    fix.props.updateDataPoints(datapoints);
   }
 
   drawKeyFrames() {
@@ -63,20 +101,21 @@ class PatternEditor extends React.Component {
       .attr("cx", (d) => this.xScale(d.time))
       .attr("cy", (d) => this.yScale(d.intensity))
       .attr("r", 5)
-      .attr("fill", "#d9534f");
-    // .on("mouseover", this.handleMouseOver)
-    // .on("mouseout", this.handleMouseOut)
-    // .call(
-    //   d3
-    //     .drag()
-    //     .on("start", this.draggStarted)
-    //     .on("drag", this.dragged)
-    //     .on("end", this.dragended)
-    // );
+      .attr("fill", "#d9534f")
+      .on("mouseover", this.handleMouseOver)
+      .on("mouseout", this.handleMouseOut)
+      .call(
+        d3
+          .drag()
+          .on("start", this.dragStarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragEnded)
+      );
   }
 
   componentDidMount() {
     let theobject = this;
+    fix = this;
 
     const width = this.refs.pattern.clientWidth;
     const height = this.refs.pattern.clientHeight;
@@ -107,9 +146,8 @@ class PatternEditor extends React.Component {
 
     // Set the datapoints
 
-    const areaGenerator = PatternUtils.createChart(
+    this.areaGenerator = PatternUtils.createChart(
       "area",
-      this.props.datapoints,
       this.xScale,
       this.yScale,
       height,
@@ -122,7 +160,7 @@ class PatternEditor extends React.Component {
 
     // Update areaChart in store
 
-    this.props.updateAreaChart(areaGenerator);
+    this.props.updateAreaChart(this.areaGenerator(this.props.datapoints));
 
     // Add event to the svg
 
@@ -133,11 +171,9 @@ class PatternEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps);
-    console.log(this.props.datapoints);
-
     if (prevProps.datapoints !== this.props.datapoints) {
-      console.log("Diff props");
+      this.drawKeyFrames();
+      this.props.updateAreaChart(this.areaGenerator(this.props.datapoints));
     }
   }
   render() {

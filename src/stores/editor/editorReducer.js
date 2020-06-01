@@ -47,6 +47,14 @@ export default function (state = INITIAL_STATE, action) {
           ],
         },
       };
+    case "CONFIG_LOADED":
+      return {
+        ...state,
+        projectName: action.payload.name,
+        hardwareDevice: action.payload.device,
+        deviceImage: action.payload.device_image,
+        actuators: action.payload.n_actuators,
+      };
 
     default:
       return state;
