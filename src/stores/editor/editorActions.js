@@ -1,5 +1,4 @@
 export function changeProjectDevice(e) {
-  console.log("Device changed");
   return {
     type: "DEVICE_CHANGED",
     payload: e.target.value,
@@ -7,7 +6,6 @@ export function changeProjectDevice(e) {
 }
 
 export function changeProjectName(e) {
-  console.log("Project name changed");
   return {
     type: "NAME_CHANGED",
     payload: e.target.value,
@@ -51,5 +49,12 @@ export function removeChannel(id) {
 export function addActuator() {
   return {
     type: "ADD_ACTUATOR",
+  };
+}
+
+export function saveConfiguration(config) {
+  return {
+    type: "SAVE_CONFIGURATION",
+    payload: config,
   };
 }

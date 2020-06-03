@@ -27,3 +27,15 @@ export function closePatternModal() {
     type: "CLOSE_PATTERN_MODAL",
   };
 }
+
+export function openSaveModal() {
+  return {
+    type: "OPEN_SAVE_MODAL",
+  };
+}
+
+export function closeSaveModal() {
+  return {
+    type: "CLOSE_SAVE_MODAL",
+  };
+}

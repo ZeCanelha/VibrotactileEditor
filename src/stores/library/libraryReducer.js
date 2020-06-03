@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case "SET_CUSTOM_PATTERNS":
-      return { ...state, customPatterns: action.payload.customPatterns };
+      return { ...state, customPatterns: action.payload };
     case "SET_PRESET_PATTERNS":
       return { ...state, presetPatterns: action.payload };
     case "UPDATE_SEARCH_QUERY":

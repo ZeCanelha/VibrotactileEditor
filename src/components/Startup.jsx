@@ -17,6 +17,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Image from "react-bootstrap/Image";
 
+import Database from "../utils/database";
+
 function mapStateToProps(state) {
   return {
     projectName: state.config.projectName,
@@ -41,15 +43,12 @@ function mapDispatchToProps(dispatch) {
 
 class StartConfig extends React.Component {
   fetchConfigurations() {
-    console.log("Fetching configurations");
-    var theobject = this;
+    let theobject = this;
 
-    fetch("http://localhost:3003/api/configs", { method: "GET" })
-      .then((res) => res.json())
-      .then((data) => {
-        theobject.props.closeInitialConfig();
-        theobject.props.loadConfigs(data[0]);
-      });
+    Database.fetchData("/configs", "GET").then((data) => {
+      theobject.props.closeInitialConfig();
+      theobject.props.loadConfigs(data[0]);
+    });
   }
 
   render() {
@@ -124,7 +123,11 @@ class StartConfig extends React.Component {
           >
             Load configuration
           </Button>
-          <Button variant="dark" block onClick={this.props.closeInitialConfig}>
+          <Button
+            variant="outline-dark"
+            block
+            onClick={this.props.closeInitialConfig}
+          >
             Save configuration
           </Button>
         </Modal.Footer>

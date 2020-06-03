@@ -6,6 +6,7 @@ import { openLibraryModal, closeLibraryModal } from "../stores/gui/guiActions";
 import {
   updateSearchQuery,
   setCustomPatterns,
+  setPresetPatterns,
 } from "../stores/library/libraryActions";
 
 import Button from "react-bootstrap/Button";
@@ -16,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import LibraryFilter from "./LibraryFilter";
-import DummyPatterns from "../utils/customPresetsDummy.json";
+import Database from "../utils/database";
 
 const mapStateToPros = (state) => ({
   setShow: state.gui.libraryModal,
@@ -26,6 +27,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setCustomPatterns,
+      setPresetPatterns,
       openLibraryModal,
       closeLibraryModal,
       updateSearchQuery,
@@ -35,7 +37,20 @@ const mapDispatchToProps = (dispatch) =>
 
 class Library extends React.Component {
   componentDidMount() {
-    this.props.setCustomPatterns(DummyPatterns);
+    let theobject = this;
+    let searchCustom = "?patternType=custom";
+    let searchPreset = "?patternType=preset";
+
+    // Fetching custom patterns
+
+    Database.fetchData("/patterns", "GET", searchCustom).then((data) => {
+      theobject.props.setCustomPatterns(data);
+    });
+
+    // Fetching preset patterns
+    Database.fetchData("/patterns", "GET", searchPreset).then((data) => {
+      theobject.props.setPresetPatterns(data);
+    });
   }
   render() {
     return (

@@ -2,7 +2,6 @@ import React from "react";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
 
 import DeviceEdior from "./Device";
 import Toolbar from "./Toolbar";
@@ -10,6 +9,7 @@ import Modal from "./Startup";
 import Timeline from "./Timeline";
 import PatternEditor from "./Pattern";
 import Library from "./Library";
+import Save from "./Save";
 
 class Editor extends React.Component {
   render() {
@@ -26,9 +26,7 @@ class Editor extends React.Component {
           <Row className="h-25 w-100 justify-content-around align-items-center">
             <Library></Library>
             <Toolbar></Toolbar>
-            <Button className="toolbar-size border rounded" variant="light">
-              Save
-            </Button>
+            <Save></Save>
           </Row>
         </Row>
       </Container>
