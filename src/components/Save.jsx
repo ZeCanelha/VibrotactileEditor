@@ -7,8 +7,11 @@ import { closeSaveModal, openSaveModal } from "../stores/gui/guiActions";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import Database from "../utils/database";
+
 const mapStateToProps = (state) => ({
   setShow: state.gui.saveModal,
+  config: state.config,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -21,6 +24,19 @@ const mapDispatchToProps = (dispatch) =>
   );
 
 class SaveModal extends React.Component {
+  saveProjectConfigurations() {
+    let requestBody = {
+      device: this.props.config.hardwareDevice,
+      device_image: this.props.config.device_image,
+      name: this.props.config.projectName,
+      n_actuators: this.props.config.actuators,
+    };
+
+    Database.saveProjectConfiguration(requestBody).then((data) => {
+      console.log(data);
+      this.props.closeSaveModal();
+    });
+  }
   render() {
     return (
       <React.Fragment>
@@ -44,7 +60,11 @@ class SaveModal extends React.Component {
           </Modal.Header>
           <Modal.Body></Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-dark" block>
+            <Button
+              variant="outline-dark"
+              block
+              onClick={() => this.saveProjectConfigurations()}
+            >
               Save Project
             </Button>
             <Button variant="dark" block onClick={this.props.closeSaveModal}>

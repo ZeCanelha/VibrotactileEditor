@@ -14,6 +14,21 @@ class Database {
       console.log(error);
     }
   }
+
+  static async saveProjectConfiguration(body) {
+    let endpoint = "/configs";
+    try {
+      let response = await fetch(baseUrl + endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      let data = await response.statusText;
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default Database;

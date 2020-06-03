@@ -51,11 +51,20 @@ class StartConfig extends React.Component {
     });
   }
 
+  handleImageUpload(event) {
+    let reader = new FileReader();
+
+    reader.onloadend = () => {
+      this.props.changeDeviceImage(reader.result);
+    };
+
+    if (event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+  }
+
   render() {
     let imagePreview;
     if (this.props.deviceImage && this.props.setShow) {
-      let preview = URL.createObjectURL(this.props.deviceImage);
-      imagePreview = <Image src={preview} thumbnail />;
+      imagePreview = <Image src={this.props.deviceImage} thumbnail />;
     }
     return (
       <Modal
@@ -76,7 +85,7 @@ class StartConfig extends React.Component {
               <Form.Label>Hardware Device</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Type were your microcontroller"
+                placeholder="Type here your microcontroller"
                 onChange={this.props.changeProjectDevice}
               />
             </Form.Group>
@@ -84,7 +93,7 @@ class StartConfig extends React.Component {
               <Form.Label>Project Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Type were your project name"
+                placeholder="Type here your project name"
                 onChange={this.props.changeProjectName}
               />
             </Form.Group>
@@ -108,7 +117,7 @@ class StartConfig extends React.Component {
             <Form.File
               id="custom-file"
               label="Upload your prototype image"
-              onChange={this.props.changeDeviceImage}
+              onChange={(e) => this.handleImageUpload(e)}
               custom
             />
           </Form>

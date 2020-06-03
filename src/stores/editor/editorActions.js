@@ -19,10 +19,10 @@ export function changeProjectActuator(e) {
   };
 }
 
-export function changeDeviceImage(e) {
+export function changeDeviceImage(img) {
   return {
     type: "DEVICEIMAGE_CHANGED",
-    payload: e.target.files[0],
+    payload: img,
   };
 }
 

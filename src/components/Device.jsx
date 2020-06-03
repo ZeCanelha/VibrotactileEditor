@@ -8,6 +8,7 @@ import Image from "react-bootstrap/Image";
 const mapStateToProps = (state) => ({
   deviceImage: state.config.deviceImage,
   actuators: state.config.actuators,
+  setShow: state.gui.initialConfigModal,
 });
 
 class PatternEditor extends React.Component {
@@ -18,9 +19,7 @@ class PatternEditor extends React.Component {
     }
 
     let imagePreview;
-    if (this.props.deviceImage) {
-      console.log(this.props.deviceImage);
-
+    if (this.props.deviceImage && !this.props.setShow) {
       //let preview = URL.createObjectURL(this.props.deviceImage);
       imagePreview = <Image src={this.props.deviceImage} fluid />;
     }
