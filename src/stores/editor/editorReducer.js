@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   hardwareDevice: "",
   deviceImage: null,
   actuators: 1,
+  actuators_coords: [],
   timeline: {
     timeline_id: 1,
     channel: [
@@ -33,6 +34,11 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, hardwareDevice: action.payload };
     case "ACTUATOR_CHANGED":
       return { ...state, actuators: action.payload };
+    case "ACTUATOR_COORDS_UPDATED":
+      return {
+        ...state,
+        actuators_coords: action.payload,
+      };
     case "DEVICEIMAGE_CHANGED":
       return { ...state, deviceImage: action.payload };
     case "REMOVE_CHANNEL":
@@ -54,6 +60,7 @@ export default function (state = INITIAL_STATE, action) {
         hardwareDevice: action.payload.device,
         deviceImage: action.payload.device_image,
         actuators: action.payload.n_actuators,
+        actuators_coords: action.payload.actuator_coords,
       };
 
     default:

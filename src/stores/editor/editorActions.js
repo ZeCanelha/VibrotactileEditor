@@ -19,6 +19,13 @@ export function changeProjectActuator(e) {
   };
 }
 
+export function updateActuatorCoords(coords) {
+  return {
+    type: "ACTUATOR_COORDS_UPDATED",
+    payload: coords,
+  };
+}
+
 export function changeDeviceImage(img) {
   return {
     type: "DEVICEIMAGE_CHANGED",
