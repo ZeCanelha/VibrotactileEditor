@@ -11,7 +11,7 @@ import {
   updateDataPoints,
 } from "../stores/pattern/patternActions";
 
-const margin = { top: 10, right: 0, bottom: 0, left: 40 };
+const margin = { top: 10, right: 30, bottom: 30, left: 40 };
 let fix = null;
 
 const mapStateToProps = (state) => ({
@@ -89,7 +89,7 @@ class PatternEditor extends React.Component {
   }
 
   drawKeyFrames() {
-    let svg = d3.select(this.refs.pattern);
+    let svg = d3.select(this.refs.svg);
     svg
       .selectAll("circle")
       .data(this.props.datapoints)
@@ -119,6 +119,13 @@ class PatternEditor extends React.Component {
 
     const width = this.refs.pattern.clientWidth;
     const height = this.refs.pattern.clientHeight;
+
+    const viewBox = "0 0 " + width + " " + height;
+
+    // Set witdh and viewBox
+
+    // d3.select(this.refs.svg).attr("width", width).attr("height", height);
+    d3.select(this.refs.svg).attr("viewBox", viewBox);
 
     // Create scales
 
@@ -164,7 +171,7 @@ class PatternEditor extends React.Component {
 
     // Add event to the svg
 
-    d3.select(this.refs.pattern).on("dblclick", function () {
+    d3.select(this.refs.svg).on("dblclick", function () {
       let coords = d3.mouse(this);
       theobject.addDatapoint(coords);
     });
@@ -177,24 +184,16 @@ class PatternEditor extends React.Component {
     }
   }
   render() {
-    const svg_style = {
-      // border: "1px solid #5bc0de",
-      width: "50%",
-      height: "100%",
-    };
     return (
-      <svg
-        style={svg_style}
-        viewBox="0 0 525 275"
-        preserveAspectRatio="xMidYMid meet"
-        ref="pattern"
-      >
-        <path d={this.props.area} fill="#5bc0de" stroke="#0275d8"></path>
-        <g>
-          <g ref={"xAxis"}></g>
-          <g ref={"yAxis"}></g>
-        </g>
-      </svg>
+      <div className="pattern-container" ref="pattern">
+        <svg ref="svg" preserveAspectRatio="xMidYMid meet">
+          <path d={this.props.area} fill="#5bc0de" stroke="#0275d8"></path>
+          <g>
+            <g ref={"xAxis"}></g>
+            <g ref={"yAxis"}></g>
+          </g>
+        </svg>
+      </div>
     );
   }
 }
