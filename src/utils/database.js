@@ -20,7 +20,9 @@ class Database {
     deviceImage,
     projectName,
     actuators,
-    actuators_coords
+    actuators_coords,
+    method = "POST",
+    projectId = null
   ) {
     let body = {
       device: hardwareDevice,
@@ -30,13 +32,16 @@ class Database {
       actuator_coords: actuators_coords,
     };
     let endpoint = "/configs";
+    if (method === "PUT") {
+      endpoint = "/configs/" + projectId;
+    }
     try {
       let response = await fetch(baseUrl + endpoint, {
-        method: "POST",
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      let data = await response.statusText;
+      let data = await response.json();
       return data;
     } catch (error) {
       console.log(error);

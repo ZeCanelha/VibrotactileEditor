@@ -12,6 +12,13 @@ export function changeProjectName(e) {
   };
 }
 
+export function defineProjectId(id) {
+  return {
+    type: "PROJECT_ID_DEFINED",
+    payload: id,
+  };
+}
+
 export function changeProjectActuator(e) {
   return {
     type: "ACTUATOR_CHANGED",

@@ -1,4 +1,5 @@
 const INITIAL_STATE = {
+  projectId: "",
   projectName: "New Project",
   hardwareDevice: "",
   deviceImage: null,
@@ -28,6 +29,8 @@ const INITIAL_STATE = {
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
+    case "PROJECT_ID_DEFINED":
+      return { ...state, projectID: action.payload };
     case "NAME_CHANGED":
       return { ...state, projectName: action.payload };
     case "DEVICE_CHANGED":
@@ -56,6 +59,7 @@ export default function (state = INITIAL_STATE, action) {
     case "CONFIG_LOADED":
       return {
         ...state,
+        projectId: action.payload._id,
         projectName: action.payload.name,
         hardwareDevice: action.payload.device,
         deviceImage: action.payload.device_image,

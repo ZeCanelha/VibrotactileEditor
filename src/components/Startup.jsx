@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
+  defineProjectId,
   changeProjectName,
   changeProjectActuator,
   changeProjectDevice,
@@ -21,7 +22,7 @@ import Database from "../utils/database";
 
 function mapStateToProps(state) {
   return {
-    projectName: state.config.projectName,
+    config: state.config,
     deviceImage: state.config.deviceImage,
     setShow: state.gui.initialConfigModal,
   };
@@ -30,6 +31,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
+      defineProjectId,
       changeProjectName,
       changeProjectActuator,
       changeDeviceImage,
@@ -48,6 +50,19 @@ class StartConfig extends React.Component {
     Database.fetchData("/configs", "GET").then((data) => {
       theobject.props.closeInitialConfig();
       theobject.props.loadConfigs(data[0]);
+    });
+  }
+
+  saveProject() {
+    Database.saveProjectConfiguration(
+      this.props.config.hardwareDevice,
+      this.props.config.deviceImage,
+      this.props.config.projectName,
+      this.props.config.actuators,
+      this.props.config.actuators_coords
+    ).then((data) => {
+      this.props.defineProjectId(data._id);
+      this.props.closeInitialConfig();
     });
   }
 
@@ -135,7 +150,7 @@ class StartConfig extends React.Component {
           <Button
             variant="outline-dark"
             block
-            onClick={this.props.closeInitialConfig}
+            onClick={() => this.saveProject()}
           >
             Save configuration
           </Button>

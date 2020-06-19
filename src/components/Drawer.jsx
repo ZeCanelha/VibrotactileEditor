@@ -71,7 +71,9 @@ class Drawer extends React.Component {
       this.props.config.deviceImage,
       this.props.config.projectName,
       this.props.config.actuators,
-      this.props.config.actuators_coords
+      this.props.config.actuators_coords,
+      "PUT",
+      this.props.config.projectId
     ).then((data) => {
       console.log(data);
       this.props.closeConfigDrawer();
