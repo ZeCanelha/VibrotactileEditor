@@ -25,6 +25,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, saveModal: true };
     case "CLOSE_SAVE_MODAL":
       return { ...state, saveModal: false };
+    case "OPEN_CONFIG_DRAWER":
+      return { ...state, configDrawer: true };
+    case "CLOSE_CONFIG_DRAWER":
+      return { ...state, configDrawer: false };
     default:
       return state;
   }

@@ -25,15 +25,13 @@ const mapDispatchToProps = (dispatch) =>
 
 class SaveModal extends React.Component {
   saveProjectConfigurations() {
-    let requestBody = {
-      device: this.props.config.hardwareDevice,
-      device_image: this.props.config.deviceImage,
-      name: this.props.config.projectName,
-      n_actuators: this.props.config.actuators,
-      actuator_coords: this.props.config.actuators_coords,
-    };
-
-    Database.saveProjectConfiguration(requestBody).then((data) => {
+    Database.saveProjectConfiguration(
+      this.props.config.hardwareDevice,
+      this.props.config.deviceImage,
+      this.props.config.projectName,
+      this.props.config.actuators,
+      this.props.config.actuators_coords
+    ).then((data) => {
       console.log(data);
       this.props.closeSaveModal();
     });

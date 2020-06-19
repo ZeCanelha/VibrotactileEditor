@@ -39,3 +39,15 @@ export function closeSaveModal() {
     type: "CLOSE_SAVE_MODAL",
   };
 }
+
+export function openConfigDrawer() {
+  return {
+    type: "OPEN_CONFIG_DRAWER",
+  };
+}
+
+export function closeConfigDrawer() {
+  return {
+    type: "CLOSE_CONFIG_DRAWER",
+  };
+}

@@ -15,7 +15,20 @@ class Database {
     }
   }
 
-  static async saveProjectConfiguration(body) {
+  static async saveProjectConfiguration(
+    hardwareDevice,
+    deviceImage,
+    projectName,
+    actuators,
+    actuators_coords
+  ) {
+    let body = {
+      device: hardwareDevice,
+      device_image: deviceImage,
+      name: projectName,
+      n_actuators: actuators,
+      actuator_coords: actuators_coords,
+    };
     let endpoint = "/configs";
     try {
       let response = await fetch(baseUrl + endpoint, {
