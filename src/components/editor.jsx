@@ -11,12 +11,14 @@ import PatternEditor from "./Pattern";
 import Library from "./Library";
 import Save from "./Save";
 import Drawer from "./Drawer";
+import Notification from "./Notification";
 
 class Editor extends React.Component {
   render() {
     return (
       <React.Fragment>
         <Drawer></Drawer>
+        <Notification />
         <Container fluid className="my-container">
           <Modal></Modal>
           <Row className="justify-content-start pattern-editor bg-light border rounded">

@@ -2,7 +2,11 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { closeSaveModal, openSaveModal } from "../stores/gui/guiActions";
+import {
+  closeSaveModal,
+  openSaveModal,
+  showSaveNotification,
+} from "../stores/gui/guiActions";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -10,7 +14,7 @@ import Modal from "react-bootstrap/Modal";
 import Database from "../utils/database";
 
 const mapStateToProps = (state) => ({
-  setShow: state.gui.saveModal,
+  setShow: state.gui.isSaveModalOpen,
   config: state.config,
 });
 
@@ -19,6 +23,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       closeSaveModal,
       openSaveModal,
+      showSaveNotification,
     },
     dispatch
   );
@@ -36,6 +41,7 @@ class SaveModal extends React.Component {
     ).then((data) => {
       console.log(data);
       this.props.closeSaveModal();
+      this.props.showSaveNotification();
     });
   }
   render() {

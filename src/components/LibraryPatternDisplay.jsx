@@ -11,7 +11,7 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 
 const mapStateToProps = (state) => ({
-  a: state.gui.libraryPatternModal,
+  a: state.gui.isLibraryPatternModalOpen,
 });
 
 const mapDispatchToProps = (dispatch) =>

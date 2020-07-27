@@ -51,3 +51,15 @@ export function closeConfigDrawer() {
     type: "CLOSE_CONFIG_DRAWER",
   };
 }
+
+export function showSaveNotification() {
+  return {
+    type: "SHOW_SAVE_NOTIFICATION",
+  };
+}
+
+export function closeSaveNotification() {
+  return {
+    type: "CLOSE_SAVE_NOTIFICATION",
+  };
+}

@@ -2,7 +2,11 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { openConfigDrawer, closeConfigDrawer } from "../stores/gui/guiActions";
+import {
+  openConfigDrawer,
+  closeConfigDrawer,
+  showSaveNotification,
+} from "../stores/gui/guiActions";
 import {
   changeProjectName,
   changeProjectActuator,
@@ -18,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const mapStateToProps = (state) => ({
-  openDrawer: state.gui.configDrawer,
+  openDrawer: state.gui.isConfigDrawerOpen,
   config: state.config,
 });
 
@@ -31,6 +35,7 @@ const mapDispatchToProps = (dispatch) =>
       changeProjectActuator,
       changeProjectDevice,
       changeDeviceImage,
+      showSaveNotification,
     },
     dispatch
   );
@@ -77,6 +82,7 @@ class Drawer extends React.Component {
     ).then((data) => {
       console.log(data);
       this.props.closeConfigDrawer();
+      this.props.showSaveNotification();
     });
   }
 

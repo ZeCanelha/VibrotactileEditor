@@ -30,7 +30,7 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case "PROJECT_ID_DEFINED":
-      return { ...state, projectID: action.payload };
+      return { ...state, projectId: action.payload };
     case "NAME_CHANGED":
       return { ...state, projectName: action.payload };
     case "DEVICE_CHANGED":

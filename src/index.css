@@ -5,6 +5,7 @@
   justify-content: space-evenly;
   align-items: center;
   background-color: white;
+  position: relative;
 }
 
 .pattern-editor {
@@ -162,3 +163,5 @@
 .sidebar.open {
   left: 0;
 }
+
+/* Notification toast  */

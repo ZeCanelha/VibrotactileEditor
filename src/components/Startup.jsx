@@ -24,7 +24,7 @@ function mapStateToProps(state) {
   return {
     config: state.config,
     deviceImage: state.config.deviceImage,
-    setShow: state.gui.initialConfigModal,
+    setShow: state.gui.isInitialModalOpen,
   };
 }
 

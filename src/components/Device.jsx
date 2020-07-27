@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
   deviceImage: state.config.deviceImage,
   actuators: state.config.actuators,
   actuators_coords: state.config.actuators_coords,
-  setShow: state.gui.initialConfigModal,
+  setShow: state.gui.isInitialModalOpen,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -55,20 +55,16 @@ class PatternEditor extends React.Component {
     let dataset = [];
     let inicialSpacing = 0;
 
-    if (this.props.actuators_coords.length > 1)
-      this.addActuators(this.props.actuators_coords);
-    else {
-      for (let index = 0; index < this.props.actuators; index++) {
-        dataset.push({
-          cx: inicialSpacing + radius,
-          cy: radius,
-          radius: radius,
-        });
-        inicialSpacing += radius * 2.5;
-      }
-      this.addActuators(dataset);
-      this.props.updateActuatorCoords(dataset);
+    for (let index = 0; index < this.props.actuators; index++) {
+      dataset.push({
+        cx: inicialSpacing + radius,
+        cy: radius,
+        radius: radius,
+      });
+      inicialSpacing += radius * 2.5;
     }
+    this.addActuators(dataset);
+    this.props.updateActuatorCoords(dataset);
   }
 
   componentDidMount() {

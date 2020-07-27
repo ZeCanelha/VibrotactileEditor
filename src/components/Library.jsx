@@ -20,7 +20,7 @@ import LibraryFilter from "./LibraryFilter";
 import Database from "../utils/database";
 
 const mapStateToPros = (state) => ({
-  setShow: state.gui.libraryModal,
+  setShow: state.gui.isLibraryModalOpen,
 });
 
 const mapDispatchToProps = (dispatch) =>
