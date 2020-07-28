@@ -18,8 +18,15 @@ const mapDispatchToProps = (dispatch) =>
 
 let theobject = null;
 class PatternEditor extends React.Component {
-  dragged() {
-    d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+  dragged(d) {
+    d3.select(this)
+      .select("text")
+      .attr("x", d3.event.x - d.radius / 4)
+      .attr("y", d3.event.y + d.radius / 4);
+    d3.select(this)
+      .select("circle")
+      .attr("cx", d3.event.x)
+      .attr("cy", d3.event.y);
   }
   draggend(d, i) {
     console.log(i);
@@ -33,20 +40,35 @@ class PatternEditor extends React.Component {
 
   addActuators(dataset) {
     const svg = d3.select(this.refs.svg);
-    svg
-      .selectAll("circle")
+
+    let group = svg
+      .selectAll("g")
       .data(dataset)
       .join(
-        (enter) => enter.append("circle"),
+        (enter) => enter.append("g"),
         (update) => update,
-        (exit) => exit.remove()
+        (exit) => {
+          svg.selectAll("circle").remove();
+          svg.selectAll("text").remove();
+          exit.remove();
+        }
       )
+      .call(d3.drag().on("drag", this.dragged).on("end", this.draggend));
+
+    group
+      .append("circle")
       .attr("cx", (d) => d.cx)
       .attr("cy", (d) => d.cy)
       .attr("r", (d) => d.radius)
-      .attr("fill", "#5bc0de")
-      .attr("stroke", "black")
-      .call(d3.drag().on("drag", this.dragged).on("end", this.draggend));
+      .attr("fill", "black")
+      .attr("stroke", "black");
+
+    group
+      .append("text")
+      .text((d) => d.id)
+      .attr("x", (d) => d.cx - d.radius / 4)
+      .attr("y", (d) => d.cy + d.radius / 4)
+      .attr("fill", "white");
   }
 
   updateDataset() {
@@ -60,6 +82,7 @@ class PatternEditor extends React.Component {
         cx: inicialSpacing + radius,
         cy: radius,
         radius: radius,
+        id: index + 1,
       });
       inicialSpacing += radius * 2.5;
     }
