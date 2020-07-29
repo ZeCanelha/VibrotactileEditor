@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Channel from "./Channel";
 
 const mapStateToProps = (state) => ({
-  timeline_list: state.config.timeline,
+  timeline_list: state.timeline,
 });
 
 class Timeline extends React.Component {

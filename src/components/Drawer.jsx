@@ -7,12 +7,13 @@ import {
   closeConfigDrawer,
   showSaveNotification,
 } from "../stores/gui/guiActions";
+import { changeProjectName } from "../stores/editor/editorActions";
+
 import {
-  changeProjectName,
   changeProjectActuator,
   changeProjectDevice,
   changeDeviceImage,
-} from "../stores/editor/editorActions";
+} from "../stores/device/deviceActions";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -24,6 +25,7 @@ import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 const mapStateToProps = (state) => ({
   openDrawer: state.gui.isConfigDrawerOpen,
   config: state.config,
+  device: state.device,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -72,11 +74,11 @@ class Drawer extends React.Component {
 
   handleSave() {
     Database.saveProjectConfiguration(
-      this.props.config.hardwareDevice,
-      this.props.config.deviceImage,
+      this.props.device.hardwareDevice,
+      this.props.device.deviceImage,
       this.props.config.projectName,
-      this.props.config.actuators,
-      this.props.config.actuators_coords,
+      this.props.device.actuators,
+      this.props.device.actuators_coords,
       "PUT",
       this.props.config.projectId
     ).then((data) => {
@@ -103,7 +105,7 @@ class Drawer extends React.Component {
                 <Form.Control
                   type="text"
                   placeholder={"Type here your microcontroller"}
-                  value={this.props.config.hardwareDevice}
+                  value={this.props.device.hardwareDevice}
                   onChange={this.props.changeProjectDevice}
                 />
               </Form.Group>

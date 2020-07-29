@@ -83,19 +83,6 @@
   font-size: 0.75rem;
 }
 
-.remove-channel {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-}
-
-.channel-track {
-  width: 85%;
-  height: 100%;
-  background-color: #f8f9fa;
-  border: 1px solid white;
-}
-
 .toolbar-size {
   width: 17.5% !important;
 }
@@ -164,4 +151,26 @@
   left: 0;
 }
 
-/* Notification toast  */
+/* Timeline and Channel: onDragOver  */
+
+.remove-channel {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+
+.channel-track {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+  height: 100%;
+  background-color: #f8f9fa;
+}
+
+.dropped-pattern {
+  display: flex;
+  justify-content: flex-start;
+  width: 25%;
+  height: 100%;
+  background-color: red;
+}

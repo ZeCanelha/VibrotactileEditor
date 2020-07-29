@@ -5,11 +5,15 @@ import { bindActionCreators } from "redux";
 import {
   defineProjectId,
   changeProjectName,
+  loadConfigs,
+} from "../stores/editor/editorActions";
+
+import {
   changeProjectActuator,
   changeProjectDevice,
   changeDeviceImage,
-  loadConfigs,
-} from "../stores/editor/editorActions";
+  loadDeviceConfigurations,
+} from "../stores/device/deviceActions";
 
 import { closeInitialConfig } from "../stores/gui/guiActions";
 
@@ -23,7 +27,7 @@ import Database from "../utils/database";
 function mapStateToProps(state) {
   return {
     config: state.config,
-    deviceImage: state.config.deviceImage,
+    device: state.device,
     setShow: state.gui.isInitialModalOpen,
   };
 }
@@ -38,6 +42,7 @@ function mapDispatchToProps(dispatch) {
       changeProjectDevice,
       closeInitialConfig,
       loadConfigs,
+      loadDeviceConfigurations,
     },
     dispatch
   );
@@ -49,17 +54,30 @@ class StartConfig extends React.Component {
 
     Database.fetchData("/configs", "GET").then((data) => {
       theobject.props.closeInitialConfig();
-      theobject.props.loadConfigs(data[0]);
+
+      let configs = {
+        projectId: data[0]._id,
+        projectName: data[0].name,
+      };
+      let device = {
+        hardwareDevice: data[0].device,
+        deviceImage: data[0].deviceImage,
+        actuators: data[0].n_actuators,
+        actuators_coords: data[0].actuator_coords,
+      };
+
+      theobject.props.loadConfigs(configs);
+      theobject.props.loadDeviceConfigurations(device);
     });
   }
 
   saveProject() {
     Database.saveProjectConfiguration(
-      this.props.config.hardwareDevice,
-      this.props.config.deviceImage,
+      this.props.device.hardwareDevice,
+      this.props.device.deviceImage,
       this.props.config.projectName,
-      this.props.config.actuators,
-      this.props.config.actuators_coords
+      this.props.device.actuators,
+      this.props.device.actuators_coords
     ).then((data) => {
       this.props.defineProjectId(data._id);
       this.props.closeInitialConfig();
@@ -78,8 +96,8 @@ class StartConfig extends React.Component {
 
   render() {
     let imagePreview;
-    if (this.props.deviceImage && this.props.setShow) {
-      imagePreview = <Image src={this.props.deviceImage} thumbnail />;
+    if (this.props.device.deviceImage && this.props.setShow) {
+      imagePreview = <Image src={this.props.device.deviceImage} thumbnail />;
     }
     return (
       <Modal

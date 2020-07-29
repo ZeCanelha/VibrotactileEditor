@@ -2,14 +2,14 @@ import React from "react";
 import * as d3 from "d3";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { updateActuatorCoords } from "../stores/editor/editorActions";
+import { updateActuatorCoords } from "../stores/device/deviceActions";
 
 import Image from "react-bootstrap/Image";
 
 const mapStateToProps = (state) => ({
-  deviceImage: state.config.deviceImage,
-  actuators: state.config.actuators,
-  actuators_coords: state.config.actuators_coords,
+  deviceImage: state.device.deviceImage,
+  actuators: state.device.actuators,
+  actuators_coords: state.device.actuators_coords,
   setShow: state.gui.isInitialModalOpen,
 });
 

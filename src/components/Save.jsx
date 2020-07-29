@@ -16,6 +16,7 @@ import Database from "../utils/database";
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
   config: state.config,
+  device: state.device,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -31,11 +32,11 @@ const mapDispatchToProps = (dispatch) =>
 class SaveModal extends React.Component {
   saveProjectConfigurations() {
     Database.saveProjectConfiguration(
-      this.props.config.hardwareDevice,
-      this.props.config.deviceImage,
+      this.props.device.hardwareDevice,
+      this.props.device.deviceImage,
       this.props.config.projectName,
-      this.props.config.actuators,
-      this.props.config.actuators_coords,
+      this.props.device.actuators,
+      this.props.device.actuators_coords,
       "PUT",
       this.props.config.projectId
     ).then((data) => {

@@ -185,7 +185,7 @@ class PatternEditor extends React.Component {
   }
   render() {
     return (
-      <div className="pattern-container" ref="pattern">
+      <div className="pattern-container" ref="pattern" draggable="true">
         <svg ref="svg" preserveAspectRatio="xMidYMid meet">
           <path d={this.props.area} fill="#5bc0de" stroke="#0275d8"></path>
           <g>
