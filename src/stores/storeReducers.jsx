@@ -5,6 +5,7 @@ import libraryReducer from "./library/libraryReducer";
 import patternReducer from "./pattern/patternReducer";
 import deviceReducer from "./device/deviceReducer";
 import timelineReducer from "./timeline/timelineReducer";
+import notificationReducer from "./notification/notificationReducer";
 
 const reducers = combineReducers({
   config: configReducer,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   gui: guiReducer,
   library: libraryReducer,
   pattern: patternReducer,
+  notification: notificationReducer,
 });
 
 export default reducers;

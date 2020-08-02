@@ -1,19 +1,21 @@
+import update from "immutability-helper";
+
 const INITIAL_STATE = {
   timelineID: null,
   channel: [
     {
       _id: 1,
-      pattern: null,
+      pattern: [],
       actuators: [],
     },
     {
       _id: 2,
-      pattern: null,
+      pattern: [],
       actuators: [],
     },
     {
       _id: 3,
-      pattern: null,
+      pattern: [],
       actuators: [],
     },
   ],
@@ -24,15 +26,18 @@ export default function (state = INITIAL_STATE, action) {
     case "REMOVE_CHANNEL":
       return {
         ...state,
-        timeline: {
-          ...state.timeline,
-          channel: [
-            ...state.timeline.channel.filter((item) => {
-              return item._id !== action.payload;
-            }),
-          ],
-        },
+        channel: [
+          ...state.channel.filter((item) => {
+            return item._id !== action.payload;
+          }),
+        ],
       };
+    case "SET_NEW_ACTUATOR":
+      return {
+        ...state,
+        channel: update(state.channel, {}),
+      };
+
     default:
       return state;
   }

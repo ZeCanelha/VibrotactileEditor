@@ -52,14 +52,14 @@ export function closeConfigDrawer() {
   };
 }
 
-export function showSaveNotification() {
+export function showNotification() {
   return {
-    type: "SHOW_SAVE_NOTIFICATION",
+    type: "SHOW_NOTIFICATION",
   };
 }
 
-export function closeSaveNotification() {
+export function closeNotification() {
   return {
-    type: "CLOSE_SAVE_NOTIFICATION",
+    type: "CLOSE_NOTIFICATION",
   };
 }

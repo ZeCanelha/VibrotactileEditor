@@ -10,3 +10,10 @@ export function removeChannel(id) {
     payload: id,
   };
 }
+
+export function setActuator(actuatorID, channelID) {
+  return {
+    type: "SET_NEW_ACTUATOR",
+    payload: { actId: actuatorID, chanID: channelID },
+  };
+}

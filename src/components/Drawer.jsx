@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import {
   openConfigDrawer,
   closeConfigDrawer,
-  showSaveNotification,
+  showNotification,
 } from "../stores/gui/guiActions";
 import { changeProjectName } from "../stores/editor/editorActions";
 
@@ -14,6 +14,8 @@ import {
   changeProjectDevice,
   changeDeviceImage,
 } from "../stores/device/deviceActions";
+
+import { setSaveNotification } from "../stores/notification/notificationAction";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -37,7 +39,8 @@ const mapDispatchToProps = (dispatch) =>
       changeProjectActuator,
       changeProjectDevice,
       changeDeviceImage,
-      showSaveNotification,
+      showNotification,
+      setSaveNotification,
     },
     dispatch
   );
@@ -84,7 +87,8 @@ class Drawer extends React.Component {
     ).then((data) => {
       console.log(data);
       this.props.closeConfigDrawer();
-      this.props.showSaveNotification();
+      this.props.setSaveNotification();
+      this.props.showNotification();
     });
   }
 

@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   isAddChannelModalOpen: false,
   isAddActuatorModalOpen: false,
   isSaveModalOpen: false,
-  isSaveNotificationOpen: false,
+  isNotificationOpen: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -30,10 +30,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, isConfigDrawerOpen: true };
     case "CLOSE_CONFIG_DRAWER":
       return { ...state, isConfigDrawerOpen: false };
-    case "SHOW_SAVE_NOTIFICATION":
-      return { ...state, isSaveNotificationOpen: true };
-    case "CLOSE_SAVE_NOTIFICATION":
-      return { ...state, isSaveNotificationOpen: false };
+    case "SHOW_NOTIFICATION":
+      return { ...state, isNotificationOpen: true };
+    case "CLOSE_NOTIFICATION":
+      return { ...state, isNotificationOpen: false };
     default:
       return state;
   }

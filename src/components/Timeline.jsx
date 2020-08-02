@@ -16,8 +16,8 @@ class Timeline extends React.Component {
       <Channel
         key={item._id}
         id={item._id}
-        actuators={item.actuatos}
-        patterns={item.patterns}
+        actuators={item.actuators}
+        patterns={item.pattern}
       />
     ));
     return <Row className="timeline-container no-gutters ">{items}</Row>;
