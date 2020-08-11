@@ -3,6 +3,8 @@ import React from "react";
 import Display from "./DisplayPattern";
 
 import { removeChannel, setActuator } from "../stores/timeline/timelineActions";
+import { setAddPatternToTimelineNotification } from "../stores/notification/notificationAction";
+import { showNotification } from "../stores/gui/guiActions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -14,7 +16,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ removeChannel, setActuator }, dispatch);
+  return bindActionCreators(
+    {
+      removeChannel,
+      setActuator,
+      setAddPatternToTimelineNotification,
+      showNotification,
+    },
+    dispatch
+  );
 };
 
 const mapStateToProps = (state) => ({
@@ -41,8 +51,8 @@ class Channel extends React.Component {
 
     dropContainer.appendChild(container);
 
-    console.log();
-    this.props.setActuator(2, this.props.id);
+    this.props.setAddPatternToTimelineNotification();
+    this.props.showNotification();
   }
   handleDragOver(event) {
     event.preventDefault();
@@ -57,17 +67,7 @@ class Channel extends React.Component {
     dropContainer.classList.add("border");
   }
 
-  getPathByPatternId(id) {}
-
   render() {
-    // Este componente é renderizado cada vez que haja uma alterações nos actuadores ou nos padrões; Por isso ter uma colum a renderizar o svg dependendo do novo id dropado.
-
-    const patterns = this.props.patterns.map((item) => (
-      <Col key={this.props.id} xs={6} md={4}>
-        <Display></Display>
-      </Col>
-    ));
-
     return (
       <Row className="channel-row no-gutters flex-column">
         <div className="channel-id border rounded">
@@ -89,9 +89,7 @@ class Channel extends React.Component {
           onDragLeave={this.handleDragLeave}
           onDragOver={this.handleDragOver}
           ref={"drop"}
-        >
-          {patterns}
-        </div>
+        ></div>
       </Row>
     );
   }

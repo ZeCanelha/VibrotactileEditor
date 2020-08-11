@@ -12,6 +12,29 @@ const mapStateToProps = (state) => ({
 });
 
 class LibraryFilter extends React.Component {
+  customPatternsData = this.filterCustomSearch(this.props.query);
+  presetPatternsData = this.filterPresetSearch(this.props.query);
+
+  customPatternDisplay = null;
+  presetPatternDisplay = null;
+
+  componentDidMount() {
+    this.customPatternDisplay = this.filteredPatterns(this.customPatternsData);
+    this.presetPatternDisplay = this.filteredPatterns(this.presetPatternsData);
+
+    this.forceUpdate();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.query !== this.props.query) {
+      this.customPatternsData = this.filterCustomSearch(this.props.query);
+      this.presetPatternsData = this.filterPresetSearch(this.props.query);
+
+      console.log(this.customPatternsData);
+      console.log(this.presetPatternsData);
+    }
+  }
+
   filterCustomSearch(query) {
     return this.props.customPatterns.filter(function (item) {
       return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
@@ -30,6 +53,7 @@ class LibraryFilter extends React.Component {
         <Col key={data[index]._id} xs={6} md={4} style={{ padding: "5px" }}>
           <PatternDisplay
             key={data[index]._id}
+            id={data[index]._id}
             patternName={data[index].name}
             description={data[index].description}
             path={data[index].path}
@@ -42,19 +66,13 @@ class LibraryFilter extends React.Component {
   }
 
   render() {
-    let customPatternsData = this.filterCustomSearch(this.props.query);
-    let presetPatternsData = this.filterPresetSearch(this.props.query);
-
-    const customPatternDisplay = this.filteredPatterns(customPatternsData);
-    const presetPatternDisplay = this.filteredPatterns(presetPatternsData);
-
     return (
       <Container fluid className="mt-1 display-container">
         <Row noGutters className="display-row border rounded">
-          {customPatternDisplay}
+          {this.customPatternDisplay}
         </Row>
         <Row noGutters className="display-row border rounded">
-          {presetPatternDisplay}
+          {this.presetPatternDisplay}
         </Row>
       </Container>
     );

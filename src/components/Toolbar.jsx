@@ -4,6 +4,14 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { showNotification } from "../stores/gui/guiActions";
+import {
+  setAddActuatorNotification,
+  setAddChannelNotification,
+} from "../stores/notification/notificationAction";
+
 import {
   faUndo,
   faRedo,
@@ -12,7 +20,34 @@ import {
   faForward,
 } from "@fortawesome/free-solid-svg-icons";
 
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showNotification,
+      setAddActuatorNotification,
+      setAddChannelNotification,
+    },
+    dispatch
+  );
+
 class Toolbar extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleAddActuator = this.handleAddActuator.bind(this);
+    this.handleAddChannel = this.handleAddChannel.bind(this);
+  }
+
+  handleAddActuator() {
+    this.props.setAddActuatorNotification();
+    this.props.showNotification();
+  }
+
+  handleAddChannel() {
+    this.props.setAddChannelNotification();
+    this.props.showNotification();
+  }
+
   render() {
     return (
       <div className="border bg-light rounded w-50 ">
@@ -40,10 +75,10 @@ class Toolbar extends React.Component {
             </Button>
           </ButtonGroup>
           <ButtonGroup>
-            <Button size="sm" variant="light">
+            <Button size="sm" variant="light" onClick={this.handleAddChannel}>
               Add Channel
             </Button>
-            <Button size="sm" variant="light">
+            <Button size="sm" variant="light" onClick={this.handleAddActuator}>
               Add Actuator
             </Button>
           </ButtonGroup>
@@ -53,4 +88,4 @@ class Toolbar extends React.Component {
   }
 }
 
-export default Toolbar;
+export default connect(null, mapDispatchToProps)(Toolbar);

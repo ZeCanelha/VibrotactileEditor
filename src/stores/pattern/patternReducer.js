@@ -1,6 +1,7 @@
 import update from "immutability-helper";
 
 const INITIAL_STATE = {
+  id: 10,
   datapoints: [
     {
       time: 0,
