@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import PatternDisplay from "./LibraryPatternDisplay";
+import Display from "./DisplayPattern";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 
 const mapStateToProps = (state) => ({
-  customPatterns: state.library.customPatterns,
-  presetPatterns: state.library.presetPatterns,
+  patterns: state.library.patterns,
   query: state.library.searchQuery,
 });
 
@@ -30,19 +30,31 @@ class LibraryFilter extends React.Component {
       this.customPatternsData = this.filterCustomSearch(this.props.query);
       this.presetPatternsData = this.filterPresetSearch(this.props.query);
 
-      console.log(this.customPatternsData);
-      console.log(this.presetPatternsData);
+      this.customPatternDisplay = this.filteredPatterns(
+        this.customPatternsData
+      );
+      this.presetPatternDisplay = this.filteredPatterns(
+        this.presetPatternsData
+      );
+
+      this.forceUpdate();
     }
   }
 
   filterCustomSearch(query) {
-    return this.props.customPatterns.filter(function (item) {
-      return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    return this.props.patterns.filter(function (item) {
+      return (
+        item.patternType === "custom" &&
+        item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+      );
     });
   }
   filterPresetSearch(query) {
-    return this.props.presetPatterns.filter(function (item) {
-      return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    return this.props.patterns.filter(function (item) {
+      return (
+        item.patternType === "preset" &&
+        item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+      );
     });
   }
 
@@ -50,14 +62,14 @@ class LibraryFilter extends React.Component {
     let dataArray = [];
     for (let index = 0; index < data.length; index++) {
       dataArray.push(
-        <Col key={data[index]._id} xs={6} md={4} style={{ padding: "5px" }}>
-          <PatternDisplay
+        <Col className="library-display" key={data[index]._id} xs={6} md={4}>
+          <Display
             key={data[index]._id}
             id={data[index]._id}
-            patternName={data[index].name}
-            description={data[index].description}
+            // patternName={data[index].name}
+            // description={data[index].description}
             path={data[index].path}
-          ></PatternDisplay>
+          ></Display>
         </Col>
       );
     }

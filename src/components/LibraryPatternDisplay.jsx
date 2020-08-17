@@ -14,6 +14,8 @@ import {
   closePatternModal,
 } from "../stores/gui/guiActions";
 
+import Display from "./DisplayPattern";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -39,10 +41,19 @@ const mapStateToProps = (state) => ({
 });
 
 class LibraryDisplay extends React.Component {
+  constructor() {
+    super();
+    this.handleImport = this.handleImport.bind(this);
+  }
+
+  handleImport() {
+    // Add pattern and close modals
+  }
+
   render() {
     return (
       <React.Fragment>
-        <svg
+        {/* <svg
           className="svg-container rounded"
           viewBox="0 0 100 100"
           onClick={this.props.openPatternModal}
@@ -62,9 +73,9 @@ class LibraryDisplay extends React.Component {
           >
             {this.props.patternName}
           </text>
-        </svg>
+        </svg> */}
 
-        <Modal
+        {/* <Modal
           show={this.props.setShow}
           onHide={this.props.closePatternModal}
           size="lg"
@@ -91,9 +102,9 @@ class LibraryDisplay extends React.Component {
                 </Col>
                 <Col className="border rounded border-success">
                   <h4>Name: </h4>
-                  {/* <p>{props.patternName}</p> */}
+                  {/* <p>{props.patternName}</p> 
                   <h4>Description:</h4>
-                  {/* <p>{props.description}</p> */}
+                  {/* <p>{props.description}</p>
                 </Col>
               </Row>
             </Container>
@@ -106,7 +117,7 @@ class LibraryDisplay extends React.Component {
               Import pattern
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
       </React.Fragment>
     );
   }

@@ -2,11 +2,15 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { openLibraryModal, closeLibraryModal } from "../stores/gui/guiActions";
+import {
+  openLibraryModal,
+  closeLibraryModal,
+  openPatternModal,
+  closePatternModal,
+} from "../stores/gui/guiActions";
 import {
   updateSearchQuery,
-  setCustomPatterns,
-  setPresetPatterns,
+  setPatterns,
 } from "../stores/library/libraryActions";
 
 import Button from "react-bootstrap/Button";
@@ -20,36 +24,42 @@ import LibraryFilter from "./LibraryFilter";
 import Database from "../utils/database";
 
 const mapStateToPros = (state) => ({
-  setShow: state.gui.isLibraryModalOpen,
+  setShowLibraryModal: state.gui.isLibraryModalOpen,
+  setShowPatternModal: state.gui.isLibraryPatternModalOpen,
 });
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCustomPatterns,
-      setPresetPatterns,
+      setPatterns,
       openLibraryModal,
       closeLibraryModal,
+      openPatternModal,
+      closePatternModal,
       updateSearchQuery,
     },
     dispatch
   );
 
 class Library extends React.Component {
+  constructor() {
+    super();
+
+    this.handleClosePattern = this.handleClosePattern.bind(this);
+  }
+
+  handleClosePattern() {
+    this.props.closePatternModal();
+    this.props.openLibraryModal();
+  }
+
   componentDidMount() {
     let theobject = this;
-    let searchCustom = "?patternType=custom";
-    let searchPreset = "?patternType=preset";
 
-    // Fetching custom patterns
+    // Fetching patterns
 
-    Database.fetchData("/patterns", "GET", searchCustom).then((data) => {
-      theobject.props.setCustomPatterns(data);
-    });
-
-    // Fetching preset patterns
-    Database.fetchData("/patterns", "GET", searchPreset).then((data) => {
-      theobject.props.setPresetPatterns(data);
+    Database.fetchData("/patterns", "GET").then((data) => {
+      theobject.props.setPatterns(data);
     });
   }
   render() {
@@ -64,7 +74,7 @@ class Library extends React.Component {
         </Button>
 
         <Modal
-          show={this.props.setShow}
+          show={this.props.setShowLibraryModal}
           size="lg"
           backdrop="static"
           dialogClassName="modal-90w"
@@ -93,6 +103,26 @@ class Library extends React.Component {
             <Button variant="dark" block onClick={this.props.closeLibraryModal}>
               Close
             </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal
+          show={this.props.setShowPatternModal}
+          onHide={this.handleClosePattern}
+          size="lg"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Pattern Characteristics</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h1>Teste no close de modals</h1>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="dark" onClick={this.handleClosePattern}>
+              Close
+            </Button>
+            <Button variant="primary">Import pattern</Button>
           </Modal.Footer>
         </Modal>
       </>
