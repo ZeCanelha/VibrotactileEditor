@@ -34,3 +34,9 @@ export function setAddPatternToTimelineNotification() {
     type: "SET_ADD_PATTERN_NOTIFICATION",
   };
 }
+
+export function setLoadConfigurationsNotification() {
+  return {
+    type: "SET_LOAD_CONFIGURATIONS_NOTIFICATION",
+  };
+}

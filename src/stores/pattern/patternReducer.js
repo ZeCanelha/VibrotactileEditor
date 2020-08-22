@@ -1,7 +1,7 @@
 import update from "immutability-helper";
 
 const INITIAL_STATE = {
-  id: 10,
+  id: 0,
   datapoints: [
     {
       time: 0,
@@ -28,8 +28,15 @@ export default function (state = INITIAL_STATE, action) {
           datapoints: { $set: action.payload },
         }),
       };
+    case "DATAPOINTS_IMPORTED":
+      return {
+        ...state,
+        datapoints: action.payload,
+      };
     case "AREA_UPDATED":
       return { ...state, area: action.payload };
+    case "SET_PATTERN_ID":
+      return { ...state, id: action.payload };
     default:
       return state;
   }

@@ -15,6 +15,23 @@ class Database {
     }
   }
 
+  //TODO: Re-factor saveProjectConfigurations
+
+  static async savePattern(endpoint, body) {
+    try {
+      let response = await fetch(baseUrl + endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      let data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async saveProjectConfiguration(
     hardwareDevice,
     deviceImage,

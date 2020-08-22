@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import PatternDisplay from "./LibraryPatternDisplay";
 import Display from "./DisplayPattern";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -66,8 +65,6 @@ class LibraryFilter extends React.Component {
           <Display
             key={data[index]._id}
             id={data[index]._id}
-            // patternName={data[index].name}
-            // description={data[index].description}
             path={data[index].path}
           ></Display>
         </Col>

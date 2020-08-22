@@ -8,6 +8,11 @@ const SAVE_NOTIFICATION = {
   body: "Project configurations saved!",
 };
 
+const LOAD_NOTIFICATION = {
+  title: "Vibrotactile Editor",
+  body: "Project configurations loaded!",
+};
+
 const ADD_ACTUATOR_NOTIFICAITON = {
   title: "Vibrotactile Editor",
   body: "Actuator added to the project!",
@@ -74,6 +79,11 @@ export default function (state = INITIAL_STATE, action) {
       return {
         actionTitle: ADD_PATTERN_TO_TIMELINE.title,
         actionBody: ADD_PATTERN_TO_TIMELINE.body,
+      };
+    case "SET_LOAD_CONFIGURATIONS_NOTIFICATION":
+      return {
+        actionTitle: LOAD_NOTIFICATION.title,
+        actionBody: LOAD_NOTIFICATION.body,
       };
     default:
       return state;

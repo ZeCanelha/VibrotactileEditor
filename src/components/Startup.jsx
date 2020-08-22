@@ -15,7 +15,13 @@ import {
   loadDeviceConfigurations,
 } from "../stores/device/deviceActions";
 
-import { closeInitialConfig } from "../stores/gui/guiActions";
+import { setLoadConfigurationsNotification } from "../stores/notification/notificationAction";
+
+import { setPatterns } from "../stores/library/libraryActions";
+
+import { closeInitialConfig, showNotification } from "../stores/gui/guiActions";
+
+import { setPatternId } from "../stores/pattern/patternActions";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -24,17 +30,20 @@ import Image from "react-bootstrap/Image";
 
 import Database from "../utils/database";
 
-function mapStateToProps(state) {
-  return {
-    config: state.config,
-    device: state.device,
-    setShow: state.gui.isInitialModalOpen,
-  };
-}
+const mapStateToProps = (state) => ({
+  config: state.config,
+  device: state.device,
+  pattern: state.pattern,
+  setShow: state.gui.isInitialModalOpen,
+});
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
     {
+      setPatternId,
+      setPatterns,
+      setLoadConfigurationsNotification,
+      showNotification,
       defineProjectId,
       changeProjectName,
       changeProjectActuator,
@@ -46,15 +55,22 @@ function mapDispatchToProps(dispatch) {
     },
     dispatch
   );
-}
 
 class StartConfig extends React.Component {
+  constructor() {
+    super();
+
+    this.fetchConfigurations = this.fetchConfigurations.bind(this);
+    this.startProject = this.startProject.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
+  }
+
   fetchConfigurations() {
-    let theobject = this;
+    Database.fetchData("/patterns", "GET").then((data) => {
+      this.props.setPatterns(data);
+    });
 
     Database.fetchData("/configs", "GET").then((data) => {
-      theobject.props.closeInitialConfig();
-
       let configs = {
         projectId: data[0]._id,
         projectName: data[0].name,
@@ -66,12 +82,26 @@ class StartConfig extends React.Component {
         actuators_coords: data[0].actuator_coords,
       };
 
-      theobject.props.loadConfigs(configs);
-      theobject.props.loadDeviceConfigurations(device);
+      this.props.loadConfigs(configs);
+      this.props.loadDeviceConfigurations(device);
+      this.props.closeInitialConfig();
+      this.props.setLoadConfigurationsNotification();
+      this.props.showNotification();
     });
   }
 
-  saveProject() {
+  startProject() {
+    Database.fetchData("/patterns", "GET").then((data) => {
+      this.props.setPatterns(data);
+    });
+
+    Database.savePattern("/patterns", {
+      path: this.props.pattern.area,
+      keyframes: this.props.pattern.datapoints,
+    }).then((data) => {
+      this.props.setPatternId(data._id);
+    });
+
     Database.saveProjectConfiguration(
       this.props.device.hardwareDevice,
       this.props.device.deviceImage,
@@ -150,7 +180,7 @@ class StartConfig extends React.Component {
             <Form.File
               id="custom-file"
               label="Upload your prototype image"
-              onChange={(e) => this.handleImageUpload(e)}
+              onChange={this.handleImageUpload}
               custom
             />
           </Form>
@@ -158,18 +188,10 @@ class StartConfig extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           {/* Arrow function to bind the function to the componente to get props access when using this */}
-          <Button
-            variant="dark"
-            block
-            onClick={() => this.fetchConfigurations()}
-          >
+          <Button variant="dark" block onClick={this.fetchConfigurations}>
             Load configuration
           </Button>
-          <Button
-            variant="outline-dark"
-            block
-            onClick={() => this.saveProject()}
-          >
+          <Button variant="outline-dark" block onClick={this.startProject}>
             Save configuration
           </Button>
         </Modal.Footer>

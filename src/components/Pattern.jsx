@@ -177,8 +177,9 @@ class PatternEditor extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.datapoints !== this.props.datapoints) {
+      console.log(this.props.datapoints);
       this.drawKeyFrames();
       this.props.updateAreaChart(this.areaGenerator(this.props.datapoints));
     }
