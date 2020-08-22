@@ -4,17 +4,17 @@ const INITIAL_STATE = {
   timelineID: null,
   channel: [
     {
+      _id: 0,
+      pattern: [],
+      actuators: [],
+    },
+    {
       _id: 1,
       pattern: [],
       actuators: [],
     },
     {
       _id: 2,
-      pattern: [],
-      actuators: [],
-    },
-    {
-      _id: 3,
       pattern: [],
       actuators: [],
     },
@@ -37,6 +37,15 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         channel: update(state.channel, {}),
       };
+
+    case "ADD_PATTERN_TO_CHANNEL":
+      return update(state, {
+        channel: {
+          [action.payload.channelID]: {
+            pattern: { $push: [action.payload.patternID] },
+          },
+        },
+      });
 
     default:
       return state;

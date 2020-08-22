@@ -17,3 +17,10 @@ export function setActuator(actuatorID, channelID) {
     payload: { actId: actuatorID, chanID: channelID },
   };
 }
+
+export function addPatternToTimeline(pId, cId) {
+  return {
+    type: "ADD_PATTERN_TO_CHANNEL",
+    payload: { patternID: pId, channelID: cId },
+  };
+}

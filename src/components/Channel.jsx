@@ -2,8 +2,14 @@ import React from "react";
 
 import Display from "./DisplayPattern";
 
-import { removeChannel, setActuator } from "../stores/timeline/timelineActions";
-import { setAddPatternToTimelineNotification } from "../stores/notification/notificationAction";
+import {
+  removeChannel,
+  addPatternToTimeline,
+} from "../stores/timeline/timelineActions";
+import {
+  setAddPatternToTimelineNotification,
+  setRemoveChannelNotification,
+} from "../stores/notification/notificationAction";
 import { showNotification } from "../stores/gui/guiActions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -19,8 +25,9 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
       removeChannel,
-      setActuator,
+      addPatternToTimeline,
       setAddPatternToTimelineNotification,
+      setRemoveChannelNotification,
       showNotification,
     },
     dispatch
@@ -38,18 +45,63 @@ class Channel extends React.Component {
     this.handleDrop = this.handleDrop.bind(this);
     this.handleDragOver = this.handleDragOver.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
+    this.handleRemoveChannel = this.handleRemoveChannel.bind(this);
+  }
+
+  channelDisplay = null;
+
+  componentDidMount() {}
+
+  componentDidUpdate(prevProps) {
+    // Se um novo pattern for adicionado a um canal da timeline, re-render dos channels
+
+    if (prevProps.timeline.channel !== this.props.timeline.channel) {
+      console.log("Novo pattern adicionado a um canal");
+      this.channelDisplay = this.renderPatternsToTimeline();
+      this.forceUpdate();
+    }
+  }
+
+  renderPatternsToTimeline() {
+    // TODO: Col must have dynamic width according to the pattern time
+    // TODO: lookup do ID na bd e buscar o path; assim fica sempre o mesmo
+
+    let renderArray = [];
+    for (
+      let index = 0;
+      index < this.props.timeline.channel[this.props.id].pattern.length;
+      index++
+    ) {
+      renderArray.push(
+        <Col
+          className="timeline-display"
+          key={this.props.pattern.id}
+          xs={6}
+          md={4}
+        >
+          <Display
+            key={this.props.pattern.id}
+            id={this.props.pattern.id}
+            path={this.props.pattern.area}
+          ></Display>
+        </Col>
+      );
+    }
+
+    return renderArray;
+  }
+
+  // TODO:  Removable if not the only channel.
+  handleRemoveChannel() {
+    this.props.removeChannel(this.props.id);
+    this.props.setRemoveChannelNotification();
+    this.props.showNotification();
   }
 
   handleDrop(event) {
     event.preventDefault();
-    let dropContainer = this.refs.drop;
-    let container = document.createElement("div");
 
-    dropContainer.style.border = null;
-    dropContainer.classList.add("border");
-    container.classList.add("dropped-pattern");
-
-    dropContainer.appendChild(container);
+    this.props.addPatternToTimeline(this.props.pattern.id, this.props.id);
 
     this.props.setAddPatternToTimelineNotification();
     this.props.showNotification();
@@ -73,13 +125,13 @@ class Channel extends React.Component {
         <div className="channel-id border rounded">
           <Button
             className="remove-channel"
-            onClick={() => this.props.removeChannel(this.props.id)}
+            onClick={this.handleRemoveChannel}
             variant="light"
             size="sm"
           >
             <FontAwesomeIcon icon={faTimesCircle} size="xs" />
           </Button>
-          Channel {this.props.id}
+          Channel {this.props.id + 1}
           <br></br>
           Actuators {this.props.actuators}
         </div>
@@ -89,7 +141,9 @@ class Channel extends React.Component {
           onDragLeave={this.handleDragLeave}
           onDragOver={this.handleDragOver}
           ref={"drop"}
-        ></div>
+        >
+          {this.channelDisplay}
+        </div>
       </Row>
     );
   }

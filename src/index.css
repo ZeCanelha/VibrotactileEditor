@@ -175,6 +175,10 @@
   background-color: red;
 }
 
+.timeline-display {
+  height: 100%;
+}
+
 /* Library CSS */
 
 .library-display {
