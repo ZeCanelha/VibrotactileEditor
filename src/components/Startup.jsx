@@ -3,7 +3,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  defineProjectId,
+  setProjectId,
+  setDBInstance,
   changeProjectName,
   loadConfigs,
 } from "../stores/editor/editorActions";
@@ -15,13 +16,21 @@ import {
   loadDeviceConfigurations,
 } from "../stores/device/deviceActions";
 
-import { setLoadConfigurationsNotification } from "../stores/notification/notificationAction";
+import {
+  setLoadConfigurationsNotification,
+  setSaveNotification,
+} from "../stores/notification/notificationAction";
 
 import { setPatterns } from "../stores/library/libraryActions";
 
 import { closeInitialConfig, showNotification } from "../stores/gui/guiActions";
 
-import { setPatternId } from "../stores/pattern/patternActions";
+import {
+  setPatternId,
+  setInitialDatapoints,
+} from "../stores/pattern/patternActions";
+
+import { setTimelineID } from "../stores/timeline/timelineActions";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -32,6 +41,7 @@ import Database from "../utils/database";
 
 const mapStateToProps = (state) => ({
   config: state.config,
+  timeline: state.timeline,
   device: state.device,
   pattern: state.pattern,
   setShow: state.gui.isInitialModalOpen,
@@ -41,10 +51,13 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setPatternId,
+      setInitialDatapoints,
       setPatterns,
       setLoadConfigurationsNotification,
+      setSaveNotification,
+      setTimelineID,
       showNotification,
-      defineProjectId,
+      setProjectId,
       changeProjectName,
       changeProjectActuator,
       changeDeviceImage,
@@ -52,6 +65,7 @@ const mapDispatchToProps = (dispatch) =>
       closeInitialConfig,
       loadConfigs,
       loadDeviceConfigurations,
+      setDBInstance,
     },
     dispatch
   );
@@ -61,8 +75,17 @@ class StartConfig extends React.Component {
     super();
 
     this.fetchConfigurations = this.fetchConfigurations.bind(this);
-    this.startProject = this.startProject.bind(this);
+    this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
+  }
+
+  componentDidMount() {
+    // Define initial application state
+
+    this.props.setProjectId();
+    this.props.setTimelineID();
+    this.props.setPatternId();
+    this.props.setInitialDatapoints();
   }
 
   fetchConfigurations() {
@@ -72,45 +95,52 @@ class StartConfig extends React.Component {
 
     Database.fetchData("/configs", "GET").then((data) => {
       let configs = {
-        projectId: data[0]._id,
-        projectName: data[0].name,
+        dbInstanceId: data[0]._id,
+        projectId: data[0].projectID,
+        projectName: data[0].projectName,
       };
       let device = {
         hardwareDevice: data[0].device,
         deviceImage: data[0].deviceImage,
-        actuators: data[0].n_actuators,
-        actuators_coords: data[0].actuator_coords,
+        actuators: data[0].nActuators,
+        actuators_coords: data[0].actuatorCoords,
       };
+
+      // Load and set IDs
+
+      this.props.setTimelineID(data[0].timelineID);
 
       this.props.loadConfigs(configs);
       this.props.loadDeviceConfigurations(device);
+
       this.props.closeInitialConfig();
       this.props.setLoadConfigurationsNotification();
       this.props.showNotification();
     });
   }
 
-  startProject() {
+  saveProject() {
     Database.fetchData("/patterns", "GET").then((data) => {
       this.props.setPatterns(data);
     });
 
-    Database.savePattern("/patterns", {
-      path: this.props.pattern.area,
-      keyframes: this.props.pattern.datapoints,
-    }).then((data) => {
-      this.props.setPatternId(data._id);
-    });
+    let projectConfiguration = {
+      projectID: this.props.config.projectId,
+      projectName: this.props.config.projectName,
+      device: this.props.device.hardwareDevice,
+      nActuators: this.props.device.actuators,
+      actuatorCoords: this.props.device.actuators_coords,
+      deviceImage: this.props.device.deviceImage,
+      timelineID: this.props.timeline.timelineID,
+    };
 
-    Database.saveProjectConfiguration(
-      this.props.device.hardwareDevice,
-      this.props.device.deviceImage,
-      this.props.config.projectName,
-      this.props.device.actuators,
-      this.props.device.actuators_coords
-    ).then((data) => {
-      this.props.defineProjectId(data._id);
+    // TODO: onError create a notification toast for error purposes
+
+    Database.saveProjectConfiguration(projectConfiguration).then((data) => {
+      this.props.setDBInstance(data._id);
       this.props.closeInitialConfig();
+      this.props.setSaveNotification();
+      this.props.showNotification();
     });
   }
 
@@ -191,7 +221,7 @@ class StartConfig extends React.Component {
           <Button variant="dark" block onClick={this.fetchConfigurations}>
             Load configuration
           </Button>
-          <Button variant="outline-dark" block onClick={this.startProject}>
+          <Button variant="outline-dark" block onClick={this.saveProject}>
             Save configuration
           </Button>
         </Modal.Footer>

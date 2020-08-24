@@ -1,7 +1,7 @@
 import update from "immutability-helper";
 
 const INITIAL_STATE = {
-  timelineID: null,
+  timelineID: "",
   channel: [
     {
       _id: 0,
@@ -46,7 +46,8 @@ export default function (state = INITIAL_STATE, action) {
           },
         },
       });
-
+    case "SET_TIMELINE_ID":
+      return { ...state, timelineID: action.payload };
     default:
       return state;
   }

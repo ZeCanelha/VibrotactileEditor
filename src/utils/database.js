@@ -33,21 +33,10 @@ class Database {
   }
 
   static async saveProjectConfiguration(
-    hardwareDevice,
-    deviceImage,
-    projectName,
-    actuators,
-    actuators_coords,
+    projectConfig,
     method = "POST",
     projectId = null
   ) {
-    let body = {
-      device: hardwareDevice,
-      device_image: deviceImage,
-      name: projectName,
-      n_actuators: actuators,
-      actuator_coords: actuators_coords,
-    };
     let endpoint = "/configs";
     if (method === "PUT") {
       endpoint = "/configs/" + projectId;
@@ -56,7 +45,7 @@ class Database {
       let response = await fetch(baseUrl + endpoint, {
         method: method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(projectConfig),
       });
       let data = await response.json();
       return data;

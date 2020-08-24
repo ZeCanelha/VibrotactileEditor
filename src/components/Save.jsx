@@ -19,6 +19,7 @@ const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
   config: state.config,
   device: state.device,
+  timeline: state.timeline,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -34,14 +35,20 @@ const mapDispatchToProps = (dispatch) =>
 
 class SaveModal extends React.Component {
   saveProjectConfigurations() {
+    let projectConfiguration = {
+      projectID: this.props.config.projectId,
+      projectName: this.props.config.projectName,
+      device: this.props.device.hardwareDevice,
+      nActuators: this.props.device.actuators,
+      actuatorCoords: this.props.device.actuators_coords,
+      deviceImage: this.props.device.deviceImage,
+      timelineID: this.props.timeline.timelineID,
+    };
+
     Database.saveProjectConfiguration(
-      this.props.device.hardwareDevice,
-      this.props.device.deviceImage,
-      this.props.config.projectName,
-      this.props.device.actuators,
-      this.props.device.actuators_coords,
+      projectConfiguration,
       "PUT",
-      this.props.config.projectId
+      this.props.config.dbInstance
     ).then((data) => {
       console.log(data);
       this.props.closeSaveModal();

@@ -1,21 +1,27 @@
 const INITIAL_STATE = {
+  dbInstance: "",
   projectId: "",
   projectName: "New Project",
 };
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "PROJECT_ID_DEFINED":
+    case "SET_PROJECT_ID":
       return { ...state, projectId: action.payload };
     case "NAME_CHANGED":
       return { ...state, projectName: action.payload };
     case "CONFIG_LOADED":
       return {
         ...state,
+        dbInstance: action.payload.dbInstanceId,
         projectId: action.payload.projectId,
         projectName: action.payload.projectName,
       };
-
+    case "SET_DB_INSTANCE_ID":
+      return {
+        ...state,
+        dbInstance: action.payload,
+      };
     default:
       return state;
   }

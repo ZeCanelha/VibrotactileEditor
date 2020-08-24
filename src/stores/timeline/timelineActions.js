@@ -1,3 +1,5 @@
+import Util from "../../utils/util.js";
+
 export function addChannel() {
   return {
     type: "ADD_CHANNEL",
@@ -22,5 +24,19 @@ export function addPatternToTimeline(pId, cId) {
   return {
     type: "ADD_PATTERN_TO_CHANNEL",
     payload: { patternID: pId, channelID: cId },
+  };
+}
+
+export function setTimelineID(id = null) {
+  if (id) {
+    return {
+      type: "SET_TIMELINE_ID",
+      payload: id,
+    };
+  }
+
+  return {
+    type: "SET_TIMELINE_ID",
+    payload: Util.generateUUI(),
   };
 }

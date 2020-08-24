@@ -1,3 +1,5 @@
+import Util from "../../utils/util.js";
+
 export function updateDataPoints(datapoints) {
   return {
     type: "DATAPOINTS_CHANGE",
@@ -19,9 +21,30 @@ export function updateAreaChart(path) {
   };
 }
 
-export function setPatternId(id) {
+export function setPatternId() {
   return {
     type: "SET_PATTERN_ID",
-    payload: id,
+    payload: Util.generateUUI(),
+  };
+}
+
+export function setInitialDatapoints() {
+  const datapoints = [
+    {
+      time: 0,
+      intensity: 50,
+    },
+    {
+      time: 175,
+      intensity: 50,
+    },
+    {
+      time: 350,
+      intensity: 50,
+    },
+  ];
+  return {
+    type: "SET_INITIAL_DATAPOINTS",
+    payload: datapoints,
   };
 }

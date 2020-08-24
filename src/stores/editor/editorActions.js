@@ -1,3 +1,5 @@
+import Util from "../../utils/util.js";
+
 export function changeProjectName(e) {
   return {
     type: "NAME_CHANGED",
@@ -5,10 +7,10 @@ export function changeProjectName(e) {
   };
 }
 
-export function defineProjectId(id) {
+export function setProjectId() {
   return {
-    type: "PROJECT_ID_DEFINED",
-    payload: id,
+    type: "SET_PROJECT_ID",
+    payload: Util.generateUUI(),
   };
 }
 
@@ -22,5 +24,12 @@ export function loadConfigs(config) {
 export function addActuator() {
   return {
     type: "ADD_ACTUATOR",
+  };
+}
+
+export function setDBInstance(dbID) {
+  return {
+    type: "SET_DB_INSTANCE_ID",
+    payload: dbID,
   };
 }
