@@ -43,6 +43,19 @@ const ADD_PATTERN_TO_TIMELINE = {
   body: "Vibration pattern added to the timeline!",
 };
 
+const ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION = {
+  title: "Vibrotactile Editor",
+  body: "Actuator(s) added to channel!",
+};
+
+const ADD_WARNING_MESSAGE_NOTIFICATION = {
+  title: "Warning!",
+};
+
+const ADD_ERROR_MESSAGE_NOTIFICATION = {
+  title: "Error!",
+};
+
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case "SET_SAVE_NOTIFICATION":
@@ -84,6 +97,21 @@ export default function (state = INITIAL_STATE, action) {
       return {
         actionTitle: LOAD_NOTIFICATION.title,
         actionBody: LOAD_NOTIFICATION.body,
+      };
+    case "SET_ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION":
+      return {
+        actionTitle: ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION.title,
+        actionBody: ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION.body,
+      };
+    case "SET_ADD_WARNING_NOTIFICATION":
+      return {
+        actionTitle: ADD_WARNING_MESSAGE_NOTIFICATION.title,
+        actionBody: action.payload,
+      };
+    case "SET_ADD_ERROR_NOTIFICATION":
+      return {
+        actionTitle: ADD_ERROR_MESSAGE_NOTIFICATION.title,
+        actionBody: action.payload,
       };
     default:
       return state;

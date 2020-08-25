@@ -1,6 +1,7 @@
 import update from "immutability-helper";
 
 const INITIAL_STATE = {
+  timelineDbInstance: "",
   timelineID: "",
   channel: [
     {
@@ -48,6 +49,10 @@ export default function (state = INITIAL_STATE, action) {
       });
     case "SET_TIMELINE_ID":
       return { ...state, timelineID: action.payload };
+    case "SET_TIMELINE_DB_INSTANCE":
+      return { ...state, timelineDbInstance: action.payload };
+    case "SET_LOADED_TIMELINE_DATA":
+      return { ...state, channel: action.payload };
     default:
       return state;
   }

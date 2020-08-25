@@ -40,3 +40,17 @@ export function setTimelineID(id = null) {
     payload: Util.generateUUI(),
   };
 }
+
+export function setTimelineDBInstance(dbInstanceId) {
+  return {
+    type: "SET_TIMELINE_DB_INSTANCE",
+    payload: dbInstanceId,
+  };
+}
+
+export function setLoadedDataToTimeline(channels) {
+  return {
+    type: "SET_LOADED_TIMELINE_DATA",
+    payload: channels,
+  };
+}

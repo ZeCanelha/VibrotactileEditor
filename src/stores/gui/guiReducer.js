@@ -5,9 +5,9 @@ const INITIAL_STATE = {
   isLibraryPatternModalOpen: false,
   isActuatorConfigModalOpen: false,
   isAddChannelModalOpen: false,
-  isAddActuatorModalOpen: false,
   isSaveModalOpen: false,
   isNotificationOpen: false,
+  isAddActuatorToChannelModalOpen: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -34,6 +34,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, isNotificationOpen: true };
     case "CLOSE_NOTIFICATION":
       return { ...state, isNotificationOpen: false };
+    case "OPEN_ADD_ACTUATOR_TO_CHANNEL_MODAL":
+      return { ...state, isAddActuatorToChannelModalOpen: true };
+    case "CLOSE_ADD_ACTUATOR_TO_CHANNEL_MODAL":
+      return { ...state, isAddActuatorToChannelModalOpen: false };
     default:
       return state;
   }

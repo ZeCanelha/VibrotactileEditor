@@ -40,3 +40,23 @@ export function setLoadConfigurationsNotification() {
     type: "SET_LOAD_CONFIGURATIONS_NOTIFICATION",
   };
 }
+
+export function setAddActuatorToChannelNotification() {
+  return {
+    type: "SET_ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION",
+  };
+}
+
+export function setAddWarningNotification(warningText) {
+  return {
+    type: "SET_ADD_WARNING_NOTIFICATION",
+    payload: warningText,
+  };
+}
+
+export function setAddErrorNotification(errorText) {
+  return {
+    type: "SET_ADD_ERROR_NOTIFICATION",
+    payload: errorText,
+  };
+}

@@ -12,8 +12,13 @@ import {
 import {
   setAddPatternToTimelineNotification,
   setRemoveChannelNotification,
+  setAddActuatorToChannelNotification,
 } from "../stores/notification/notificationAction";
-import { showNotification } from "../stores/gui/guiActions";
+import {
+  showNotification,
+  closeAddActuatorToChannelModal,
+  openAddActuatorToChannelModal,
+} from "../stores/gui/guiActions";
 
 import {
   setPatternId,
@@ -23,6 +28,7 @@ import {
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import Modal from "react-bootstrap/Modal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
@@ -33,10 +39,13 @@ const mapDispatchToProps = (dispatch) => {
       removeChannel,
       addPatternToTimeline,
       setAddPatternToTimelineNotification,
+      setAddActuatorToChannelNotification,
       setRemoveChannelNotification,
       showNotification,
       setPatternId,
       setInitialDatapoints,
+      closeAddActuatorToChannelModal,
+      openAddActuatorToChannelModal,
     },
     dispatch
   );
@@ -45,6 +54,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => ({
   timeline: state.timeline,
   pattern: state.pattern,
+  device: state.device,
+  setShow: state.gui.isAddActuatorToChannelModalOpen,
 });
 
 class Channel extends React.Component {
@@ -54,6 +65,9 @@ class Channel extends React.Component {
     this.handleDragOver = this.handleDragOver.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
     this.handleRemoveChannel = this.handleRemoveChannel.bind(this);
+    this.handleAddActuatorToChannel = this.handleAddActuatorToChannel.bind(
+      this
+    );
   }
 
   channelDisplay = [];
@@ -129,6 +143,13 @@ class Channel extends React.Component {
     dropContainer.classList.add("border");
   }
 
+  handleAddActuatorToChannel() {
+    this.props.setAddActuatorToChannelNotification();
+    this.props.showNotification();
+
+    this.props.closeAddActuatorToChannelModal();
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -144,7 +165,11 @@ class Channel extends React.Component {
             </Button>
             <div className="channel-id-column">
               <p>Channel {this.props.id + 1}</p>
-              <Button variant="link" size="sm">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={this.props.openAddActuatorToChannelModal}
+              >
                 Actuators
               </Button>
             </div>
@@ -159,6 +184,34 @@ class Channel extends React.Component {
             {this.channelDisplay}
           </div>
         </Row>
+
+        <Modal
+          show={this.props.setShow}
+          // size="sm"
+          backdrop="static"
+          aria-labelledby="example-custom-modal-styling-title"
+        >
+          <Modal.Header>
+            <Modal.Title id="example-custom-modal-styling-title">
+              Add Actuator to Channel
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body></Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="outline-dark"
+              onClick={this.handleAddActuatorToChannel}
+            >
+              Save Settings
+            </Button>
+            <Button
+              variant="dark"
+              onClick={this.props.closeAddActuatorToChannelModal}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </React.Fragment>
     );
   }

@@ -15,7 +15,10 @@ import {
   changeDeviceImage,
 } from "../stores/device/deviceActions";
 
-import { setSaveNotification } from "../stores/notification/notificationAction";
+import {
+  setSaveNotification,
+  setAddWarningNotification,
+} from "../stores/notification/notificationAction";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -42,6 +45,7 @@ const mapDispatchToProps = (dispatch) =>
       changeDeviceImage,
       showNotification,
       setSaveNotification,
+      setAddWarningNotification,
     },
     dispatch
   );
@@ -77,26 +81,48 @@ class Drawer extends React.Component {
   }
 
   handleSave() {
-    // TODO: HTTP status code
-
     let projectConfiguration = {
-      projectID: this.props.config.projectId,
       projectName: this.props.config.projectName,
       device: this.props.device.hardwareDevice,
       nActuators: this.props.device.actuators,
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
-      timelineID: this.props.timeline.timelineID,
     };
 
-    Database.saveProjectConfiguration(
+    Database.postData(
+      "/configs",
       projectConfiguration,
       "PUT",
-      this.props.config.dbInstance
+      "/" + this.props.config.dbInstance
     ).then((data) => {
-      console.log(data);
+      if (!data) {
+        this.props.setAddWarningNotification(
+          "Network Error! Could not save project settings. Try again later!"
+        );
+      } else {
+        Database.postData(
+          "/timeline",
+          { channel: this.props.timeline.channel },
+          "PUT",
+          "/" + this.props.timeline.timelineDbInstance
+        )
+          .then((data) => {
+            if (!data) {
+              this.props.setAddWarningNotification(
+                "Network Error! Could not save project settings. Try again later!"
+              );
+            } else {
+              this.props.setSaveNotification();
+            }
+          })
+          .catch((error) => {
+            this.props.setAddWarningNotification(
+              "Network Error! Could not save project settings. Try again later!"
+            );
+          });
+      }
+
       this.props.closeConfigDrawer();
-      this.props.setSaveNotification();
       this.props.showNotification();
     });
   }

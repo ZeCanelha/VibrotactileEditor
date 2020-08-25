@@ -63,3 +63,15 @@ export function closeNotification() {
     type: "CLOSE_NOTIFICATION",
   };
 }
+
+export function openAddActuatorToChannelModal() {
+  return {
+    type: "OPEN_ADD_ACTUATOR_TO_CHANNEL_MODAL",
+  };
+}
+
+export function closeAddActuatorToChannelModal() {
+  return {
+    type: "CLOSE_ADD_ACTUATOR_TO_CHANNEL_MODAL",
+  };
+}

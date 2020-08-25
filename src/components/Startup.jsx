@@ -19,6 +19,7 @@ import {
 import {
   setLoadConfigurationsNotification,
   setSaveNotification,
+  setAddWarningNotification,
 } from "../stores/notification/notificationAction";
 
 import { setPatterns } from "../stores/library/libraryActions";
@@ -30,7 +31,11 @@ import {
   setInitialDatapoints,
 } from "../stores/pattern/patternActions";
 
-import { setTimelineID } from "../stores/timeline/timelineActions";
+import {
+  setTimelineID,
+  setTimelineDBInstance,
+  setLoadedDataToTimeline,
+} from "../stores/timeline/timelineActions";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -66,6 +71,9 @@ const mapDispatchToProps = (dispatch) =>
       loadConfigs,
       loadDeviceConfigurations,
       setDBInstance,
+      setTimelineDBInstance,
+      setLoadedDataToTimeline,
+      setAddWarningNotification,
     },
     dispatch
   );
@@ -82,6 +90,10 @@ class StartConfig extends React.Component {
   componentDidMount() {
     // Define initial application state
 
+    Database.fetchData("/patterns", "GET").then((data) => {
+      this.props.setPatterns(data);
+    });
+
     this.props.setProjectId();
     this.props.setTimelineID();
     this.props.setPatternId();
@@ -89,41 +101,51 @@ class StartConfig extends React.Component {
   }
 
   fetchConfigurations() {
-    Database.fetchData("/patterns", "GET").then((data) => {
-      this.props.setPatterns(data);
-    });
-
     Database.fetchData("/configs", "GET").then((data) => {
-      let configs = {
-        dbInstanceId: data[0]._id,
-        projectId: data[0].projectID,
-        projectName: data[0].projectName,
-      };
-      let device = {
-        hardwareDevice: data[0].device,
-        deviceImage: data[0].deviceImage,
-        actuators: data[0].nActuators,
-        actuators_coords: data[0].actuatorCoords,
-      };
+      if (!data) {
+        this.props.setAddWarningNotification(
+          "Network Error! Failed fetching project settings!"
+        );
+      } else {
+        let configs = {
+          dbInstanceId: data[0]._id,
+          projectId: data[0].projectID,
+          projectName: data[0].projectName,
+        };
+        let device = {
+          hardwareDevice: data[0].device,
+          deviceImage: data[0].deviceImage,
+          actuators: data[0].nActuators,
+          actuators_coords: data[0].actuatorCoords,
+        };
 
-      // Load and set IDs
+        // Load and set IDs
+        this.props.setTimelineID(data[0].timelineID);
+        this.props.loadConfigs(configs);
+        this.props.loadDeviceConfigurations(device);
 
-      this.props.setTimelineID(data[0].timelineID);
-
-      this.props.loadConfigs(configs);
-      this.props.loadDeviceConfigurations(device);
-
+        Database.fetchData(
+          "/timeline",
+          "GET",
+          "?timelineID=" + data[0].timelineID
+        ).then((data) => {
+          if (!data)
+            this.props.setAddWarningNotification(
+              "Network Error! Failed fetching project settings!"
+            );
+          else {
+            this.props.setTimelineDBInstance(data[0]._id);
+            this.props.setLoadedDataToTimeline(data[0].channel);
+            this.props.setLoadConfigurationsNotification();
+          }
+        });
+      }
       this.props.closeInitialConfig();
-      this.props.setLoadConfigurationsNotification();
       this.props.showNotification();
     });
   }
 
   saveProject() {
-    Database.fetchData("/patterns", "GET").then((data) => {
-      this.props.setPatterns(data);
-    });
-
     let projectConfiguration = {
       projectID: this.props.config.projectId,
       projectName: this.props.config.projectName,
@@ -134,14 +156,34 @@ class StartConfig extends React.Component {
       timelineID: this.props.timeline.timelineID,
     };
 
-    // TODO: onError create a notification toast for error purposes
-
-    Database.saveProjectConfiguration(projectConfiguration).then((data) => {
-      this.props.setDBInstance(data._id);
-      this.props.closeInitialConfig();
-      this.props.setSaveNotification();
-      this.props.showNotification();
+    Database.postData("/configs", projectConfiguration, "POST").then((data) => {
+      if (!data) {
+        this.props.setAddWarningNotification(
+          "Network Error! Could not save project settings. Try again later!"
+        );
+      } else {
+        this.props.setDBInstance(data._id);
+        Database.postData(
+          "/timeline",
+          {
+            timelineID: this.props.timeline.timelineID,
+            channel: this.props.timeline.channel,
+          },
+          "POST"
+        ).then((data) => {
+          if (!data) {
+            this.props.setAddWarningNotification(
+              "Network Error! Could not save project settings. Try again later!"
+            );
+          } else {
+            this.props.setTimelineDBInstance(data._id);
+            this.props.setSaveNotification();
+          }
+        });
+      }
     });
+    this.props.closeInitialConfig();
+    this.props.showNotification();
   }
 
   handleImageUpload(event) {
