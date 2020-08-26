@@ -18,6 +18,8 @@ import {
   showNotification,
   closeAddActuatorToChannelModal,
   openAddActuatorToChannelModal,
+  setDragActive,
+  setDragFalse,
 } from "../stores/gui/guiActions";
 
 import {
@@ -46,6 +48,8 @@ const mapDispatchToProps = (dispatch) => {
       setInitialDatapoints,
       closeAddActuatorToChannelModal,
       openAddActuatorToChannelModal,
+      setDragActive,
+      setDragFalse,
     },
     dispatch
   );
@@ -56,11 +60,13 @@ const mapStateToProps = (state) => ({
   pattern: state.pattern,
   device: state.device,
   setShow: state.gui.isAddActuatorToChannelModalOpen,
+  dragActive: state.gui.isDragActive,
 });
 
 class Channel extends React.Component {
   constructor(props) {
     super(props);
+
     this.handleDrop = this.handleDrop.bind(this);
     this.handleDragOver = this.handleDragOver.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
@@ -116,6 +122,7 @@ class Channel extends React.Component {
 
   handleDrop(event) {
     event.preventDefault();
+    this.props.setDragFalse();
 
     let dropContainer = this.refs.drop;
     dropContainer.style.border = null;
@@ -132,9 +139,10 @@ class Channel extends React.Component {
   }
   handleDragOver(event) {
     event.preventDefault();
+
     let dropContainer = this.refs.drop;
     dropContainer.classList.remove("border");
-    dropContainer.style.border = "1px dashed #5cb85c";
+    dropContainer.style.border = "2px dashed #5cb85c";
   }
   handleDragLeave(event) {
     event.preventDefault();
@@ -181,7 +189,13 @@ class Channel extends React.Component {
             onDragOver={this.handleDragOver}
             ref={"drop"}
           >
-            {this.channelDisplay}
+            {this.props.dragActive ? (
+              <p className="dropzone-content">
+                Drop to add the pattern to the timeline
+              </p>
+            ) : (
+              this.channelDisplay
+            )}
           </div>
         </Row>
 

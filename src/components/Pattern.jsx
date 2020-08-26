@@ -11,6 +11,8 @@ import {
   updateDataPoints,
 } from "../stores/pattern/patternActions";
 
+import { setDragActive, setDragFalse } from "../stores/gui/guiActions";
+
 const margin = { top: 10, right: 30, bottom: 30, left: 40 };
 let fix = null;
 
@@ -24,11 +26,26 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateAreaChart,
       updateDataPoints,
+      setDragActive,
+      setDragFalse,
     },
     dispatch
   );
 
 class PatternEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleDragStart = this.handleDragStart.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
+  }
+
+  handleDragStart() {
+    this.props.setDragActive();
+  }
+  handleDragEnd() {
+    this.props.setDragFalse();
+  }
+
   xScale = null;
   yScale = null;
   areaGenerator = null;
@@ -186,7 +203,13 @@ class PatternEditor extends React.Component {
   }
   render() {
     return (
-      <div className="pattern-container" ref="pattern" draggable="true">
+      <div
+        className="pattern-container"
+        ref="pattern"
+        draggable="true"
+        onDragStart={this.handleDragStart}
+        onDragEnd={this.handleDragEnd}
+      >
         <svg ref="svg" preserveAspectRatio="xMidYMid meet">
           <path d={this.props.area} fill="#5bc0de" stroke="#0275d8"></path>
           <g>

@@ -169,14 +169,15 @@
   width: 85%;
   height: 100%;
   background-color: #f8f9fa;
+  position: relative;
 }
 
-.dropped-pattern {
-  display: flex;
-  justify-content: flex-start;
-  width: 25%;
-  height: 100%;
-  background-color: red;
+.dropzone-content {
+  left: 35%;
+  top: 35%;
+  position: absolute;
+  color: #5bc0de;
+  font-size: 1rem;
 }
 
 .timeline-display {

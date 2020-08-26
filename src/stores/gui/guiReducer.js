@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   isSaveModalOpen: false,
   isNotificationOpen: false,
   isAddActuatorToChannelModalOpen: false,
+  isDragActive: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -38,6 +39,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, isAddActuatorToChannelModalOpen: true };
     case "CLOSE_ADD_ACTUATOR_TO_CHANNEL_MODAL":
       return { ...state, isAddActuatorToChannelModalOpen: false };
+    case "SET_DRAG_ACTIVE":
+      return { ...state, isDragActive: true };
+    case "SET_DRAG_FALSE":
+      return { ...state, isDragActive: false };
     default:
       return state;
   }

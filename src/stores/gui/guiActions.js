@@ -75,3 +75,15 @@ export function closeAddActuatorToChannelModal() {
     type: "CLOSE_ADD_ACTUATOR_TO_CHANNEL_MODAL",
   };
 }
+
+export function setDragActive() {
+  return {
+    type: "SET_DRAG_ACTIVE",
+  };
+}
+
+export function setDragFalse() {
+  return {
+    type: "SET_DRAG_FALSE",
+  };
+}
