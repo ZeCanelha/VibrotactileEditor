@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 import {
   removeChannel,
   addPatternToTimeline,
+  setUploadingDataFalse,
 } from "../stores/timeline/timelineActions";
 import {
   setAddPatternToTimelineNotification,
@@ -26,6 +27,8 @@ import {
   setPatternId,
   setInitialDatapoints,
 } from "../stores/pattern/patternActions";
+
+import Database from "../utils/database";
 
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
@@ -50,6 +53,7 @@ const mapDispatchToProps = (dispatch) => {
       openAddActuatorToChannelModal,
       setDragActive,
       setDragFalse,
+      setUploadingDataFalse,
     },
     dispatch
   );
@@ -78,36 +82,41 @@ class Channel extends React.Component {
 
   channelDisplay = [];
 
-  componentDidMount() {}
+  componentDidMount() {
+    //TODO: Se existir data proveniente de um load, adicionar aqui
+  }
 
   componentDidUpdate(prevProps) {
-    // Se um novo pattern for adicionado a um canal da timeline, re-render dos channels
+    // TODO: Se um novo pattern for adicionado a um canal da timeline, re-render dos channels
 
-    if (
-      prevProps.timeline.channel[this.props.id] !==
-      this.props.timeline.channel[this.props.id]
-    ) {
-      console.log("Novo pattern adicionado a um canal");
-      this.renderPatternsToTimeline();
-      this.forceUpdate();
+    let patterns = this.props.timeline.channel[this.props.id].pattern;
+    if (prevProps.timeline.channel[this.props.id].pattern !== patterns) {
+      // TODO: Render dos patterns que são provenientes do editor.
     }
   }
 
-  renderPatternsToTimeline() {
-    this.channelDisplay.push(
-      <Col
-        className="timeline-display"
-        key={this.props.pattern.patternID}
-        xs={6}
-        md={4}
-      >
-        <Display
-          key={this.props.pattern.patternID}
-          id={this.props.pattern.patternID}
-          path={this.props.pattern.area}
-        ></Display>
-      </Col>
+  findPatternByID(patternID) {
+    return Database.fetchData("/pattern", "GET", "/" + patternID).then(
+      (data) => {
+        return data;
+      }
     );
+  }
+
+  renderChannelToTimeline() {
+    let patterns = this.props.timeline.channel[this.props.id].pattern;
+    for (let index = 0; index < patterns.length; index++) {
+      let pattern = this.findPatternByID(patterns[index]._id);
+      this.channelDisplay.push(
+        <Col className="timeline-display" key={pattern._id} xs={6} md={4}>
+          <Display
+            key={pattern._id}
+            id={pattern._id}
+            path={pattern.path}
+          ></Display>
+        </Col>
+      );
+    }
 
     this.props.setInitialDatapoints();
     this.props.setPatternId();

@@ -20,6 +20,8 @@ const INITIAL_STATE = {
       actuators: [],
     },
   ],
+
+  isDataBeingUpload: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -53,6 +55,10 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, timelineDbInstance: action.payload };
     case "SET_LOADED_TIMELINE_DATA":
       return { ...state, channel: action.payload };
+    case "SET_UPLOADING_DATA_TRUE":
+      return { ...state, isDataBeingUpload: true };
+    case "SET_UPLOADING_DATA_FALSE":
+      return { ...state, isDataBeingUpload: false };
     default:
       return state;
   }

@@ -54,3 +54,15 @@ export function setLoadedDataToTimeline(channels) {
     payload: channels,
   };
 }
+
+export function setUploadingDataTrue() {
+  return {
+    type: "SET_UPLOADING_DATA_TRUE",
+  };
+}
+
+export function setUploadingDataFalse() {
+  return {
+    type: "SET_UPLOADING_DATA_FALSE",
+  };
+}

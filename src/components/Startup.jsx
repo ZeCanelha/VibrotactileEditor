@@ -35,6 +35,7 @@ import {
   setTimelineID,
   setTimelineDBInstance,
   setLoadedDataToTimeline,
+  setUploadingDataTrue,
 } from "../stores/timeline/timelineActions";
 
 import Modal from "react-bootstrap/Modal";
@@ -74,6 +75,7 @@ const mapDispatchToProps = (dispatch) =>
       setTimelineDBInstance,
       setLoadedDataToTimeline,
       setAddWarningNotification,
+      setUploadingDataTrue,
     },
     dispatch
   );
@@ -134,6 +136,7 @@ class StartConfig extends React.Component {
               "Network Error! Failed fetching project settings!"
             );
           else {
+            this.props.setUploadingDataTrue();
             this.props.setTimelineDBInstance(data[0]._id);
             this.props.setLoadedDataToTimeline(data[0].channel);
             this.props.setLoadConfigurationsNotification();

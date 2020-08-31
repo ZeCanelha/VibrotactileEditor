@@ -17,8 +17,7 @@ const margin = { top: 10, right: 30, bottom: 30, left: 40 };
 let fix = null;
 
 const mapStateToProps = (state) => ({
-  datapoints: state.pattern.datapoints,
-  area: state.pattern.area,
+  pattern: state.pattern,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -65,7 +64,7 @@ class PatternEditor extends React.Component {
       newPoints.intensity >= 0
     ) {
       // update datapoints in time
-      let datapoints = this.props.datapoints;
+      let datapoints = this.props.pattern.datapoints;
 
       // Returns the insertion point for x in array to maintain sorted order
 
@@ -78,7 +77,8 @@ class PatternEditor extends React.Component {
     // TODO assign the attributes to an object
   }
 
-  handleMouseOver() {
+  handleMouseOver(d, i) {
+    console.log(d, i);
     d3.select(this).attr("r", "8");
   }
   handleMouseOut() {
@@ -93,14 +93,14 @@ class PatternEditor extends React.Component {
   }
   dragEnded(d) {
     let index = PatternUtils.getInsertionPoint(
-      fix.props.datapoints,
+      fix.props.pattern.datapoints,
       d3.event.x
     );
     let newPoints = {
       time: Math.round(fix.xScale.invert(d3.event.x)),
       intensity: Math.round(fix.yScale.invert(d3.event.y)),
     };
-    let datapoints = fix.props.datapoints;
+    let datapoints = fix.props.pattern.datapoints;
     datapoints.splice(index, 0, newPoints);
     fix.props.updateDataPoints(datapoints);
   }
@@ -109,7 +109,7 @@ class PatternEditor extends React.Component {
     let svg = d3.select(this.refs.svg);
     svg
       .selectAll("circle")
-      .data(this.props.datapoints)
+      .data(this.props.pattern.datapoints)
       .join(
         (enter) => enter.append("circle"),
         (update) => update,
@@ -184,7 +184,9 @@ class PatternEditor extends React.Component {
 
     // Update areaChart in store
 
-    this.props.updateAreaChart(this.areaGenerator(this.props.datapoints));
+    this.props.updateAreaChart(
+      this.areaGenerator(this.props.pattern.datapoints)
+    );
 
     // Add event to the svg
 
@@ -195,10 +197,11 @@ class PatternEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.datapoints !== this.props.datapoints) {
-      console.log(this.props.datapoints);
+    if (prevProps.pattern.datapoints !== this.props.pattern.datapoints) {
       this.drawKeyFrames();
-      this.props.updateAreaChart(this.areaGenerator(this.props.datapoints));
+      this.props.updateAreaChart(
+        this.areaGenerator(this.props.pattern.datapoints)
+      );
     }
   }
   render() {
@@ -211,7 +214,11 @@ class PatternEditor extends React.Component {
         onDragEnd={this.handleDragEnd}
       >
         <svg ref="svg" preserveAspectRatio="xMidYMid meet">
-          <path d={this.props.area} fill="#5bc0de" stroke="#0275d8"></path>
+          <path
+            d={this.props.pattern.area}
+            fill="#5bc0de"
+            stroke="#0275d8"
+          ></path>
           <g>
             <g ref={"xAxis"}></g>
             <g ref={"yAxis"}></g>
