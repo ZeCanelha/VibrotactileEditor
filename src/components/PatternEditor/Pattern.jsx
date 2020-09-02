@@ -12,6 +12,7 @@ import {
 } from "../../stores/pattern/patternActions";
 
 const PATTERN_OFFSET = 25;
+let thisObject = null;
 
 const mapStateToProps = (state) => ({
   pattern: state.pattern,
@@ -29,6 +30,7 @@ const mapDispatchToProps = (dispatch) =>
 class Pattern extends React.Component {
   componentDidMount() {
     let theobject = this;
+    thisObject = theobject;
     d3.select(this.refs.svg).on("dblclick", function () {
       let coords = d3.mouse(this);
       theobject.addDatapoint(coords);
@@ -39,7 +41,50 @@ class Pattern extends React.Component {
     if (prevProps.pattern.datapoints !== this.props.pattern.datapoints) {
       let newArea = this.areaGenerator();
       this.props.updateAreaChart(newArea(this.props.pattern.datapoints));
+      this.addEventListeners();
     }
+  }
+
+  addEventListeners() {
+    let svg = d3.select(this.refs.svg);
+    svg
+      .selectAll("circle")
+      .data(this.props.pattern.datapoints)
+      .on("mouseover", this.handleMouseOver)
+      .on("mouseout", this.handleMouseOut)
+      .call(
+        d3
+          .drag()
+          .on("start", this.dragStarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragEnded)
+      );
+  }
+
+  handleMouseOver(d) {
+    d3.select(this).attr("r", "6");
+  }
+  handleMouseOut() {
+    d3.select(this).attr("r", "4");
+  }
+
+  dragStarted() {
+    console.log("Drag Started");
+  }
+  dragged() {
+    d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+  }
+  dragEnded(d, i) {
+    let newPoints = {
+      time: Math.round(thisObject.xScale().invert(d3.event.x)),
+      intensity: Math.round(thisObject.yScale().invert(d3.event.y)),
+    };
+
+    let datapoints = thisObject.props.pattern.datapoints;
+    datapoints.splice(i, 1);
+    datapoints.push(newPoints);
+    datapoints.sort((a, b) => a.time - b.time);
+    thisObject.props.updateDataPoints(datapoints);
   }
 
   addDatapoint(coords) {
@@ -93,11 +138,7 @@ class Pattern extends React.Component {
         ref={"svg"}
         preserveAspectRatio="xMidYMid meet"
       >
-        <path
-          d={this.props.pattern.area}
-          fill="#5bc0de"
-          stroke="#0275d8"
-        ></path>
+        <path className="svg-editor-area" d={this.props.pattern.area}></path>
         <Keyframes {...scales} {...this.props}></Keyframes>
         <Axis {...scales} {...this.props}></Axis>
       </svg>

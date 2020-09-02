@@ -8,6 +8,8 @@
   position: relative;
 }
 
+/* Editor CSS */
+
 .pattern-editor {
   width: 75%;
   height: 40%;
@@ -53,8 +55,37 @@
 .pattern-container {
   width: 50%;
   height: 100%;
+  position: relative;
 }
 
+/* SVG */
+
+.svg-editor-area {
+  fill: #5bc0de;
+  stroke: #0275d8;
+  stroke-width: 1.5px;
+}
+
+.svg-editor-keyframes {
+  fill: rgb(87, 85, 175);
+}
+
+.svg-editor-y-label {
+  position: absolute;
+  top: 45%;
+  left: -5%;
+  transform: rotate(-90deg);
+  font-size: 0.75rem;
+}
+
+.svg-editor-x-label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 0.65rem;
+}
+
+/* ------------------------ ------------------------ ------------------------ */
 .timeline {
   width: 100%;
   height: 50%;

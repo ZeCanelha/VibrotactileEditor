@@ -8,7 +8,7 @@ const renderKeyframes = (props) => {
       r: 4,
       key: index,
     };
-    return <circle {...datapoints}></circle>;
+    return <circle className="svg-editor-keyframes" {...datapoints}></circle>;
   };
 };
 

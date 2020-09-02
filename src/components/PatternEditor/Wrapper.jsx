@@ -71,6 +71,8 @@ class PatternWrapper extends React.Component {
         onDragStart={this.handleDragStart}
         onDragEnd={this.handleDragEnd}
       >
+        <span className={"svg-editor-y-label"}>Intensity(%)</span>
+        <span className={"svg-editor-x-label"}>Time(ms)</span>
         <Pattern {...size} {...margin}></Pattern>
       </div>
     );
