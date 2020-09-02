@@ -1,11 +1,6 @@
 import * as d3 from "d3";
 
-const DEFAULT_MARGIN = {
-  right: 0,
-  top: 0,
-  bottom: 0,
-  left: 0,
-};
+const DEFAULT_MARGIN = { top: 10, right: 30, bottom: 30, left: 40 };
 
 class PatternUtils {
   static createScale(

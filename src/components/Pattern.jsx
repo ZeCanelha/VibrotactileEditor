@@ -34,15 +34,7 @@ const mapDispatchToProps = (dispatch) =>
 class PatternEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.handleDragStart = this.handleDragStart.bind(this);
-    this.handleDragEnd = this.handleDragEnd.bind(this);
-  }
-
-  handleDragStart() {
-    this.props.setDragActive();
-  }
-  handleDragEnd() {
-    this.props.setDragFalse();
+    
   }
 
   xScale = null;

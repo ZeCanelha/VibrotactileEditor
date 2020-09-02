@@ -7,12 +7,12 @@ import DeviceEdior from "./Device";
 import Toolbar from "./Toolbar";
 import Modal from "./Startup";
 import Timeline from "./Timeline";
-import PatternEditor from "./Pattern";
+// import PatternEditor from "./Pattern";
 import Library from "./Library";
 import Save from "./Save";
 import Drawer from "./Drawer";
 import Notification from "./Notification";
-import Teste from "./PatternEditor/Pattern";
+import PatternEditor from "./PatternEditor/Wrapper";
 
 class Editor extends React.Component {
   render() {
@@ -24,8 +24,7 @@ class Editor extends React.Component {
           <Modal></Modal>
           <Row className="justify-content-start pattern-editor bg-light border rounded">
             <DeviceEdior></DeviceEdior>
-            {/* <PatternEditor></PatternEditor> */}
-            <Teste></Teste>
+            <PatternEditor></PatternEditor>
           </Row>
 
           <Row className="timeline flex-column align-items-center justify-content-end">
