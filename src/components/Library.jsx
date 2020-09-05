@@ -17,7 +17,7 @@ import {
 
 import {
   setPatternId,
-  importDataPints,
+  importDatapoints,
 } from "../stores/pattern/patternActions";
 
 import { setImportPatternNotification } from "../stores/notification/notificationAction";
@@ -53,7 +53,7 @@ const mapDispatchToProps = (dispatch) =>
       closePatternModal,
       updateSearchQuery,
       setPatternId,
-      importDataPints,
+      importDatapoints,
       showNotification,
       setImportPatternNotification,
     },
@@ -80,7 +80,7 @@ class Library extends React.Component {
       this.props.displayDetails.currentDisplayedPattern
     );
     this.props.setPatternId(this.props.displayDetails.currentDisplayedPattern);
-    this.props.importDataPints(patternObject.keyframes);
+    this.props.importDatapoints(patternObject.keyframes);
     this.props.setImportPatternNotification();
     this.props.showNotification();
     this.props.closePatternModal();

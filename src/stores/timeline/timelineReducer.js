@@ -20,8 +20,6 @@ const INITIAL_STATE = {
       actuators: [],
     },
   ],
-
-  isDataBeingUpload: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -45,7 +43,15 @@ export default function (state = INITIAL_STATE, action) {
       return update(state, {
         channel: {
           [action.payload.channelID]: {
-            pattern: { $push: [action.payload.patternID] },
+            pattern: { $push: [action.payload.patternObject] },
+          },
+        },
+      });
+    case "REMOVE_PATTERN_FROM_TIMELINE":
+      return update(state, {
+        channel: {
+          [action.payload.channelID]: {
+            pattern: { $splice: [[action.payload.index, 1]] },
           },
         },
       });
@@ -57,8 +63,7 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, channel: action.payload };
     case "SET_UPLOADING_DATA_TRUE":
       return { ...state, isDataBeingUpload: true };
-    case "SET_UPLOADING_DATA_FALSE":
-      return { ...state, isDataBeingUpload: false };
+
     default:
       return state;
   }

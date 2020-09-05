@@ -43,6 +43,11 @@ const ADD_PATTERN_TO_TIMELINE = {
   body: "Vibration pattern added to the timeline!",
 };
 
+const REMOVE_PATTERN_FROM_TIMELINE = {
+  title: "Vibrotactile Editor",
+  body: "Vibration pattern removed from the timeline!",
+};
+
 const ADD_ACTUATOR_TO_CHANNEL_NOTIFICATION = {
   title: "Vibrotactile Editor",
   body: "Actuator(s) added to channel!",
@@ -92,6 +97,11 @@ export default function (state = INITIAL_STATE, action) {
       return {
         actionTitle: ADD_PATTERN_TO_TIMELINE.title,
         actionBody: ADD_PATTERN_TO_TIMELINE.body,
+      };
+    case "SET_REMOVE_PATTERN_NOTIFICATION":
+      return {
+        actionTitle: REMOVE_PATTERN_FROM_TIMELINE.title,
+        actionBody: REMOVE_PATTERN_FROM_TIMELINE.body,
       };
     case "SET_LOAD_CONFIGURATIONS_NOTIFICATION":
       return {

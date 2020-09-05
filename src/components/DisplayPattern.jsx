@@ -106,13 +106,14 @@ class DisplayPattern extends React.Component {
         ref={"svgRef"}
         preserveAspectRatio="xMidYMid meet"
         className="display-pattern-container"
-        onClick={this.handleClick}
+        // onClick={this.handleClick}
       >
         <path
           ref={"path"}
           d={this.props.path}
           fill="#5bc0de"
           stroke={"0275d8"}
+          strokeWidth={"1.5px"}
         ></path>
       </svg>
     );

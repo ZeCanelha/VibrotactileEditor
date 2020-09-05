@@ -12,7 +12,6 @@ const mapStateToProps = (state) => ({
 class Timeline extends React.Component {
   items = [];
   componentDidMount() {
-    console.log("render times");
     const channels = this.props.timeline_list.channel;
     this.items = channels.map((item) => (
       <Channel
@@ -24,7 +23,7 @@ class Timeline extends React.Component {
     ));
   }
   render() {
-    return <Row className="timeline-container no-gutters ">{this.items}</Row>;
+    return <Row className="timeline-container no-gutters">{this.items}</Row>;
   }
 }
 

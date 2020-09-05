@@ -122,6 +122,60 @@
   width: 17.5% !important;
 }
 
+/* Timeline and Channel: onDragOver  */
+
+.remove-channel {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+
+.channel-track {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+  height: 100%;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.dropzone-content {
+  left: 35%;
+  top: 35%;
+  position: absolute;
+  color: #5bc0de;
+  font-size: 1rem;
+}
+
+.timeline-display {
+  height: 100%;
+  position: relative;
+}
+
+.channel-hover-items {
+  background-color: white;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s;
+}
+
+.channel-hover-items:hover {
+  opacity: 0.85;
+  border: 1.5px solid #5bc0de;
+  border-radius: 2.5px;
+}
+
+.channel-hover-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 /* Library CSS */
 
 .display-container {
@@ -184,35 +238,6 @@
 
 .sidebar.open {
   left: 0;
-}
-
-/* Timeline and Channel: onDragOver  */
-
-.remove-channel {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-}
-
-.channel-track {
-  display: flex;
-  flex-direction: row;
-  width: 85%;
-  height: 100%;
-  background-color: #f8f9fa;
-  position: relative;
-}
-
-.dropzone-content {
-  left: 35%;
-  top: 35%;
-  position: absolute;
-  color: #5bc0de;
-  font-size: 1rem;
-}
-
-.timeline-display {
-  height: 100%;
 }
 
 /* Library CSS */

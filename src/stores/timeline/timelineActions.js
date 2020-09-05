@@ -20,10 +20,16 @@ export function setActuator(actuatorID, channelID) {
   };
 }
 
-export function addPatternToTimeline(pId, cId) {
+export function addPatternToTimeline(patternObject, cId) {
   return {
     type: "ADD_PATTERN_TO_CHANNEL",
-    payload: { patternID: pId, channelID: cId },
+    payload: { patternObject: patternObject, channelID: cId },
+  };
+}
+export function removePatternFromTimeline(index, channelID) {
+  return {
+    type: "REMOVE_PATTERN_FROM_TIMELINE",
+    payload: { index: index, channelID: channelID },
   };
 }
 

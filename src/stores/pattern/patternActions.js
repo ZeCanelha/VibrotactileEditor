@@ -7,7 +7,7 @@ export function updateDataPoints(datapoints) {
   };
 }
 
-export function importDataPints(datapoints) {
+export function importDatapoints(datapoints) {
   return {
     type: "DATAPOINTS_IMPORTED",
     payload: datapoints,

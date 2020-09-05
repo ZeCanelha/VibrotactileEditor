@@ -35,6 +35,12 @@ export function setAddPatternToTimelineNotification() {
   };
 }
 
+export function setRemovePatternFromTimelineNotification() {
+  return {
+    type: "SET_REMOVE_PATTERN_NOTIFICATION",
+  };
+}
+
 export function setLoadConfigurationsNotification() {
   return {
     type: "SET_LOAD_CONFIGURATIONS_NOTIFICATION",
