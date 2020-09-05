@@ -1,6 +1,7 @@
 import React from "react";
 
 import ChannelItems from "./ChannelItem";
+import ActuatorItem from "./ActuatorItem";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -8,8 +9,9 @@ import { bindActionCreators } from "redux";
 import {
   removeChannel,
   addPatternToTimeline,
-  setUploadingDataFalse,
   removePatternFromTimeline,
+  setRemoveActuatorFromChannel,
+  setAddActuatorToChannel,
 } from "../../stores/timeline/timelineActions";
 import {
   setAddPatternToTimelineNotification,
@@ -19,8 +21,6 @@ import {
 } from "../../stores/notification/notificationAction";
 import {
   showNotification,
-  closeAddActuatorToChannelModal,
-  openAddActuatorToChannelModal,
   setDragActive,
   setDragFalse,
 } from "../../stores/gui/guiActions";
@@ -44,6 +44,8 @@ const mapDispatchToProps = (dispatch) => {
       removeChannel,
       addPatternToTimeline,
       removePatternFromTimeline,
+      setRemoveActuatorFromChannel,
+      setAddActuatorToChannel,
       setAddPatternToTimelineNotification,
       setAddActuatorToChannelNotification,
       setRemoveChannelNotification,
@@ -52,11 +54,8 @@ const mapDispatchToProps = (dispatch) => {
       setPatternId,
       setInitialDatapoints,
       importDatapoints,
-      closeAddActuatorToChannelModal,
-      openAddActuatorToChannelModal,
       setDragActive,
       setDragFalse,
-      setUploadingDataFalse,
     },
     dispatch
   );
@@ -74,6 +73,11 @@ class Channel extends React.Component {
   constructor(props) {
     super(props);
 
+    // State component for actuator configuration
+    this.state = {
+      openActuatorModal: false,
+    };
+
     this.handleDrop = this.handleDrop.bind(this);
     this.handleDragOver = this.handleDragOver.bind(this);
     this.handleDragLeave = this.handleDragLeave.bind(this);
@@ -83,6 +87,15 @@ class Channel extends React.Component {
       this
     );
     this.handleOpenInEditor = this.handleOpenInEditor.bind(this);
+    this.handleActuatorModal = this.handleActuatorModal.bind(this);
+  }
+
+  handleActuatorModal() {
+    if (this.state.openActuatorModal) {
+      this.props.setAddActuatorToChannelNotification();
+      this.props.showNotification();
+    }
+    this.setState({ openActuatorModal: !this.state.openActuatorModal });
   }
 
   // TODO:  Removable if not the only channel.
@@ -93,6 +106,7 @@ class Channel extends React.Component {
   }
 
   handleRemovePattern(index) {
+    this.props.removePatternFromTimeline(index, this.props.id);
     this.props.setRemovePatternFromTimelineNotification();
     this.props.showNotification();
   }
@@ -147,7 +161,7 @@ class Channel extends React.Component {
     this.props.setAddActuatorToChannelNotification();
     this.props.showNotification();
 
-    this.props.closeAddActuatorToChannelModal();
+    this.handleActuatorModal();
   }
 
   render() {
@@ -168,7 +182,7 @@ class Channel extends React.Component {
               <Button
                 variant="link"
                 size="sm"
-                onClick={this.props.openAddActuatorToChannelModal}
+                onClick={this.handleActuatorModal}
               >
                 Actuators
               </Button>
@@ -197,8 +211,7 @@ class Channel extends React.Component {
         </Row>
 
         <Modal
-          show={this.props.setShow}
-          // size="sm"
+          show={this.state.openActuatorModal}
           backdrop="static"
           aria-labelledby="example-custom-modal-styling-title"
         >
@@ -207,18 +220,19 @@ class Channel extends React.Component {
               Add Actuator to Channel
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body></Modal.Body>
+          <Modal.Body>
+            <ActuatorItem
+              nActuators={this.props.device.actuators}
+              channelActuators={
+                this.props.timeline.channel[this.props.id].actuators
+              }
+              addActuator={this.props.setAddActuatorToChannel}
+              removeActuator={this.props.setRemoveActuatorFromChannel}
+              id={this.props.id}
+            ></ActuatorItem>
+          </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="outline-dark"
-              onClick={this.handleAddActuatorToChannel}
-            >
-              Save Settings
-            </Button>
-            <Button
-              variant="dark"
-              onClick={this.props.closeAddActuatorToChannelModal}
-            >
+            <Button variant="dark" onClick={this.handleActuatorModal}>
               Close
             </Button>
           </Modal.Footer>

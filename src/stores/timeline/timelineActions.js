@@ -13,13 +13,6 @@ export function removeChannel(id) {
   };
 }
 
-export function setActuator(actuatorID, channelID) {
-  return {
-    type: "SET_NEW_ACTUATOR",
-    payload: { actId: actuatorID, chanID: channelID },
-  };
-}
-
 export function addPatternToTimeline(patternObject, cId) {
   return {
     type: "ADD_PATTERN_TO_CHANNEL",
@@ -61,14 +54,16 @@ export function setLoadedDataToTimeline(channels) {
   };
 }
 
-export function setUploadingDataTrue() {
+export function setAddActuatorToChannel(channelID, actuatorID) {
   return {
-    type: "SET_UPLOADING_DATA_TRUE",
+    type: "ADD_ACTUATOR_TO_CHANNEL",
+    payload: { channelID: channelID, actuator: actuatorID },
   };
 }
 
-export function setUploadingDataFalse() {
+export function setRemoveActuatorFromChannel(channelID, index) {
   return {
-    type: "SET_UPLOADING_DATA_FALSE",
+    type: "REMOVE_ACTUATOR_FROM_CHANNEL",
+    payload: { channelID: channelID, index: index },
   };
 }

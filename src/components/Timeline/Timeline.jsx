@@ -14,12 +14,7 @@ class Timeline extends React.Component {
   componentDidMount() {
     const channels = this.props.timeline_list.channel;
     this.items = channels.map((item) => (
-      <Channel
-        key={item._id}
-        id={item._id}
-        actuators={item.actuators}
-        patterns={item.pattern}
-      />
+      <Channel key={item._id} id={item._id} />
     ));
   }
   render() {

@@ -6,8 +6,6 @@ import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
-// TODO: Pass function to remove pattern as prop.
-
 const renderChannelItemsToTimeline = (props) => {
   return (object, index) => {
     const properties = {
