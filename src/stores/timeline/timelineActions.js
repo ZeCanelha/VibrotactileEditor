@@ -12,10 +12,10 @@ export function addChannelToTimeline() {
   };
 }
 
-export function removeChannel(id) {
+export function removeChannel(index) {
   return {
     type: "REMOVE_CHANNEL",
-    payload: id,
+    payload: index,
   };
 }
 

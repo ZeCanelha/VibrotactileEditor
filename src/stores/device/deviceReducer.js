@@ -1,3 +1,5 @@
+import update from "immutability-helper";
+
 const INITIAL_STATE = {
   hardwareDevice: "",
   deviceImage: null,
@@ -17,10 +19,14 @@ export default function (state = INITIAL_STATE, action) {
         actuators: state.actuators + 1,
       };
     case "ACTUATOR_COORDS_UPDATED":
-      return {
-        ...state,
-        actuators_coords: action.payload,
-      };
+      return update(state, {
+        actuators_coords: {
+          [action.payload.index]: {
+            cx: { $set: action.payload.x },
+            cy: { $set: action.payload.y },
+          },
+        },
+      });
     case "DEVICEIMAGE_CHANGED":
       return { ...state, deviceImage: action.payload };
     case "DEVICE_CONFIGURATIONS_LOADED":

@@ -26,9 +26,16 @@
   justify-content: space-evenly;
 }
 
-.actuator {
+.actuator-circle {
+  position: absolute;
+  display: flex;
+  justify-content: center;
   width: 10%;
-  height: auto;
+  height: 10%;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 50%;
+  color: white;
 }
 
 .hardware-container {
@@ -36,6 +43,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   position: relative;
 }
 

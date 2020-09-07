@@ -3,7 +3,7 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import DeviceEdior from "./Device";
+import DeviceEdior from "./Actuators/Device";
 import Toolbar from "./Toolbar";
 import Modal from "./Startup";
 import Timeline from "./Timeline/Timeline";
