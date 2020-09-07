@@ -7,7 +7,7 @@ import DeviceEdior from "./Device";
 import Toolbar from "./Toolbar";
 import Modal from "./Startup";
 import Timeline from "./Timeline/Timeline";
-import Library from "./Library";
+import Library from "./Library/Library";
 import Save from "./Save";
 import Drawer from "./Drawer";
 import Notification from "./Notification";

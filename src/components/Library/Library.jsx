@@ -3,29 +3,27 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import {
-  openLibraryModal,
-  closeLibraryModal,
-  openPatternModal,
-  closePatternModal,
-  showNotification,
-} from "../stores/gui/guiActions";
+import { showNotification } from "../../stores/gui/guiActions";
 import {
   updateSearchQuery,
   setPatterns,
-} from "../stores/library/libraryActions";
+} from "../../stores/library/libraryActions";
 
 import {
   setPatternId,
   importDatapoints,
-} from "../stores/pattern/patternActions";
+} from "../../stores/pattern/patternActions";
 
-import { setImportPatternNotification } from "../stores/notification/notificationAction";
+import { setImportPatternNotification } from "../../stores/notification/notificationAction";
 
-import Display from "./DisplayPattern";
+import {
+  setPatternName,
+  setPatternDescription,
+  setPatternPath,
+  updatePatternToDisplay,
+} from "../../stores/display/displayActions";
 
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -38,7 +36,6 @@ import LibraryFilter from "./LibraryFilter";
 
 const mapStateToPros = (state) => ({
   setShowLibraryModal: state.gui.isLibraryModalOpen,
-  setShowPatternModal: state.gui.isLibraryPatternModalOpen,
   displayDetails: state.display,
   patterns: state.library.patterns,
 });
@@ -46,11 +43,12 @@ const mapStateToPros = (state) => ({
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      setPatternName,
+      setPatternDescription,
+      setPatternPath,
+      updatePatternToDisplay,
+
       setPatterns,
-      openLibraryModal,
-      closeLibraryModal,
-      openPatternModal,
-      closePatternModal,
       updateSearchQuery,
       setPatternId,
       importDatapoints,
@@ -63,9 +61,15 @@ const mapDispatchToProps = (dispatch) =>
 class Library extends React.Component {
   constructor() {
     super();
+    this.state = {
+      openPatternDetails: false,
+      openLibraryModal: false,
+    };
 
     this.handleClosePattern = this.handleClosePattern.bind(this);
     this.handleImportPattern = this.handleImportPattern.bind(this);
+    this.handleOpenPattern = this.handleOpenPattern.bind(this);
+    this.handleLibraryModal = this.handleLibraryModal.bind(this);
   }
 
   searchPatternById(id) {
@@ -73,6 +77,20 @@ class Library extends React.Component {
       if (this.props.patterns[index]._id === id)
         return this.props.patterns[index];
     }
+  }
+
+  // Receives pattern ID and pattern path and open details modal
+  handleOpenPattern(patternDetails) {
+    // Set store with details to show
+    let patternObject = this.searchPatternById(patternDetails.id);
+
+    this.props.setPatternName(patternObject.name);
+    this.props.setPatternDescription(patternObject.description);
+
+    this.props.updatePatternToDisplay(patternDetails.id);
+    this.props.setPatternPath(patternDetails.path);
+
+    this.setState({ openPatternDetails: true, openLibraryModal: false });
   }
 
   handleImportPattern() {
@@ -83,12 +101,16 @@ class Library extends React.Component {
     this.props.importDatapoints(patternObject.keyframes);
     this.props.setImportPatternNotification();
     this.props.showNotification();
-    this.props.closePatternModal();
+
+    this.setState({ openPatternDetails: false });
   }
 
   handleClosePattern() {
-    this.props.closePatternModal();
-    this.props.openLibraryModal();
+    this.setState({ openPatternDetails: false, openLibraryModal: true });
+  }
+
+  handleLibraryModal() {
+    this.setState({ openLibraryModal: !this.state.openLibraryModal });
   }
 
   render() {
@@ -97,13 +119,12 @@ class Library extends React.Component {
         <Button
           className="toolbar-size border rounded"
           variant="light"
-          onClick={this.props.openLibraryModal}
+          onClick={this.handleLibraryModal}
         >
           Library
         </Button>
-
         <Modal
-          show={this.props.setShowLibraryModal}
+          show={this.state.openLibraryModal}
           size="lg"
           backdrop="static"
           dialogClassName="modal-90w"
@@ -126,17 +147,17 @@ class Library extends React.Component {
                 <FontAwesomeIcon icon={faSearch} />
               </Button>
             </Form>
-            <LibraryFilter></LibraryFilter>
+            <LibraryFilter openDetails={this.handleOpenPattern}></LibraryFilter>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="dark" block onClick={this.props.closeLibraryModal}>
+            <Button variant="dark" block onClick={this.handleLibraryModal}>
               Close
             </Button>
           </Modal.Footer>
         </Modal>
 
         <Modal
-          show={this.props.setShowPatternModal}
+          show={this.state.openPatternDetails}
           onHide={this.handleClosePattern}
           size="lg"
           centered
@@ -146,21 +167,12 @@ class Library extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Container>
-              <Row>
-                <Col>
-                  <Display
-                    id={this.props.displayDetails.currentDisplayedPattern}
-                    path={this.props.displayDetails.patternPath}
-                    logger={true}
-                  ></Display>
-                </Col>
-                <Col className="border rounded border-success">
-                  <h4>Name: </h4>
-                  <p>{this.props.displayDetails.patternName}</p>
-                  <h4>Description:</h4>
-                  <p>{this.props.displayDetails.patternDescription}</p>
-                </Col>
-              </Row>
+              <Col className="border rounded border-success">
+                <h4>Name: </h4>
+                <p>{this.props.displayDetails.patternName}</p>
+                <h4>Description:</h4>
+                <p>{this.props.displayDetails.patternDescription}</p>
+              </Col>
             </Container>
           </Modal.Body>
           <Modal.Footer>

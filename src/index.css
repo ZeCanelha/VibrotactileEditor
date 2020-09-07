@@ -95,7 +95,7 @@
   width: 75%;
   height: 75%;
 
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
 }
 
 .channel-row {
@@ -243,6 +243,7 @@
 /* Library CSS */
 
 .library-display {
+  cursor: pointer;
   border: 1px solid #292b2c;
   margin: 2px;
 }

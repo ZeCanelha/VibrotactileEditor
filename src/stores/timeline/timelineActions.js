@@ -1,8 +1,14 @@
 import Util from "../../utils/util.js";
 
-export function addChannel() {
+export function addChannelToTimeline() {
+  let defaultChannel = {
+    _id: Util.generateUUI(),
+    pattern: [],
+    actuators: [],
+  };
   return {
-    type: "ADD_CHANNEL",
+    type: "ADD_CHANNEL_TO_TIMELINE",
+    payload: defaultChannel,
   };
 }
 

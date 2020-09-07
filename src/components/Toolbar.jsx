@@ -12,6 +12,8 @@ import {
   setAddChannelNotification,
 } from "../stores/notification/notificationAction";
 
+import { addChannelToTimeline } from "../stores/timeline/timelineActions";
+
 import {
   faUndo,
   faRedo,
@@ -26,6 +28,7 @@ const mapDispatchToProps = (dispatch) =>
       showNotification,
       setAddActuatorNotification,
       setAddChannelNotification,
+      addChannelToTimeline,
     },
     dispatch
   );
@@ -44,6 +47,7 @@ class Toolbar extends React.Component {
   }
 
   handleAddChannel() {
+    this.props.addChannelToTimeline();
     this.props.setAddChannelNotification();
     this.props.showNotification();
   }

@@ -10,15 +10,23 @@ const mapStateToProps = (state) => ({
 });
 
 class Timeline extends React.Component {
-  items = [];
-  componentDidMount() {
-    const channels = this.props.timeline_list.channel;
-    this.items = channels.map((item) => (
-      <Channel key={item._id} id={item._id} />
-    ));
+  shouldComponentUpdate(nextProps) {
+    if (this.props.timeline_list.channel !== nextProps.timeline_list.channel)
+      return true;
+    return false;
+  }
+  renderTimelineChannels() {
+    return (channel, index) => {
+      console.log(channel);
+      return <Channel key={index} id={index}></Channel>;
+    };
   }
   render() {
-    return <Row className="timeline-container no-gutters">{this.items}</Row>;
+    return (
+      <Row className="timeline-container no-gutters">
+        {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
+      </Row>
+    );
   }
 }
 

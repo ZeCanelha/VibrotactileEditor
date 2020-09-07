@@ -25,14 +25,13 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case "REMOVE_CHANNEL":
-      return {
-        ...state,
-        channel: [
-          ...state.channel.filter((item) => {
-            return item._id !== action.payload;
-          }),
-        ],
-      };
+      return update(state, {
+        channel: { $splice: [[action.payload, 1]] },
+      });
+    case "ADD_CHANNEL_TO_TIMELINE":
+      return update(state, {
+        channel: { $push: [action.payload] },
+      });
 
     case "ADD_ACTUATOR_TO_CHANNEL":
       return update(state, {
