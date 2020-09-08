@@ -1,3 +1,7 @@
+import Util from "../../utils/util";
+
+let newID = 1;
+
 export function changeProjectDevice(e) {
   return {
     type: "DEVICE_CHANGED",
@@ -12,10 +16,21 @@ export function changeDeviceImage(img) {
   };
 }
 
-export function changeProjectActuator(e) {
+export function changeProjectActuator(nActuators) {
+  let actuatorArray = [];
+
+  for (let index = 0; index < nActuators; index++) {
+    const actuator = {
+      number: index + 1,
+      cx: 40 * index,
+      cy: 0,
+      id: Util.generateUUI(),
+    };
+    actuatorArray.push(actuator);
+  }
   return {
     type: "ACTUATOR_CHANGED",
-    payload: e.target.value,
+    payload: actuatorArray,
   };
 }
 
@@ -33,8 +48,23 @@ export function loadDeviceConfigurations(configs) {
   };
 }
 
-export function addNewActuatord() {
+export function addNewActuator() {
+  const actuator = {
+    number: "#" + newID++,
+    cx: 0,
+    cy: 0,
+    id: Util.generateUUI(),
+  };
+
   return {
     type: "ADD_NEW_ACTUATOR",
+    payload: actuator,
+  };
+}
+
+export function removeActuator(index) {
+  return {
+    type: "REMOVE_ACTUATOR",
+    payload: index,
   };
 }

@@ -222,7 +222,7 @@ class Channel extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <ActuatorItem
-              nActuators={this.props.device.actuators}
+              actuators={this.props.device.actuators_coords}
               channelActuators={
                 this.props.timeline.channel[this.props.id].actuators
               }

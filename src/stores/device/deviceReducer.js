@@ -12,12 +12,21 @@ export default function (state = INITIAL_STATE, action) {
     case "DEVICE_CHANGED":
       return { ...state, hardwareDevice: action.payload };
     case "ACTUATOR_CHANGED":
-      return { ...state, actuators: action.payload };
-    case "ADD_NEW_ACTUATOR":
       return {
         ...state,
-        actuators: state.actuators + 1,
+        actuators_coords: action.payload,
+        actuators: action.payload.length,
       };
+    case "ADD_NEW_ACTUATOR":
+      return update(state, {
+        actuators: { $set: state.actuators + 1 },
+        actuators_coords: { $push: [action.payload] },
+      });
+    case "REMOVE_ACTUATOR":
+      return update(state, {
+        actuators: { $set: state.actuators - 1 },
+        actuators_coords: { $splice: [[action.payload, 1]] },
+      });
     case "ACTUATOR_COORDS_UPDATED":
       return update(state, {
         actuators_coords: {
@@ -27,6 +36,7 @@ export default function (state = INITIAL_STATE, action) {
           },
         },
       });
+
     case "DEVICEIMAGE_CHANGED":
       return { ...state, deviceImage: action.payload };
     case "DEVICE_CONFIGURATIONS_LOADED":

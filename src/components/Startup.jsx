@@ -85,6 +85,7 @@ class StartConfig extends React.Component {
     this.fetchConfigurations = this.fetchConfigurations.bind(this);
     this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
+    this.handleChangeActuators = this.handleChangeActuators.bind(this);
   }
 
   componentDidMount() {
@@ -115,7 +116,7 @@ class StartConfig extends React.Component {
         let device = {
           hardwareDevice: data[0].device,
           deviceImage: data[0].deviceImage,
-          actuators: data[0].nActuators,
+          actuators: data[0].actuatorCoords.length,
           actuators_coords: data[0].actuatorCoords,
         };
 
@@ -150,7 +151,7 @@ class StartConfig extends React.Component {
       projectID: this.props.config.projectId,
       projectName: this.props.config.projectName,
       device: this.props.device.hardwareDevice,
-      nActuators: this.props.device.actuators,
+      nActuators: this.props.device.actuators_coords.length,
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
       timelineID: this.props.timeline.timelineID,
@@ -184,6 +185,10 @@ class StartConfig extends React.Component {
     });
     this.props.closeInitialConfig();
     this.props.showNotification();
+  }
+
+  handleChangeActuators(event) {
+    this.props.changeProjectActuator(event.target.value);
   }
 
   handleImageUpload(event) {
@@ -234,10 +239,7 @@ class StartConfig extends React.Component {
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>Number of actuators</Form.Label>
-              <Form.Control
-                onChange={this.props.changeProjectActuator}
-                as="select"
-              >
+              <Form.Control onChange={this.handleChangeActuators} as="select">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>

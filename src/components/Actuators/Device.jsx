@@ -2,7 +2,10 @@ import React from "react";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { updateActuatorCoords } from "../../stores/device/deviceActions";
+import {
+  updateActuatorCoords,
+  removeActuator,
+} from "../../stores/device/deviceActions";
 
 import Image from "react-bootstrap/Image";
 import Actuators from "./Actuator";
@@ -15,13 +18,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ updateActuatorCoords }, dispatch);
+  bindActionCreators({ updateActuatorCoords, removeActuator }, dispatch);
 
 class PatternEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.updateActuatorPosition = this.updateActuatorPosition.bind(this);
+    this.removeActuator = this.removeActuator.bind(this);
   }
 
   updateActuatorPosition(event, data, index) {
@@ -32,6 +36,11 @@ class PatternEditor extends React.Component {
     };
 
     this.props.updateActuatorCoords(coords);
+  }
+
+  //TODO: Remover por index ou por ID
+  removeActuator(index) {
+    this.props.removeActuator(index);
   }
 
   render() {
@@ -47,6 +56,7 @@ class PatternEditor extends React.Component {
           {...this.props}
           actuators={this.props.actuators_coords}
           handleStop={this.updateActuatorPosition}
+          removeActuator={this.removeActuator}
         ></Actuators>
       </div>
     );

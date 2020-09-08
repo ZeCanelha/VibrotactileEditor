@@ -42,7 +42,7 @@ class SaveModal extends React.Component {
     let projectConfiguration = {
       projectName: this.props.config.projectName,
       device: this.props.device.hardwareDevice,
-      nActuators: this.props.device.actuators,
+      nActuators: this.props.device.actuators_coords.length,
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
     };

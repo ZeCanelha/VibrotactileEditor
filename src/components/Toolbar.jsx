@@ -13,6 +13,7 @@ import {
 } from "../stores/notification/notificationAction";
 
 import { addChannelToTimeline } from "../stores/timeline/timelineActions";
+import { addNewActuator } from "../stores/device/deviceActions";
 
 import {
   faUndo,
@@ -29,6 +30,7 @@ const mapDispatchToProps = (dispatch) =>
       setAddActuatorNotification,
       setAddChannelNotification,
       addChannelToTimeline,
+      addNewActuator,
     },
     dispatch
   );
@@ -42,6 +44,7 @@ class Toolbar extends React.Component {
   }
 
   handleAddActuator() {
+    this.props.addNewActuator();
     this.props.setAddActuatorNotification();
     this.props.showNotification();
   }

@@ -2,11 +2,11 @@ import React from "react";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 
-const addActuatorToChannel = (props, index) => {
-  if (isChecked(props, index)) {
-    props.removeActuator(props.id, props.channelActuators.indexOf(index));
+const addActuatorToChannel = (props, id) => {
+  if (isChecked(props, id)) {
+    props.removeActuator(props.id, props.channelActuators.indexOf(id));
   } else {
-    props.addActuator(props.id, index);
+    props.addActuator(props.id, id);
   }
 };
 
@@ -15,30 +15,26 @@ const isChecked = (props, id) => {
 };
 
 const renderRadioButtons = (props) => {
-  let renderButtons = [];
-
-  for (let index = 0; index < props.nActuators; index++) {
-    renderButtons.push(
+  return (actuator, index) => {
+    return (
       <ToggleButton
         key={index}
         type="checkbox"
         variant="outline-primary"
-        value={isChecked(props, index)}
-        checked={isChecked(props, index)}
-        onChange={(e) => addActuatorToChannel(props, index)}
+        value={isChecked(props, actuator.id)}
+        checked={isChecked(props, actuator.id)}
+        onChange={(e) => addActuatorToChannel(props, actuator.id)}
       >
-        {index}
+        {actuator.number}
       </ToggleButton>
     );
-  }
-
-  return renderButtons;
+  };
 };
 
 export default (props) => {
   return (
     <ButtonGroup toggle className="m-1 d-flex flex-wrap">
-      {renderRadioButtons(props)}
+      {props.actuators.map(renderRadioButtons(props))}
     </ButtonGroup>
   );
 };
