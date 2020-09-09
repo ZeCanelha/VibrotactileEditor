@@ -1,5 +1,6 @@
 import React from "react";
 import Pattern from "./Pattern";
+import SaveToLibrary from "./SaveToLibrary";
 
 import { bindActionCreators } from "redux";
 import { setDragActive, setDragFalse } from "../../stores/gui/guiActions";
@@ -64,16 +65,19 @@ class PatternWrapper extends React.Component {
     };
     const margin = { top: 10, right: 30, bottom: 30, left: 40 };
     return (
-      <div
-        className="pattern-container"
-        ref="pattern"
-        draggable="true"
-        onDragStart={this.handleDragStart}
-        onDragEnd={this.handleDragEnd}
-      >
-        <span className={"svg-editor-y-label"}>Intensity(%)</span>
-        <span className={"svg-editor-x-label"}>Time(ms)</span>
-        <Pattern {...size} {...margin}></Pattern>
+      <div className="pattern-wrapper">
+        <div
+          className="pattern-container"
+          ref="pattern"
+          draggable="true"
+          onDragStart={this.handleDragStart}
+          onDragEnd={this.handleDragEnd}
+        >
+          <span className={"svg-editor-y-label"}>Intensity(%)</span>
+          <span className={"svg-editor-x-label"}>Time(ms)</span>
+          <Pattern {...size} {...margin}></Pattern>
+        </div>
+        <SaveToLibrary />
       </div>
     );
   }

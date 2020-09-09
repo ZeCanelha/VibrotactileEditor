@@ -2,9 +2,12 @@ import React from "react";
 import Display from "../DisplayPattern";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import Draggable from "react-draggable";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+
+//TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
 
 const renderChannelItemsToTimeline = (props) => {
   return (object, index) => {
@@ -14,27 +17,41 @@ const renderChannelItemsToTimeline = (props) => {
       path: object.path,
     };
     return (
-      <Col
-        className="timeline-display"
+      <Draggable
         key={index}
-        xs={6}
-        md={4}
-        onDoubleClick={() => props.openInEditor(index)}
+        axis="x"
+        bounds="parent"
+        handle=".timeline-display"
+        defaultPosition={{ x: 0, y: 0 }}
+        position={null}
+        grid={[5, 5]}
+        scale={1}
+        onStart={props.handleStart}
+        onDrag={props.handleDrag}
+        onStop={props.handleStop}
       >
-        <div className="channel-hover-items">
-          <Button
-            className="channel-hover-remove"
-            variant="light"
-            size="sm"
-            onClick={() => props.removePattern(index)}
-          >
-            <FontAwesomeIcon icon={faTimesCircle} />
-          </Button>
-          <span>Double click to edit</span>
-        </div>
+        <Col
+          className="timeline-display"
+          key={index}
+          xs={6}
+          md={4}
+          onDoubleClick={() => props.openInEditor(index)}
+        >
+          <div className="channel-hover-items">
+            <Button
+              className="channel-hover-remove"
+              variant="light"
+              size="sm"
+              onClick={() => props.removePattern(index)}
+            >
+              <FontAwesomeIcon icon={faTimesCircle} />
+            </Button>
+            <span>Double click to edit</span>
+          </div>
 
-        <Display {...properties}></Display>
-      </Col>
+          <Display {...properties}></Display>
+        </Col>
+      </Draggable>
     );
   };
 };
