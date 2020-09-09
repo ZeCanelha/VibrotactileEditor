@@ -4,6 +4,8 @@ import Axis from "./PatternAxis";
 import PatternUtils from "../../utils/patternUtil";
 
 import * as d3 from "d3";
+import d3Tip from "d3-tip";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
@@ -39,6 +41,7 @@ class Pattern extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.pattern.datapoints !== this.props.pattern.datapoints) {
+      d3.select(".d3-tip").remove();
       let newArea = this.areaGenerator();
       this.props.updateAreaChart(newArea(this.props.pattern.datapoints));
       this.addEventListeners();
@@ -46,12 +49,19 @@ class Pattern extends React.Component {
   }
 
   addEventListeners() {
+    let tip = d3Tip()
+      .attr("class", "d3-tip")
+      .html(function (d) {
+        return "(" + d.time + "," + d.intensity + ")";
+      });
+
     let svg = d3.select(this.refs.svg);
+    svg.call(tip);
     svg
       .selectAll("circle")
       .data(this.props.pattern.datapoints)
-      .on("mouseover", this.handleMouseOver)
-      .on("mouseout", this.handleMouseOut)
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide)
       .call(
         d3
           .drag()
@@ -59,13 +69,6 @@ class Pattern extends React.Component {
           .on("drag", this.dragged)
           .on("end", this.dragEnded)
       );
-  }
-
-  handleMouseOver(d) {
-    d3.select(this).attr("r", "6");
-  }
-  handleMouseOut() {
-    d3.select(this).attr("r", "4");
   }
 
   dragStarted() {
@@ -79,6 +82,10 @@ class Pattern extends React.Component {
       time: Math.round(thisObject.xScale().invert(d3.event.x)),
       intensity: Math.round(thisObject.yScale().invert(d3.event.y)),
     };
+
+    if (newPoints.time < 0) newPoints.time = 0;
+    if (newPoints.intensity > 100) newPoints.intensity = 100;
+    if (newPoints.intensity < 0) newPoints.intensity = 0;
 
     let datapoints = thisObject.props.pattern.datapoints;
     datapoints.splice(i, 1);
@@ -94,6 +101,10 @@ class Pattern extends React.Component {
       intensity: Math.round(this.yScale().invert(coords[1])),
     };
     let datapoints = this.props.pattern.datapoints;
+
+    if (newPoints.time < 0) newPoints.time = 0;
+    if (newPoints.intensity > 100) newPoints.intensity = 100;
+    if (newPoints.intensity < 0) newPoints.intensity = 0;
 
     // Returns the insertion point for x in array to maintain sorted order
 

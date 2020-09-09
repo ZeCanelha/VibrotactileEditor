@@ -5,7 +5,7 @@ const renderKeyframes = (props) => {
     const datapoints = {
       cx: props.xScale(coords.time),
       cy: props.yScale(coords.intensity),
-      r: 4,
+      r: 5,
       key: index,
     };
     return <circle className="svg-editor-keyframes" {...datapoints}></circle>;
