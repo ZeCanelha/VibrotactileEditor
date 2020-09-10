@@ -60,6 +60,7 @@ class Pattern extends React.Component {
     svg
       .selectAll("circle")
       .data(this.props.pattern.datapoints)
+
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .call(

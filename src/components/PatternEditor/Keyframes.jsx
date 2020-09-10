@@ -1,5 +1,4 @@
 import React from "react";
-
 const renderKeyframes = (props) => {
   return (coords, index) => {
     const datapoints = {

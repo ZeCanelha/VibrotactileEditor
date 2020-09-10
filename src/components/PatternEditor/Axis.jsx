@@ -16,7 +16,7 @@ export default class Axis extends React.Component {
       this.props.orient === "left"
         ? d3.axisLeft().ticks(5).scale(this.props.scale)
         : d3.axisBottom().ticks(6).scale(this.props.scale);
-    d3.select(node).call(axis);
+    d3.select(node).transition().duration(500).call(axis);
   }
 
   render() {
