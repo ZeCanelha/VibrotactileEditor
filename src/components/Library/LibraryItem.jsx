@@ -6,7 +6,7 @@ const renderPatternToLibrary = (props) => {
   return (object, index) => {
     const properties = {
       key: index,
-      id: object._id,
+      id: object.patternID,
       path: object.path,
     };
 

@@ -66,3 +66,9 @@ export function setAddErrorNotification(errorText) {
     payload: errorText,
   };
 }
+
+export function setAddSavePatternNotification() {
+  return {
+    type: "SET_ADD_PATTERN_TO_LIBRARY_NOTIFICATION",
+  };
+}

@@ -57,6 +57,11 @@ const ADD_WARNING_MESSAGE_NOTIFICATION = {
   title: "Warning!",
 };
 
+const ADD_SAVE_PATTERN_NOTIFICATION = {
+  title: "Vibrotactile Editor",
+  body: "Pattern saved to Library!",
+};
+
 const ADD_ERROR_MESSAGE_NOTIFICATION = {
   title: "Error!",
 };
@@ -122,6 +127,11 @@ export default function (state = INITIAL_STATE, action) {
       return {
         actionTitle: ADD_ERROR_MESSAGE_NOTIFICATION.title,
         actionBody: action.payload,
+      };
+    case "SET_ADD_PATTERN_TO_LIBRARY_NOTIFICATION":
+      return {
+        actionTitle: ADD_SAVE_PATTERN_NOTIFICATION.title,
+        actionBody: ADD_SAVE_PATTERN_NOTIFICATION.body,
       };
     default:
       return state;

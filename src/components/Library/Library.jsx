@@ -74,7 +74,7 @@ class Library extends React.Component {
 
   searchPatternById(id) {
     for (let index = 0; index < this.props.patterns.length; index++) {
-      if (this.props.patterns[index]._id === id)
+      if (this.props.patterns[index].patternID === id)
         return this.props.patterns[index];
     }
   }

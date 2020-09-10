@@ -87,14 +87,14 @@
 }
 .pattern-container {
   width: 100%;
-  height: 88%;
+  height: 100%;
   position: relative;
 }
 
 .save-pattern-container {
   display: flex;
   position: absolute;
-  bottom: 0;
+  top: 0;
 }
 
 /* SVG */

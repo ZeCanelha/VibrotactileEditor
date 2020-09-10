@@ -21,7 +21,13 @@ export function updateAreaChart(path) {
   };
 }
 
-export function setPatternId() {
+export function setPatternId(id = null) {
+  if (id) {
+    return {
+      type: "SET_PATTERN_ID",
+      payload: id,
+    };
+  }
   return {
     type: "SET_PATTERN_ID",
     payload: Util.generateUUI(),
