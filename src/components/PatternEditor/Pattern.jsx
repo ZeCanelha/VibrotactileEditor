@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import {
   updateAreaChart,
   updateDataPoints,
+  removeDatapoint,
 } from "../../stores/pattern/patternActions";
 
 const PATTERN_OFFSET = 25;
@@ -25,6 +26,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateAreaChart,
       updateDataPoints,
+      removeDatapoint,
     },
     dispatch
   );
@@ -48,6 +50,12 @@ class Pattern extends React.Component {
     }
   }
 
+  removeDatapoint(d, i) {
+    if (d3.event.shiftKey) {
+      this.props.removeDatapoint(i);
+    }
+  }
+
   addEventListeners() {
     let tip = d3Tip()
       .attr("class", "d3-tip")
@@ -63,6 +71,7 @@ class Pattern extends React.Component {
 
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
+      .on("click", (d, i) => this.removeDatapoint(d, i))
       .call(
         d3
           .drag()
@@ -124,12 +133,11 @@ class Pattern extends React.Component {
   }
 
   xScale() {
+    let scaleMax = d3.max(this.props.pattern.datapoints, (d) => d.time);
+    if (!scaleMax || scaleMax < 350) scaleMax = 350;
     return d3
       .scaleLinear()
-      .domain([
-        0,
-        d3.max(this.props.pattern.datapoints, (d) => d.time) + PATTERN_OFFSET,
-      ])
+      .domain([0, scaleMax + PATTERN_OFFSET])
       .range([this.props.left, this.props.width - this.props.right]);
   }
 

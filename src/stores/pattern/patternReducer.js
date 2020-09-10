@@ -15,6 +15,12 @@ export default function (state = INITIAL_STATE, action) {
           datapoints: { $set: action.payload },
         }),
       };
+    case "REMOVE_DATAPOINT":
+      return update(state, {
+        datapoints: {
+          $splice: [[action.payload, 1]],
+        },
+      });
     case "DATAPOINTS_IMPORTED":
       return {
         ...state,

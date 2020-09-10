@@ -54,3 +54,10 @@ export function setInitialDatapoints() {
     payload: datapoints,
   };
 }
+
+export function removeDatapoint(index) {
+  return {
+    type: "REMOVE_DATAPOINT",
+    payload: index,
+  };
+}
