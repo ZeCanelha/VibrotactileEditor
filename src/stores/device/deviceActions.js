@@ -2,10 +2,10 @@ import Util from "../../utils/util";
 
 let newID = 1;
 
-export function changeProjectDevice(e) {
+export function changeProjectDevice(hardwareDevice) {
   return {
-    type: "DEVICE_CHANGED",
-    payload: e.target.value,
+    type: "SET_HARDWARE_DEVICE",
+    payload: hardwareDevice,
   };
 }
 

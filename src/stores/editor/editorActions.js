@@ -1,9 +1,9 @@
 import Util from "../../utils/util.js";
 
-export function changeProjectName(e) {
+export function changeProjectName(projectName) {
   return {
-    type: "NAME_CHANGED",
-    payload: e.target.value,
+    type: "SET_PROJECT_NAME",
+    payload: projectName,
   };
 }
 

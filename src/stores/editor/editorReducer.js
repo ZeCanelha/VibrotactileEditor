@@ -8,7 +8,7 @@ export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case "SET_PROJECT_ID":
       return { ...state, projectId: action.payload };
-    case "NAME_CHANGED":
+    case "SET_PROJECT_NAME":
       return { ...state, projectName: action.payload };
     case "CONFIG_LOADED":
       return {

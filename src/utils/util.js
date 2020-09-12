@@ -1,3 +1,4 @@
+import * as yup from "yup";
 class Util {
   // https://gist.github.com/solenoid/1372386
   static generateUUI() {
@@ -14,6 +15,15 @@ class Util {
     };
 
     return (patternId = patternId());
+  }
+
+  static formValidationSchema() {
+    return yup.object({
+      hardwareDevice: yup.string().required(),
+      projectName: yup.string().required(),
+      nActuators: yup.string().required(),
+      deviceImage: yup.string().notRequired(),
+    });
   }
 }
 

@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "DEVICE_CHANGED":
+    case "SET_HARDWARE_DEVICE":
       return { ...state, hardwareDevice: action.payload };
     case "ACTUATOR_CHANGED":
       return {

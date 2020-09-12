@@ -88,6 +88,22 @@ class Channel extends React.Component {
     );
     this.handleOpenInEditor = this.handleOpenInEditor.bind(this);
     this.handleActuatorModal = this.handleActuatorModal.bind(this);
+    this.handleAddPatternToChannel = this.handleAddPatternToChannel.bind(this);
+  }
+
+  handleAddPatternToChannel() {
+    this.props.setPatternId();
+    this.props.setInitialDatapoints();
+
+    const patternObject = {
+      id: this.props.pattern.patternID,
+      path: this.props.pattern.area,
+      datapoints: this.props.pattern.datapoints,
+    };
+    this.props.addPatternToTimeline(patternObject, this.props.id);
+
+    this.props.setAddPatternToTimelineNotification();
+    this.props.showNotification();
   }
 
   handleActuatorModal() {
@@ -205,6 +221,7 @@ class Channel extends React.Component {
                 {...this.props}
                 removePattern={this.handleRemovePattern}
                 openInEditor={this.handleOpenInEditor}
+                addNewPattern={this.handleAddPatternToChannel}
               ></ChannelItems>
             )}
           </div>

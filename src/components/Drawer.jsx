@@ -1,4 +1,6 @@
 import React from "react";
+import { Formik } from "formik";
+import Util from "../utils/util";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -59,9 +61,18 @@ class Drawer extends React.Component {
     this.drawerReference = React.createRef();
     this.handleClick = this.handleClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleFormSubmission = this.handleFormSubmission.bind(this);
   }
   componentDidMount() {
     document.addEventListener("click", this.handleClick);
+  }
+
+  handleFormSubmission(values) {
+    this.props.changeProjectName(values.projectName);
+    this.props.changeProjectDevice(values.hardwareDevice);
+    this.props.changeProjectActuator(parseInt(values.nActuators));
+
+    this.handleSave();
   }
 
   handleClick(event) {
@@ -126,7 +137,7 @@ class Drawer extends React.Component {
       this.props.showNotification();
     });
   }
-
+  //TODO: Device image
   render() {
     let sidebarClass = this.props.openDrawer ? openSidebar : idleSidebar;
     let iconRender = this.props.openDrawer ? faTimes : faBars;
@@ -138,54 +149,93 @@ class Drawer extends React.Component {
             <h4>Configurations</h4>
           </div>
           <div className="sidebar-body">
-            <Form>
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Hardware Device</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={"Type here your microcontroller"}
-                  value={this.props.device.hardwareDevice}
-                  onChange={this.props.changeProjectDevice}
-                />
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlInput2">
-                <Form.Label>Project Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Type here your project name"
-                  value={this.props.config.projectName}
-                  onChange={this.props.changeProjectName}
-                />
-              </Form.Group>
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                <Form.Label>Number of actuators</Form.Label>
-                <Form.Control
-                  onChange={this.props.changeProjectActuator}
-                  as="select"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.File
-                id="custom-file"
-                label="Upload your prototype image"
-                // onChange={(e) => this.handleImageUpload(e)}
-                custom
-              />
-            </Form>
-          </div>
-          <div className="sidebar-footer">
-            <Button variant="dark" block onClick={this.handleSave}>
-              Save configuration
-            </Button>
+            <Formik
+              enableReinitialize
+              validationSchema={Util.formValidationSchema()}
+              onSubmit={this.handleFormSubmission}
+              initialValues={{
+                hardwareDevice: this.props.device.hardwareDevice,
+                projectName: this.props.config.projectName,
+                nActuators: this.props.device.actuators,
+                deviceImage: "",
+              }}
+            >
+              {({ handleSubmit, handleChange, values, touched, errors }) => (
+                <Form noValidate onSubmit={handleSubmit}>
+                  <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>Hardware Device</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="hardwareDevice"
+                      value={values.hardwareDevice}
+                      placeholder="Type here your microcontroller"
+                      onChange={handleChange}
+                      isValid={touched.hardwareDevice && !errors.hardwareDevice}
+                      isInvalid={!!errors.hardwareDevice}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid device name.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Project Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="projectName"
+                      value={values.projectName}
+                      placeholder="Type here your project name"
+                      onChange={handleChange}
+                      isValid={touched.projectName && !errors.projectName}
+                      isInvalid={!!errors.projectName}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid project name.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Label>Number of actuators</Form.Label>
+                    <Form.Control
+                      name="nActuators"
+                      value={values.nActuators}
+                      onChange={handleChange}
+                      as="select"
+                      isValid={touched.nActuators && errors.nActuators}
+                      isInvalid={!!errors.nActuators}
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                      Please select the number of actuators.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.File
+                    id="custom-file"
+                    label="Upload your prototype image"
+                    // onChange={this.handleImageUpload}
+                    // name="deviceImage"
+                    // value={values.deviceImage}
+                    custom
+                  />
+
+                  <Button
+                    className="mt-2"
+                    variant="outline-dark"
+                    type="submit"
+                    block
+                  >
+                    Save configuration
+                  </Button>
+                </Form>
+              )}
+            </Formik>
           </div>
           <Button
             variant="light"
