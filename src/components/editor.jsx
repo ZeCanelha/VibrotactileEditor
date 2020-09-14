@@ -5,11 +5,11 @@ import Row from "react-bootstrap/Row";
 
 import DeviceEdior from "./Actuators/Device";
 import Toolbar from "./Toolbar";
-import Modal from "./Startup";
+import Modal from "./Configurations/Startup";
 import Timeline from "./Timeline/Timeline";
 import Library from "./Library/Library";
-import Save from "./Save";
-import Drawer from "./Drawer";
+import Save from "./Configurations/Save";
+import Drawer from "./Configurations/Drawer";
 import Notification from "./Notification";
 import PatternEditor from "./PatternEditor/Wrapper";
 

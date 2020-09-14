@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik } from "formik";
-import Util from "../utils/util";
+import Util from "../../utils/util";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -8,23 +8,24 @@ import {
   openConfigDrawer,
   closeConfigDrawer,
   showNotification,
-} from "../stores/gui/guiActions";
-import { changeProjectName } from "../stores/editor/editorActions";
+} from "../../stores/gui/guiActions";
+import { changeProjectName } from "../../stores/editor/editorActions";
 
 import {
   changeProjectActuator,
   changeProjectDevice,
   changeDeviceImage,
-} from "../stores/device/deviceActions";
+} from "../../stores/device/deviceActions";
 
 import {
   setSaveNotification,
   setAddWarningNotification,
-} from "../stores/notification/notificationAction";
+} from "../../stores/notification/notificationAction";
 
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
-import Database from "../utils/database";
+import Database from "../../utils/database";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -58,10 +59,19 @@ const idleSidebar = "sidebar";
 class Drawer extends React.Component {
   constructor() {
     super();
+    this.state = {
+      isLoading: false,
+    };
+
+    this.isProjectSaving = this.isProjectSaving.bind(this);
     this.drawerReference = React.createRef();
     this.handleClick = this.handleClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleFormSubmission = this.handleFormSubmission.bind(this);
+  }
+
+  isProjectSaving() {
+    this.setState({ isLoading: !this.state.isLoading });
   }
   componentDidMount() {
     document.addEventListener("click", this.handleClick);
@@ -92,6 +102,7 @@ class Drawer extends React.Component {
   }
 
   handleSave() {
+    this.isProjectSaving();
     let projectConfiguration = {
       projectName: this.props.config.projectName,
       device: this.props.device.hardwareDevice,
@@ -134,6 +145,7 @@ class Drawer extends React.Component {
       }
 
       this.props.closeConfigDrawer();
+      this.isProjectSaving();
       this.props.showNotification();
     });
   }
@@ -231,7 +243,17 @@ class Drawer extends React.Component {
                     type="submit"
                     block
                   >
-                    Save configuration
+                    {this.state.isLoading ? (
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Save Configuration"
+                    )}
                   </Button>
                 </Form>
               )}

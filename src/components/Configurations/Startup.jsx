@@ -1,11 +1,12 @@
 import React from "react";
 import { Formik } from "formik";
-import Util from "../utils/util";
+import Util from "../../utils/util";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
 import Image from "react-bootstrap/Image";
-import Database from "../utils/database";
+import Database from "../../utils/database";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -14,35 +15,38 @@ import {
   setDBInstance,
   changeProjectName,
   loadConfigs,
-} from "../stores/editor/editorActions";
+} from "../../stores/editor/editorActions";
 
 import {
   changeProjectActuator,
   changeProjectDevice,
   changeDeviceImage,
   loadDeviceConfigurations,
-} from "../stores/device/deviceActions";
+} from "../../stores/device/deviceActions";
 
 import {
   setLoadConfigurationsNotification,
   setSaveNotification,
   setAddWarningNotification,
-} from "../stores/notification/notificationAction";
+} from "../../stores/notification/notificationAction";
 
-import { setPatterns } from "../stores/library/libraryActions";
+import { setPatterns } from "../../stores/library/libraryActions";
 
-import { closeInitialConfig, showNotification } from "../stores/gui/guiActions";
+import {
+  closeInitialConfig,
+  showNotification,
+} from "../../stores/gui/guiActions";
 
 import {
   setPatternId,
   setInitialDatapoints,
-} from "../stores/pattern/patternActions";
+} from "../../stores/pattern/patternActions";
 
 import {
   setTimelineID,
   setTimelineDBInstance,
   setLoadedDataToTimeline,
-} from "../stores/timeline/timelineActions";
+} from "../../stores/timeline/timelineActions";
 
 const mapStateToProps = (state) => ({
   config: state.config,
@@ -81,15 +85,20 @@ const mapDispatchToProps = (dispatch) =>
 class StartConfig extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      isLoading: false,
+    };
+
+    this.isProjectLoading = this.isProjectLoading.bind(this);
     this.handleFormSubmission = this.handleFormSubmission.bind(this);
     this.fetchConfigurations = this.fetchConfigurations.bind(this);
     this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
-    this.handleChangeActuators = this.handleChangeActuators.bind(this);
   }
 
   componentDidMount() {
-    // Define initial application state
+    // TODO: Change this
 
     Database.fetchData("/patterns", "GET").then((data) => {
       this.props.setPatterns(data);
@@ -101,6 +110,10 @@ class StartConfig extends React.Component {
     this.props.setInitialDatapoints();
   }
 
+  isProjectLoading() {
+    this.setState({ isLoading: !this.state.isLoading });
+  }
+
   handleFormSubmission(values) {
     this.props.changeProjectName(values.projectName);
     this.props.changeProjectDevice(values.hardwareDevice);
@@ -110,6 +123,7 @@ class StartConfig extends React.Component {
   }
 
   fetchConfigurations() {
+    this.isProjectLoading();
     Database.fetchData("/configs", "GET").then((data) => {
       if (!data) {
         this.props.setAddWarningNotification(
@@ -150,11 +164,15 @@ class StartConfig extends React.Component {
         });
       }
       this.props.closeInitialConfig();
+      this.isProjectLoading();
       this.props.showNotification();
     });
   }
 
   saveProject() {
+    // Set spinner
+    this.isProjectLoading();
+
     let projectConfiguration = {
       projectID: this.props.config.projectId,
       projectName: this.props.config.projectName,
@@ -190,13 +208,11 @@ class StartConfig extends React.Component {
           }
         });
       }
-    });
-    this.props.closeInitialConfig();
-    this.props.showNotification();
-  }
 
-  handleChangeActuators(event) {
-    this.props.changeProjectActuator(event.target.value);
+      this.props.closeInitialConfig();
+      this.isProjectLoading();
+      this.props.showNotification();
+    });
   }
 
   handleImageUpload(event) {
@@ -309,7 +325,17 @@ class StartConfig extends React.Component {
                   type="submit"
                   block
                 >
-                  Save configuration
+                  {this.state.isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Save configurations"
+                  )}
                 </Button>
               </Form>
             )}
@@ -317,7 +343,17 @@ class StartConfig extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="dark" block onClick={this.fetchConfigurations}>
-            Load configuration
+            {this.state.isLoading ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : (
+              "Load configuration"
+            )}
           </Button>
         </Modal.Footer>
       </Modal>

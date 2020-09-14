@@ -6,17 +6,18 @@ import {
   closeSaveModal,
   openSaveModal,
   showNotification,
-} from "../stores/gui/guiActions";
+} from "../../stores/gui/guiActions";
 
 import {
   setSaveNotification,
   setAddWarningNotification,
-} from "../stores/notification/notificationAction";
+} from "../../stores/notification/notificationAction";
 
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
-import Database from "../utils/database";
+import Database from "../../utils/database";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
@@ -38,7 +39,23 @@ const mapDispatchToProps = (dispatch) =>
   );
 
 class SaveModal extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      isLoading: false,
+    };
+
+    this.isProjectSaving = this.isProjectSaving.bind(this);
+    this.saveProjectConfigurations = this.saveProjectConfigurations.bind(this);
+  }
+
+  isProjectSaving() {
+    this.setState({ isLoading: !this.state.isLoading });
+  }
+
   saveProjectConfigurations() {
+    this.isProjectSaving();
+
     let projectConfiguration = {
       projectName: this.props.config.projectName,
       device: this.props.device.hardwareDevice,
@@ -81,6 +98,7 @@ class SaveModal extends React.Component {
       }
 
       this.props.closeSaveModal();
+      this.isProjectSaving();
       this.props.showNotification();
     });
   }
@@ -110,9 +128,19 @@ class SaveModal extends React.Component {
             <Button
               variant="outline-dark"
               block
-              onClick={() => this.saveProjectConfigurations()}
+              onClick={this.saveProjectConfigurations}
             >
-              Save Project
+              {this.state.isLoading ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                "Save Project"
+              )}
             </Button>
             <Button variant="dark" block onClick={this.props.closeSaveModal}>
               Close

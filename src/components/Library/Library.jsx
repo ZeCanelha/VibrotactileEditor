@@ -25,14 +25,12 @@ import {
 
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-
-import LibraryFilter from "./LibraryFilter";
+import LibraryFilter from "./LibrayItems";
+import Search from "./LibrarySearch";
 
 const mapStateToPros = (state) => ({
   setShowLibraryModal: state.gui.isLibraryModalOpen,
@@ -125,35 +123,27 @@ class Library extends React.Component {
         </Button>
         <Modal
           show={this.state.openLibraryModal}
+          onHide={this.handleLibraryModal}
           size="lg"
           backdrop="static"
           dialogClassName="modal-90w"
           aria-labelledby="example-custom-modal-styling-title"
         >
-          <Modal.Header>
+          <Modal.Header closeButton>
             <Modal.Title id="example-custom-modal-styling-title">
               Vibrotactile Library
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form inline>
-              <Form.Control
-                type="text"
-                placeholder="Search"
-                className=" mr-sm-2"
-                onChange={this.props.updateSearchQuery}
-              />
-              <Button variant="dark">
-                <FontAwesomeIcon icon={faSearch} />
-              </Button>
-            </Form>
-            <LibraryFilter openDetails={this.handleOpenPattern}></LibraryFilter>
+            <Container fluid className="d-flex flex-row">
+              <Row>
+                <Search></Search>
+                <LibraryFilter
+                  openDetails={this.handleOpenPattern}
+                ></LibraryFilter>
+              </Row>
+            </Container>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="dark" block onClick={this.handleLibraryModal}>
-              Close
-            </Button>
-          </Modal.Footer>
         </Modal>
 
         <Modal
