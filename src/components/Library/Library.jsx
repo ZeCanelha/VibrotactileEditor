@@ -1,55 +1,31 @@
 import React from "react";
-
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import LibraryFilter from "./LibrayItems";
+import Search from "./LibrarySearch";
 
 import { showNotification } from "../../stores/gui/guiActions";
 import {
   updateSearchQuery,
   setPatterns,
 } from "../../stores/library/libraryActions";
-
-import {
-  setPatternId,
-  importDatapoints,
-} from "../../stores/pattern/patternActions";
-
 import { setImportPatternNotification } from "../../stores/notification/notificationAction";
-
-import {
-  setPatternName,
-  setPatternDescription,
-  setPatternPath,
-  updatePatternToDisplay,
-} from "../../stores/display/displayActions";
-
-import Container from "react-bootstrap/Container";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-
-import LibraryFilter from "./LibrayItems";
-import Search from "./LibrarySearch";
 
 const mapStateToPros = (state) => ({
   setShowLibraryModal: state.gui.isLibraryModalOpen,
-  displayDetails: state.display,
   patterns: state.library.patterns,
+  channels: state.timeline.channel,
 });
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setPatternName,
-      setPatternDescription,
-      setPatternPath,
-      updatePatternToDisplay,
-
       setPatterns,
       updateSearchQuery,
-      setPatternId,
-      importDatapoints,
       showNotification,
       setImportPatternNotification,
     },
@@ -60,14 +36,14 @@ class Library extends React.Component {
   constructor() {
     super();
     this.state = {
-      openPatternDetails: false,
       openLibraryModal: false,
+      searchParameters: {},
     };
 
-    this.handleClosePattern = this.handleClosePattern.bind(this);
     this.handleImportPattern = this.handleImportPattern.bind(this);
-    this.handleOpenPattern = this.handleOpenPattern.bind(this);
     this.handleLibraryModal = this.handleLibraryModal.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   searchPatternById(id) {
@@ -77,38 +53,22 @@ class Library extends React.Component {
     }
   }
 
-  // Receives pattern ID and pattern path and open details modal
-  handleOpenPattern(patternDetails) {
-    // Set store with details to show
-    let patternObject = this.searchPatternById(patternDetails.id);
-
-    this.props.setPatternName(patternObject.name);
-    this.props.setPatternDescription(patternObject.description);
-
-    this.props.updatePatternToDisplay(patternDetails.id);
-    this.props.setPatternPath(patternDetails.path);
-
-    this.setState({ openPatternDetails: true, openLibraryModal: false });
-  }
-
-  handleImportPattern() {
-    let patternObject = this.searchPatternById(
-      this.props.displayDetails.currentDisplayedPattern
-    );
-    this.props.setPatternId(this.props.displayDetails.currentDisplayedPattern);
-    this.props.importDatapoints(patternObject.keyframes);
+  handleImportPattern(patternObject) {
     this.props.setImportPatternNotification();
     this.props.showNotification();
 
     this.setState({ openPatternDetails: false });
   }
 
-  handleClosePattern() {
-    this.setState({ openPatternDetails: false, openLibraryModal: true });
-  }
-
   handleLibraryModal() {
     this.setState({ openLibraryModal: !this.state.openLibraryModal });
+  }
+
+  handleSearch(values) {
+    this.setState({ searchParameters: values });
+  }
+  handleReset() {
+    this.setState({ searchParameters: {} });
   }
 
   render() {
@@ -135,44 +95,19 @@ class Library extends React.Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Container fluid className="d-flex flex-row">
+            <Container fluid className="library-modal-container">
               <Row>
-                <Search></Search>
+                <Search
+                  handleSearch={this.handleSearch}
+                  handleReset={this.handleReset}
+                ></Search>
                 <LibraryFilter
-                  openDetails={this.handleOpenPattern}
+                  searchParameters={this.state.searchParameters}
+                  channels={this.props.channels}
                 ></LibraryFilter>
               </Row>
             </Container>
           </Modal.Body>
-        </Modal>
-
-        <Modal
-          show={this.state.openPatternDetails}
-          onHide={this.handleClosePattern}
-          size="lg"
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Pattern Characteristics</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Container>
-              <Col className="border rounded border-success">
-                <h4>Name: </h4>
-                <p>{this.props.displayDetails.patternName}</p>
-                <h4>Description:</h4>
-                <p>{this.props.displayDetails.patternDescription}</p>
-              </Col>
-            </Container>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="dark" onClick={this.handleClosePattern}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.handleImportPattern}>
-              Import pattern
-            </Button>
-          </Modal.Footer>
         </Modal>
       </>
     );

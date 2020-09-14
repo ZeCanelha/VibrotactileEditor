@@ -256,6 +256,14 @@
   flex-wrap: nowrap;
 }
 
+.library-modal-container {
+  display: flex;
+
+  width: 100%;
+
+  flex-direction: row;
+}
+
 .library-search-form {
   font-size: 0.95rem;
   background-color: #f7f7f7;
@@ -265,6 +273,7 @@
   overflow-y: scroll;
   display: flex;
   flex-wrap: wrap;
+  min-height: 100%;
 }
 
 .card-item {

@@ -1,5 +1,5 @@
 import React from "react";
-
+import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Database from "../../utils/database";
@@ -42,8 +42,9 @@ class SaveToLibrary extends React.Component {
     this.state = {
       isSaveModalOpen: false,
       isValidated: false,
+      isLoading: false,
     };
-
+    this.isProjectSaving = this.isProjectSaving.bind(this);
     this.handleSelectedSave = this.handleSelectedSave.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.handleFormSubmission = this.handleFormSubmission.bind(this);
@@ -98,7 +99,12 @@ class SaveToLibrary extends React.Component {
     );
   }
 
+  isProjectSaving() {
+    this.setState({ isLoading: !this.state.isLoading });
+  }
+
   handleFormSubmission(values) {
+    this.isProjectSaving();
     const body = {
       patternID: this.props.pattern.patternID,
       keyframes: this.props.pattern.datapoints,
@@ -116,7 +122,10 @@ class SaveToLibrary extends React.Component {
       } else this.props.setAddSavePatternNotification();
 
       this.props.showNotification();
-      this.setState({ isSaveModalOpen: false });
+      this.setState({
+        isSaveModalOpen: false,
+        isLoading: !this.state.isLoading,
+      });
     });
   }
 
@@ -171,7 +180,6 @@ class SaveToLibrary extends React.Component {
               {({
                 handleSubmit,
                 handleChange,
-                handleBlur,
                 values,
                 touched,
                 isValid,
@@ -227,15 +235,25 @@ class SaveToLibrary extends React.Component {
                       Pleas provide a valid pattern usage.
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Button variant="outline-dark" type="submit" block>
-                    Save Pattern
+                  <Button variant="primary" type="submit" block>
+                    {this.state.isLoading ? (
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Save Pattern"
+                    )}
                   </Button>
                 </Form>
               )}
             </Formik>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="dark" block onClick={this.handleModal}>
+            <Button variant="outline-primary" block onClick={this.handleModal}>
               Close
             </Button>
           </Modal.Footer>

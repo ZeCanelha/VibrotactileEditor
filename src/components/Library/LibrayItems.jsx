@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Col from "react-bootstrap/Col";
-import Items from "./LibraryItem";
+import Items from "./Item";
 
 const mapStateToProps = (state) => ({
   patterns: state.library.patterns,
@@ -17,27 +17,33 @@ class LibraryFilter extends React.Component {
   }
   componentDidMount() {
     this.setState({
-      items: this.filterSearch(this.props.query),
+      items: this.filterSearch(this.props.searchParameters),
     });
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.query !== this.props.query) {
+    if (prevProps.searchParameters !== this.props.searchParameters) {
       this.setState({
-        items: this.filterSearch(this.props.query),
+        items: this.filterSearch(this.props.searchParameters),
       });
     }
   }
 
-  filterSearch(query) {
+  filterSearch(searchParameters) {
     return this.props.patterns.filter(function (item) {
-      return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+      if (searchParameters.hasOwnProperty("patternName"))
+        return (
+          item.name
+            .toLowerCase()
+            .indexOf(searchParameters.patternName.toLowerCase()) > -1
+        );
+      return item;
     });
   }
 
   render() {
     return (
-      <Col className="libray-item-display">
-        <Items patterns={this.state.items}></Items>
+      <Col className="libray-item-display" lg={8}>
+        <Items {...this.props} patterns={this.state.items}></Items>
       </Col>
     );
   }

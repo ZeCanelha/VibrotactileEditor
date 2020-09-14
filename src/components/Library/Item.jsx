@@ -8,7 +8,6 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 
 const renderPatternToLibrary = (props) => {
   return (object, index) => {
-    console.log(object);
     const properties = {
       key: index,
       id: object.patternID,
@@ -16,7 +15,7 @@ const renderPatternToLibrary = (props) => {
     };
     return (
       <Card className="card-item" key={index}>
-        <Card.Header>
+        <Card.Header className="text-center">
           {object.name}
           <div className="library-pattern-display">
             <Display {...properties}></Display>
@@ -33,12 +32,11 @@ const renderPatternToLibrary = (props) => {
             title="Add to channel"
             size="sm"
           >
-            <Dropdown.Item size="sm" eventKey={"1"} as="button">
-              Channel 1
-            </Dropdown.Item>
-            <Dropdown.Item size="sm" eventKey={"2"} as="button">
-              Channel 2
-            </Dropdown.Item>
+            {props.channels.map((channel, index) => (
+              <Dropdown.Item size="sm" eventKey={channel._id} as="button">
+                Channel {index + 1}
+              </Dropdown.Item>
+            ))}
           </DropdownButton>
         </Card.Body>
       </Card>

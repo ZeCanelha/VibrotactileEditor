@@ -126,7 +126,7 @@ class SaveModal extends React.Component {
           <Modal.Body></Modal.Body>
           <Modal.Footer>
             <Button
-              variant="outline-dark"
+              variant="primary"
               block
               onClick={this.saveProjectConfigurations}
             >
@@ -142,7 +142,11 @@ class SaveModal extends React.Component {
                 "Save Project"
               )}
             </Button>
-            <Button variant="dark" block onClick={this.props.closeSaveModal}>
+            <Button
+              variant="outline-primary"
+              block
+              onClick={this.props.closeSaveModal}
+            >
               Close
             </Button>
           </Modal.Footer>

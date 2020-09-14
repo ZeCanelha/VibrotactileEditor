@@ -319,12 +319,7 @@ class StartConfig extends React.Component {
                   custom
                 />
                 {imagePreview}
-                <Button
-                  className="mt-2"
-                  variant="outline-dark"
-                  type="submit"
-                  block
-                >
+                <Button className="mt-2" variant="primary" type="submit" block>
                   {this.state.isLoading ? (
                     <Spinner
                       as="span"
@@ -342,7 +337,11 @@ class StartConfig extends React.Component {
           </Formik>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" block onClick={this.fetchConfigurations}>
+          <Button
+            variant="outline-primary"
+            block
+            onClick={this.fetchConfigurations}
+          >
             {this.state.isLoading ? (
               <Spinner
                 as="span"

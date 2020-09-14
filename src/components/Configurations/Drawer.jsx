@@ -239,7 +239,7 @@ class Drawer extends React.Component {
 
                   <Button
                     className="mt-2"
-                    variant="outline-dark"
+                    variant="primary"
                     type="submit"
                     block
                   >
