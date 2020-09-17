@@ -14,13 +14,16 @@ const mapDispatchToProps = (dispatch) =>
     },
     dispatch
   );
+const mapStateToProps = (state) => ({
+  pattern: state.pattern,
+});
 
 class PatternWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      containerWidth: null,
-      containerHeight: null,
+      width: null,
+      height: null,
     };
 
     this.getParentSize = this.getParentSize.bind(this);
@@ -30,25 +33,31 @@ class PatternWrapper extends React.Component {
 
   componentDidMount() {
     this.getParentSize();
-    window.addEventListener("resize", this.getParentSize());
+    window.addEventListener("resize", this.getParentSize);
   }
   componentWillUnmount() {
-    window.removeEventListener("resize", this.getParentSize());
+    window.removeEventListener("resize", this.getParentSize);
   }
 
   getParentSize() {
-    // TODO: learn HOC to introduce responsiveness on window resize
+    const { width } = this.state;
+    const { height } = this.state;
 
-    const currentContainerHeight = this.refs.pattern.getBoundingClientRect()
+    const currentContainerHeight = this.refs.patternContainer.getBoundingClientRect()
       .height;
 
-    const currentContainerWidth = this.refs.pattern.getBoundingClientRect()
+    const currentContainerWidth = this.refs.patternContainer.getBoundingClientRect()
       .width;
 
-    this.setState({
-      containerHeight: currentContainerHeight,
-      containerWidth: currentContainerWidth,
-    });
+    const shouldResize =
+      height !== currentContainerHeight || width !== currentContainerWidth;
+
+    if (shouldResize) {
+      this.setState({
+        height: currentContainerHeight,
+        width: currentContainerWidth,
+      });
+    }
   }
 
   handleDragStart() {
@@ -59,23 +68,20 @@ class PatternWrapper extends React.Component {
   }
 
   render() {
-    const size = {
-      width: this.state.containerWidth,
-      height: this.state.containerHeight,
-    };
+    const shouldRender = this.state.width !== null;
     const margin = { top: 10, right: 30, bottom: 30, left: 40 };
     return (
-      <div className="pattern-wrapper">
+      <div className="pattern-wrapper" ref={"patternContainer"}>
         <div
           className="pattern-container"
-          ref="pattern"
           draggable="true"
           onDragStart={this.handleDragStart}
           onDragEnd={this.handleDragEnd}
         >
           <span className={"svg-editor-y-label"}>Intensity(%)</span>
           <span className={"svg-editor-x-label"}>Time(ms)</span>
-          <Pattern {...size} {...margin}></Pattern>
+
+          {shouldRender && <Pattern {...this.state} {...margin}></Pattern>}
         </div>
         <SaveToLibrary />
       </div>
@@ -83,4 +89,4 @@ class PatternWrapper extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(PatternWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(PatternWrapper);

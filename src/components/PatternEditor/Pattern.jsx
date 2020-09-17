@@ -42,7 +42,11 @@ class Pattern extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.pattern.datapoints !== this.props.pattern.datapoints) {
+    if (
+      prevProps.pattern.datapoints !== this.props.pattern.datapoints ||
+      this.props.width !== prevProps.width ||
+      this.props.height !== prevProps.height
+    ) {
       d3.select(".d3-tip").remove();
       let newArea = this.areaGenerator();
       this.props.updateAreaChart(newArea(this.props.pattern.datapoints));
