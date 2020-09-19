@@ -10,12 +10,17 @@ import { faTimesCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 //TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
 
 const renderChannelItemsToTimeline = (props) => {
-  return (object, index) => {
-    const properties = {
-      key: index,
-      id: object.id,
-      path: object.path,
-    };
+  return (id, index) => {
+    let properties = {};
+    props.patternList.forEach((element) => {
+      if (element.patternID === id) {
+        properties = {
+          key: index,
+          path: element.area,
+          id: id,
+        };
+      }
+    });
     return (
       <Draggable
         key={index}
@@ -55,7 +60,6 @@ const renderChannelItemsToTimeline = (props) => {
               </Button>
             </div>
           </div>
-
           <Display {...properties}></Display>
         </Col>
       </Draggable>

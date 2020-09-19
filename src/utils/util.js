@@ -25,6 +25,27 @@ class Util {
       deviceImage: yup.string().notRequired(),
     });
   }
+
+  static defaultPattern() {
+    return {
+      patternID: Util.generateUUI(),
+      datapoints: [
+        {
+          time: 0,
+          intensity: 50,
+        },
+        {
+          time: 175,
+          intensity: 50,
+        },
+        {
+          time: 350,
+          intensity: 50,
+        },
+      ],
+      area: "",
+    };
+  }
 }
 
 export default Util;

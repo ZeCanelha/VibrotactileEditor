@@ -38,11 +38,6 @@ import {
 } from "../../stores/gui/guiActions";
 
 import {
-  setPatternId,
-  setInitialDatapoints,
-} from "../../stores/pattern/patternActions";
-
-import {
   setTimelineID,
   setTimelineDBInstance,
   setLoadedDataToTimeline,
@@ -59,8 +54,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setPatternId,
-      setInitialDatapoints,
       setPatterns,
       setLoadConfigurationsNotification,
       setSaveNotification,
@@ -106,8 +99,6 @@ class StartConfig extends React.Component {
 
     this.props.setProjectId();
     this.props.setTimelineID();
-    this.props.setPatternId();
-    this.props.setInitialDatapoints();
   }
 
   isProjectLoading() {

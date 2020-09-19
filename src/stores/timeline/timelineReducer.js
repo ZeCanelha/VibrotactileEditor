@@ -53,11 +53,11 @@ export default function (state = INITIAL_STATE, action) {
       return update(state, {
         channel: {
           [action.payload.channelID]: {
-            pattern: { $push: [action.payload.patternObject] },
+            pattern: { $push: [action.payload.patternID] },
           },
         },
       });
-    case "REMOVE_PATTERN_FROM_TIMELINE":
+    case "REMOVE_PATTERN_FROM_CHANNEL":
       return update(state, {
         channel: {
           [action.payload.channelID]: {

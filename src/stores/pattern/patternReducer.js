@@ -1,40 +1,54 @@
 import update from "immutability-helper";
 
 const INITIAL_STATE = {
-  patternID: "",
-  datapoints: [],
-  area: null,
+  patterns: [],
+  isPatternDisplayed: false,
+  currentPatternIndex: 0,
 };
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
-    case "DATAPOINTS_CHANGE":
+    case "PATTERN_UPDATE_DATAPOINTS":
       return {
         ...state,
-        datapoints: update(state.datapoints, {
-          datapoints: { $set: action.payload },
+        datapoints: update(state.patterns[action.payload.index].datapoints, {
+          datapoints: { $set: action.payload.datapoints },
         }),
       };
     case "REMOVE_DATAPOINT":
       return update(state, {
-        datapoints: {
-          $splice: [[action.payload, 1]],
+        patterns: {
+          [action.payload.index]: {
+            datapoints: {
+              $splice: [[action.payload.pointIndex, 1]],
+            },
+          },
         },
       });
-    case "DATAPOINTS_IMPORTED":
-      return {
-        ...state,
-        datapoints: action.payload,
-      };
     case "AREA_UPDATED":
-      return { ...state, area: action.payload };
-    case "SET_PATTERN_ID":
-      return { ...state, patternID: action.payload };
-    case "SET_INITIAL_DATAPOINTS":
-      return {
-        ...state,
-        datapoints: action.payload,
-      };
+      return update(state, {
+        patterns: {
+          [action.payload.index]: {
+            area: { $set: action.payload.area },
+          },
+        },
+      });
+    case "ADD_PATTERN_TO_LIST":
+      return update(state, {
+        patterns: {
+          $push: [action.payload],
+        },
+      });
+    case "REMOVE_PATTERN_FROM_LIST":
+      return update(state, {
+        patterns: {
+          $splice: [[action.payload.index, 1]],
+        },
+      });
+    case "SET_DISPLAY_PATTERN":
+      return { ...state, isPatternDisplayed: true };
+    case "SET_CURRENT_PATTERN":
+      return { ...state, currentPatternIndex: action.payload };
 
     default:
       return state;

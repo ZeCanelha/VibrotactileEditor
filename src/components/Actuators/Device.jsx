@@ -38,7 +38,6 @@ class PatternEditor extends React.Component {
     this.props.updateActuatorCoords(coords);
   }
 
-  //TODO: Remover por index ou por ID
   removeActuator(index) {
     this.props.removeActuator(index);
   }

@@ -7,11 +7,15 @@ import Channel from "./Channel";
 
 const mapStateToProps = (state) => ({
   timeline_list: state.timeline,
+  pattern: state.pattern,
 });
 
 class Timeline extends React.Component {
   shouldComponentUpdate(nextProps) {
-    if (this.props.timeline_list.channel !== nextProps.timeline_list.channel)
+    if (
+      this.props.timeline_list.channel !== nextProps.timeline_list.channel ||
+      this.props.pattern.patterns !== nextProps.pattern.patterns
+    )
       return true;
     return false;
   }

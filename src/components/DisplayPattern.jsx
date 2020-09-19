@@ -4,6 +4,14 @@ import * as d3 from "d3";
 class DisplayPattern extends React.Component {
   componentDidMount() {
     // Scale factor to fit the path in the container
+    this.fitToParent();
+  }
+
+  componentDidUpdate() {
+    this.fitToParent();
+  }
+
+  fitToParent() {
     const width = this.refs.svgRef.clientWidth;
     const height = this.refs.svgRef.clientHeight;
     const viewBox = "0 0 " + width + " " + height;

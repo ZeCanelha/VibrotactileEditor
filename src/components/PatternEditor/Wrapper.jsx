@@ -14,9 +14,12 @@ const mapDispatchToProps = (dispatch) =>
     },
     dispatch
   );
+
 const mapStateToProps = (state) => ({
-  pattern: state.pattern,
+  patternInEditor: state.pattern.isPatternDisplayed,
 });
+
+//TODO: patter in display ternary
 
 class PatternWrapper extends React.Component {
   constructor(props) {
@@ -27,8 +30,6 @@ class PatternWrapper extends React.Component {
     };
 
     this.getParentSize = this.getParentSize.bind(this);
-    this.handleDragStart = this.handleDragStart.bind(this);
-    this.handleDragEnd = this.handleDragEnd.bind(this);
   }
 
   componentDidMount() {
@@ -60,30 +61,26 @@ class PatternWrapper extends React.Component {
     }
   }
 
-  handleDragStart() {
-    this.props.setDragActive();
-  }
-  handleDragEnd() {
-    this.props.setDragFalse();
-  }
-
   render() {
     const shouldRender = this.state.width !== null;
     const margin = { top: 10, right: 30, bottom: 30, left: 40 };
     return (
       <div className="pattern-wrapper" ref={"patternContainer"}>
-        <div
-          className="pattern-container"
-          draggable="true"
-          onDragStart={this.handleDragStart}
-          onDragEnd={this.handleDragEnd}
-        >
-          <span className={"svg-editor-y-label"}>Intensity(%)</span>
-          <span className={"svg-editor-x-label"}>Time(ms)</span>
+        {this.props.patternInEditor ? (
+          <React.Fragment>
+            <div className="pattern-container">
+              <span className={"svg-editor-y-label"}>Intensity(%)</span>
+              <span className={"svg-editor-x-label"}>Time(ms)</span>
 
-          {shouldRender && <Pattern {...this.state} {...margin}></Pattern>}
-        </div>
-        <SaveToLibrary />
+              {shouldRender && <Pattern {...this.state} {...margin}></Pattern>}
+            </div>
+            <SaveToLibrary />
+          </React.Fragment>
+        ) : (
+          <div className="pattern-text-editor ">
+            <p>Select pattern to edit</p>
+          </div>
+        )}
       </div>
     );
   }

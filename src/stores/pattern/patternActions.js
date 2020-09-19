@@ -1,23 +1,16 @@
 import Util from "../../utils/util.js";
 
-export function updateDataPoints(datapoints) {
+export function updateDataPoints(patternIndex, _datapoints) {
   return {
-    type: "DATAPOINTS_CHANGE",
-    payload: datapoints,
+    type: "PATTERN_UPDATE_DATAPOINTS",
+    payload: { index: patternIndex, datapoints: _datapoints },
   };
 }
 
-export function importDatapoints(datapoints) {
-  return {
-    type: "DATAPOINTS_IMPORTED",
-    payload: datapoints,
-  };
-}
-
-export function updateAreaChart(path) {
+export function updateAreaChart(_index, _area) {
   return {
     type: "AREA_UPDATED",
-    payload: path,
+    payload: { index: _index, area: _area },
   };
 }
 
@@ -34,30 +27,37 @@ export function setPatternId(id = null) {
   };
 }
 
-export function setInitialDatapoints() {
-  const datapoints = [
-    {
-      time: 0,
-      intensity: 50,
-    },
-    {
-      time: 175,
-      intensity: 50,
-    },
-    {
-      time: 350,
-      intensity: 50,
-    },
-  ];
+export function removeDatapoint(patternIndex, _pointIndex) {
   return {
-    type: "SET_INITIAL_DATAPOINTS",
-    payload: datapoints,
+    type: "REMOVE_DATAPOINT",
+    payload: { index: patternIndex, pointIndex: _pointIndex },
   };
 }
 
-export function removeDatapoint(index) {
+//TODO: add default config here or create util to create pattern defaults
+export function addPatternToList(pattern) {
   return {
-    type: "REMOVE_DATAPOINT",
+    type: "ADD_PATTERN_TO_LIST",
+    payload: pattern,
+  };
+}
+
+export function removePatternFromList(index) {
+  return {
+    type: "REMOVE_PATTERN_FROM_LIST",
+    payload: index,
+  };
+}
+
+export function setDisplayPattern() {
+  return {
+    type: "SET_DISPLAY_PATTERN",
+  };
+}
+
+export function setCurrentPattern(index) {
+  return {
+    type: "SET_CURRENT_PATTERN",
     payload: index,
   };
 }

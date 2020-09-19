@@ -18,7 +18,9 @@ const PATTERN_OFFSET = 25;
 let thisObject = null;
 
 const mapStateToProps = (state) => ({
-  pattern: state.pattern,
+  pattern: state.pattern.patterns,
+  render: state.pattern,
+  index: state.pattern.currentPatternIndex,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -35,6 +37,11 @@ class Pattern extends React.Component {
   componentDidMount() {
     let theobject = this;
     thisObject = theobject;
+    let newArea = this.areaGenerator();
+    this.props.updateAreaChart(
+      this.props.index,
+      newArea(this.props.pattern[this.props.index].datapoints)
+    );
     d3.select(this.refs.svg).on("dblclick", function () {
       let coords = d3.mouse(this);
       theobject.addDatapoint(coords);
@@ -43,20 +50,23 @@ class Pattern extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.pattern.datapoints !== this.props.pattern.datapoints ||
-      this.props.width !== prevProps.width ||
-      this.props.height !== prevProps.height
+      prevProps.render !== this.props.render ||
+      prevProps.width !== this.props.width ||
+      prevProps.heigth !== this.props.height
     ) {
       d3.select(".d3-tip").remove();
       let newArea = this.areaGenerator();
-      this.props.updateAreaChart(newArea(this.props.pattern.datapoints));
+      this.props.updateAreaChart(
+        this.props.index,
+        newArea(this.props.pattern[this.props.index].datapoints)
+      );
       this.addEventListeners();
     }
   }
 
   removeDatapoint(d, i) {
     if (d3.event.shiftKey) {
-      this.props.removeDatapoint(i);
+      this.props.removeDatapoint(this.props.index, i);
     }
   }
 
@@ -71,7 +81,7 @@ class Pattern extends React.Component {
     svg.call(tip);
     svg
       .selectAll("circle")
-      .data(this.props.pattern.datapoints)
+      .data(this.props.pattern[this.props.index].datapoints)
 
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
@@ -101,11 +111,12 @@ class Pattern extends React.Component {
     if (newPoints.intensity > 100) newPoints.intensity = 100;
     if (newPoints.intensity < 0) newPoints.intensity = 0;
 
-    let datapoints = thisObject.props.pattern.datapoints;
+    let datapoints =
+      thisObject.props.pattern[thisObject.props.index].datapoints;
     datapoints.splice(i, 1);
     datapoints.push(newPoints);
     datapoints.sort((a, b) => a.time - b.time);
-    thisObject.props.updateDataPoints(datapoints);
+    thisObject.props.updateDataPoints(thisObject.props.index, datapoints);
   }
 
   addDatapoint(coords) {
@@ -114,7 +125,8 @@ class Pattern extends React.Component {
       time: Math.round(this.xScale().invert(coords[0])),
       intensity: Math.round(this.yScale().invert(coords[1])),
     };
-    let datapoints = this.props.pattern.datapoints;
+    let datapoints = this.props.pattern[this.props.index].datapoints;
+    console.log(datapoints);
 
     if (newPoints.time < 0) newPoints.time = 0;
     if (newPoints.intensity > 100) newPoints.intensity = 100;
@@ -125,7 +137,7 @@ class Pattern extends React.Component {
     let index = PatternUtils.getInsertionPoint(datapoints, newPoints.time);
 
     datapoints.splice(index, 0, newPoints);
-    this.props.updateDataPoints(datapoints);
+    this.props.updateDataPoints(this.props.index, datapoints);
   }
   areaGenerator() {
     return PatternUtils.createChart(
@@ -137,7 +149,10 @@ class Pattern extends React.Component {
   }
 
   xScale() {
-    let scaleMax = d3.max(this.props.pattern.datapoints, (d) => d.time);
+    let scaleMax = d3.max(
+      this.props.pattern[this.props.index].datapoints,
+      (d) => d.time
+    );
     if (!scaleMax || scaleMax < 350) scaleMax = 350;
     return d3
       .scaleLinear()
@@ -162,7 +177,10 @@ class Pattern extends React.Component {
         ref={"svg"}
         preserveAspectRatio="xMidYMid meet"
       >
-        <path className="svg-editor-area" d={this.props.pattern.area}></path>
+        <path
+          className="svg-editor-area"
+          d={this.props.pattern[this.props.index].area}
+        ></path>
         <Keyframes {...scales} {...this.props}></Keyframes>
         <Axis {...scales} {...this.props}></Axis>
       </svg>

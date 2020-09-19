@@ -19,15 +19,15 @@ export function removeChannel(index) {
   };
 }
 
-export function addPatternToTimeline(patternObject, cId) {
+export function addPatternToChannel(_patternID, cId) {
   return {
     type: "ADD_PATTERN_TO_CHANNEL",
-    payload: { patternObject: patternObject, channelID: cId },
+    payload: { patternID: _patternID, channelID: cId },
   };
 }
-export function removePatternFromTimeline(index, channelID) {
+export function removePatternFromChannel(index, channelID) {
   return {
-    type: "REMOVE_PATTERN_FROM_TIMELINE",
+    type: "REMOVE_PATTERN_FROM_CHANNEL",
     payload: { index: index, channelID: channelID },
   };
 }

@@ -1,49 +1,48 @@
 import React from "react";
-
 import ChannelItems from "./ChannelItem";
 import ActuatorItem from "./ActuatorItem";
-
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import Util from "../../utils/util";
 
 import {
   removeChannel,
-  addPatternToTimeline,
-  removePatternFromTimeline,
+  addPatternToChannel,
+  removePatternFromChannel,
   setRemoveActuatorFromChannel,
   setAddActuatorToChannel,
 } from "../../stores/timeline/timelineActions";
+
+import {
+  addPatternToList,
+  removePatternFromList,
+  setDisplayPattern,
+  setCurrentPattern,
+} from "../../stores/pattern/patternActions";
 import {
   setAddPatternToTimelineNotification,
   setRemoveChannelNotification,
   setAddActuatorToChannelNotification,
   setRemovePatternFromTimelineNotification,
 } from "../../stores/notification/notificationAction";
-import {
-  showNotification,
-  setDragActive,
-  setDragFalse,
-} from "../../stores/gui/guiActions";
-
-import {
-  setPatternId,
-  setInitialDatapoints,
-  importDatapoints,
-} from "../../stores/pattern/patternActions";
-
-import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { showNotification } from "../../stores/gui/guiActions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
+      addPatternToList,
+      removePatternFromList,
+      setDisplayPattern,
+      setCurrentPattern,
       removeChannel,
-      addPatternToTimeline,
-      removePatternFromTimeline,
+      addPatternToChannel,
+      removePatternFromChannel,
       setRemoveActuatorFromChannel,
       setAddActuatorToChannel,
       setAddPatternToTimelineNotification,
@@ -51,11 +50,6 @@ const mapDispatchToProps = (dispatch) => {
       setRemoveChannelNotification,
       setRemovePatternFromTimelineNotification,
       showNotification,
-      setPatternId,
-      setInitialDatapoints,
-      importDatapoints,
-      setDragActive,
-      setDragFalse,
     },
     dispatch
   );
@@ -63,10 +57,9 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => ({
   timeline: state.timeline,
-  pattern: state.pattern,
+  patternList: state.pattern.patterns,
   device: state.device,
   setShow: state.gui.isAddActuatorToChannelModalOpen,
-  dragActive: state.gui.isDragActive,
 });
 
 class Channel extends React.Component {
@@ -91,19 +84,12 @@ class Channel extends React.Component {
     this.handleAddPatternToChannel = this.handleAddPatternToChannel.bind(this);
   }
 
-  handleAddPatternToChannel() {
-    this.props.setPatternId();
-    this.props.setInitialDatapoints();
+  // -------------- Actuator and channel functions -------------------------
 
-    const patternObject = {
-      id: this.props.pattern.patternID,
-      path: this.props.pattern.area,
-      datapoints: this.props.pattern.datapoints,
-    };
-    this.props.addPatternToTimeline(patternObject, this.props.id);
-
-    this.props.setAddPatternToTimelineNotification();
+  handleAddActuatorToChannel() {
+    this.props.setAddActuatorToChannelNotification();
     this.props.showNotification();
+    this.handleActuatorModal();
   }
 
   handleActuatorModal() {
@@ -121,64 +107,39 @@ class Channel extends React.Component {
     this.props.showNotification();
   }
 
+  // ----------------- Channel Items functions ---------------------------
+
+  // Add default pattern to timeline
+
+  handleAddPatternToChannel() {
+    // TODO: Position
+
+    let pattern = Util.defaultPattern();
+    let patternID = pattern.patternID;
+
+    // Add pattern to pattern list
+
+    console.log(pattern);
+
+    this.props.addPatternToList(pattern);
+
+    // // Add pattern id to this channel list
+    this.props.addPatternToChannel(patternID, this.props.id);
+
+    this.props.setCurrentPattern(this.props.patternList.length);
+    this.props.setDisplayPattern();
+  }
+
   handleRemovePattern(index) {
     this.props.removePatternFromTimeline(index, this.props.id);
     this.props.setRemovePatternFromTimelineNotification();
     this.props.showNotification();
   }
 
-  handleOpenInEditor(index) {
-    let pattern = this.props.timeline.channel[this.props.id].pattern[index];
-
-    this.props.removePatternFromTimeline(index, this.props.id);
-    this.props.setPatternId(pattern.id);
-    this.props.importDatapoints(pattern.datapoints);
-  }
-
-  handleDrop(event) {
-    event.preventDefault();
-    this.props.setDragFalse();
-
-    let dropContainer = this.refs.drop;
-    dropContainer.style.border = null;
-    dropContainer.classList.add("border");
-
-    const patternObject = {
-      id: this.props.pattern.patternID,
-      path: this.props.pattern.area,
-      datapoints: this.props.pattern.datapoints,
-    };
-
-    this.props.addPatternToTimeline(patternObject, this.props.id);
-
-    // Dar reset ao padrão e criar um novo ID
-
-    this.props.setInitialDatapoints();
-    this.props.setPatternId();
-
-    this.props.setAddPatternToTimelineNotification();
-    this.props.showNotification();
-  }
-  handleDragOver(event) {
-    event.preventDefault();
-
-    let dropContainer = this.refs.drop;
-    dropContainer.classList.remove("border");
-    dropContainer.style.border = "2px dashed #5cb85c";
-  }
-  handleDragLeave(event) {
-    event.preventDefault();
-    let dropContainer = this.refs.drop;
-    dropContainer.style.border = null;
-    dropContainer.classList.add("border");
-  }
-
-  handleAddActuatorToChannel() {
-    this.props.setAddActuatorToChannelNotification();
-    this.props.showNotification();
-
-    this.handleActuatorModal();
-  }
+  handleOpenInEditor(index) {}
+  handleDrop(event) {}
+  handleDragOver(event) {}
+  handleDragLeave(event) {}
 
   render() {
     return (
@@ -211,18 +172,27 @@ class Channel extends React.Component {
             onDragOver={this.handleDragOver}
             ref={"drop"}
           >
-            {this.props.dragActive ? (
-              <p className="dropzone-content">
-                Drop to add the pattern to the timeline
-              </p>
-            ) : (
+            {this.props.timeline.channel[this.props.id].pattern.length ? (
               <ChannelItems
+                patternList={this.props.patternList}
                 channel={this.props.timeline.channel[this.props.id].pattern}
                 {...this.props}
                 removePattern={this.handleRemovePattern}
                 openInEditor={this.handleOpenInEditor}
                 addNewPattern={this.handleAddPatternToChannel}
               ></ChannelItems>
+            ) : (
+              <div className="empty-channel">
+                <Button
+                  variant="primary"
+                  onClick={this.handleAddPatternToChannel}
+                >
+                  <FontAwesomeIcon icon={faPlusCircle} size="lg" />
+                </Button>
+                <p>
+                  Click to add a <strong>pattern</strong>
+                </p>
+              </div>
             )}
           </div>
         </Row>

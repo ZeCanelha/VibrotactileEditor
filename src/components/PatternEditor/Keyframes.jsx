@@ -12,5 +12,7 @@ const renderKeyframes = (props) => {
 };
 
 export default (props) => {
-  return <g>{props.pattern.datapoints.map(renderKeyframes(props))}</g>;
+  return (
+    <g>{props.pattern[props.index].datapoints.map(renderKeyframes(props))}</g>
+  );
 };
