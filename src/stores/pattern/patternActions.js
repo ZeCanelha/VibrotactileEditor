@@ -34,7 +34,6 @@ export function removeDatapoint(patternIndex, _pointIndex) {
   };
 }
 
-//TODO: add default config here or create util to create pattern defaults
 export function addPatternToList(pattern) {
   return {
     type: "ADD_PATTERN_TO_LIST",
@@ -49,9 +48,10 @@ export function removePatternFromList(index) {
   };
 }
 
-export function setDisplayPattern() {
+export function setDisplayPattern(bool) {
   return {
     type: "SET_DISPLAY_PATTERN",
+    payload: bool,
   };
 }
 
@@ -59,5 +59,12 @@ export function setCurrentPattern(index) {
   return {
     type: "SET_CURRENT_PATTERN",
     payload: index,
+  };
+}
+
+export function setLoadedPatterns(patterns) {
+  return {
+    type: "SET_LOADED_PATTERNS",
+    payload: patterns,
   };
 }

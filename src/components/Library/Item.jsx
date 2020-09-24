@@ -10,6 +10,7 @@ const renderPatternToLibrary = (props) => {
   return (object, index) => {
     const properties = {
       key: index,
+      datapoints: object.keyframes,
       id: object.patternID,
       path: object.path,
     };
@@ -33,7 +34,15 @@ const renderPatternToLibrary = (props) => {
             size="sm"
           >
             {props.channels.map((channel, index) => (
-              <Dropdown.Item size="sm" eventKey={channel._id} as="button">
+              <Dropdown.Item
+                key={index}
+                size="sm"
+                eventKey={index}
+                as="button"
+                onSelect={(eventKey) =>
+                  props.handleImport(eventKey, properties)
+                }
+              >
                 Channel {index + 1}
               </Dropdown.Item>
             ))}

@@ -43,6 +43,8 @@ import {
   setLoadedDataToTimeline,
 } from "../../stores/timeline/timelineActions";
 
+import { setLoadedPatterns } from "../../stores/pattern/patternActions";
+
 const mapStateToProps = (state) => ({
   config: state.config,
   timeline: state.timeline,
@@ -55,6 +57,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setPatterns,
+      setLoadedPatterns,
       setLoadConfigurationsNotification,
       setSaveNotification,
       setTimelineID,
@@ -91,12 +94,6 @@ class StartConfig extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: Change this
-
-    Database.fetchData("/patterns", "GET").then((data) => {
-      this.props.setPatterns(data);
-    });
-
     this.props.setProjectId();
     this.props.setTimelineID();
   }
@@ -136,6 +133,7 @@ class StartConfig extends React.Component {
         // Load and set IDs
         this.props.setTimelineID(data[0].timelineID);
         this.props.loadConfigs(configs);
+        this.props.setLoadedPatterns(data[0].patternList);
         this.props.loadDeviceConfigurations(device);
 
         Database.fetchData(
@@ -172,6 +170,7 @@ class StartConfig extends React.Component {
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
       timelineID: this.props.timeline.timelineID,
+      patternList: this.props.pattern.patterns,
     };
 
     Database.postData("/configs", projectConfiguration, "POST").then((data) => {

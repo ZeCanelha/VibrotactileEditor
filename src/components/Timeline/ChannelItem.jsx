@@ -8,19 +8,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
+//TODO: If display == true verificar o selected
+
+function isSelected(currentDisplaying, patternListIndex) {}
 
 const renderChannelItemsToTimeline = (props) => {
-  return (id, index) => {
-    let properties = {};
-    props.patternList.forEach((element) => {
-      if (element.patternID === id) {
-        properties = {
-          key: index,
-          path: element.area,
-          id: id,
-        };
-      }
-    });
+  return (pattern, index) => {
+    const properties = {
+      key: index,
+      id: pattern.patternID,
+      path: pattern.area,
+    };
+
+    let patternListIndex = pattern.index;
     return (
       <Draggable
         key={index}
@@ -28,19 +28,19 @@ const renderChannelItemsToTimeline = (props) => {
         bounds="parent"
         handle=".timeline-display"
         defaultPosition={{ x: 0, y: 0 }}
-        position={null}
+        position={{ x: pattern.x, y: pattern.y }}
         grid={[5, 5]}
         scale={1}
         onStart={props.handleStart}
         onDrag={props.handleDrag}
-        onStop={props.handleStop}
+        onStop={(event, data) => props.handleStop(event, data, index)}
       >
         <Col
-          className="timeline-display"
+          className={"timeline-display"}
           key={index}
           xs={6}
           md={4}
-          onDoubleClick={() => props.openInEditor(index)}
+          onDoubleClick={() => props.openInEditor(patternListIndex)}
         >
           <div className="timeline-display-hover">
             <div className="channel-hover-info">
@@ -48,7 +48,7 @@ const renderChannelItemsToTimeline = (props) => {
                 className="channel-hover-remove"
                 variant="light"
                 size="sm"
-                onClick={() => props.removePattern(index)}
+                onClick={() => props.removePattern(patternListIndex)}
               >
                 <FontAwesomeIcon icon={faTimesCircle} />
               </Button>
@@ -68,5 +68,5 @@ const renderChannelItemsToTimeline = (props) => {
 };
 
 export default (props) => {
-  return props.channel.map(renderChannelItemsToTimeline(props));
+  return props.patternList.map(renderChannelItemsToTimeline(props));
 };

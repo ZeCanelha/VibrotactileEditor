@@ -21,6 +21,7 @@ import Database from "../../utils/database";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
+  patternList: state.pattern.patterns,
   config: state.config,
   device: state.device,
   timeline: state.timeline,
@@ -62,6 +63,7 @@ class SaveModal extends React.Component {
       nActuators: this.props.device.actuators_coords.length,
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
+      patternList: this.props.patternList,
     };
 
     Database.postData(

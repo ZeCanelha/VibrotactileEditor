@@ -65,6 +65,24 @@ export default function (state = INITIAL_STATE, action) {
           },
         },
       });
+    case "UPDATE_PATTERN_POSITION":
+      return update(state, {
+        channel: {
+          [action.payload.channelIndex]: {
+            pattern: {
+              [action.payload.patternIndex]: {
+                $set: {
+                  ...state.channel[action.payload.channelIndex].pattern[
+                    action.payload.patternIndex
+                  ],
+                  x: action.payload.x,
+                  y: action.payload.y,
+                },
+              },
+            },
+          },
+        },
+      });
     case "SET_TIMELINE_ID":
       return { ...state, timelineID: action.payload };
     case "SET_TIMELINE_DB_INSTANCE":

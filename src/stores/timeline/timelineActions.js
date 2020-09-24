@@ -19,10 +19,13 @@ export function removeChannel(index) {
   };
 }
 
-export function addPatternToChannel(_patternID, cId) {
+export function addPatternToChannel(_patternID, cId, _x = 0, _y = 0) {
   return {
     type: "ADD_PATTERN_TO_CHANNEL",
-    payload: { patternID: _patternID, channelID: cId },
+    payload: {
+      patternID: { patternID: _patternID, x: _x, y: _y },
+      channelID: cId,
+    },
   };
 }
 export function removePatternFromChannel(index, channelID) {
@@ -71,5 +74,17 @@ export function setRemoveActuatorFromChannel(channelID, index) {
   return {
     type: "REMOVE_ACTUATOR_FROM_CHANNEL",
     payload: { channelID: channelID, index: index },
+  };
+}
+
+export function updatePatternPosition(_channelIndex, _patternIndex, coords) {
+  return {
+    type: "UPDATE_PATTERN_POSITION",
+    payload: {
+      channelIndex: _channelIndex,
+      patternIndex: _patternIndex,
+      x: coords.x,
+      y: coords.y,
+    },
   };
 }

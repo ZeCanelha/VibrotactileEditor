@@ -42,14 +42,15 @@ export default function (state = INITIAL_STATE, action) {
     case "REMOVE_PATTERN_FROM_LIST":
       return update(state, {
         patterns: {
-          $splice: [[action.payload.index, 1]],
+          $splice: [[action.payload, 1]],
         },
       });
     case "SET_DISPLAY_PATTERN":
-      return { ...state, isPatternDisplayed: true };
+      return { ...state, isPatternDisplayed: action.payload };
     case "SET_CURRENT_PATTERN":
       return { ...state, currentPatternIndex: action.payload };
-
+    case "SET_LOADED_PATTERNS":
+      return { ...state, patterns: action.payload };
     default:
       return state;
   }

@@ -20,7 +20,6 @@ class DisplayPattern extends React.Component {
     let pathH = path.getBBox().height;
     let scaleX = width / pathW;
     let scaleY = height / pathH;
-    console.log(scaleX, scaleY);
     d3.select(this.refs.svgRef).attr("viewBox", viewBox);
     d3.select(this.refs.path).attr(
       "transform",

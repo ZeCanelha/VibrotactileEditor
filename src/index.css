@@ -150,7 +150,6 @@ strong {
 .timeline-container {
   width: 75%;
   height: 75%;
-
   overflow-y: scroll;
 }
 
@@ -268,6 +267,10 @@ strong {
 
 .empty-channel p {
   margin: 0;
+}
+
+.selected {
+  border: 1px solid red;
 }
 
 /* Library CSS */

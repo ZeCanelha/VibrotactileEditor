@@ -33,6 +33,7 @@ import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 const mapStateToProps = (state) => ({
   openDrawer: state.gui.isConfigDrawerOpen,
   config: state.config,
+  patternList: state.pattern.patterns,
   device: state.device,
   timeline: state.timeline,
 });
@@ -109,6 +110,7 @@ class Drawer extends React.Component {
       nActuators: this.props.device.actuators_coords.length,
       actuatorCoords: this.props.device.actuators_coords,
       deviceImage: this.props.device.deviceImage,
+      patternList: this.props.patternList,
     };
 
     Database.postData(

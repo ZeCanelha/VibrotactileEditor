@@ -1,6 +1,7 @@
 import React from "react";
 import ChannelItems from "./ChannelItem";
 import ActuatorItem from "./ActuatorItem";
+import ChannelHeader from "./ChannelHeader";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -14,6 +15,7 @@ import {
   removePatternFromChannel,
   setRemoveActuatorFromChannel,
   setAddActuatorToChannel,
+  updatePatternPosition,
 } from "../../stores/timeline/timelineActions";
 
 import {
@@ -31,7 +33,7 @@ import {
 import { showNotification } from "../../stores/gui/guiActions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
@@ -40,6 +42,7 @@ const mapDispatchToProps = (dispatch) => {
       removePatternFromList,
       setDisplayPattern,
       setCurrentPattern,
+      updatePatternPosition,
       removeChannel,
       addPatternToChannel,
       removePatternFromChannel,
@@ -57,9 +60,10 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => ({
   timeline: state.timeline,
-  patternList: state.pattern.patterns,
+  patterns: state.pattern.patterns,
+  currentShowing: state.pattern.currentPatternIndex,
+  isPatternDisplayed: state.pattern.isPatternDisplayed,
   device: state.device,
-  setShow: state.gui.isAddActuatorToChannelModalOpen,
 });
 
 class Channel extends React.Component {
@@ -69,11 +73,11 @@ class Channel extends React.Component {
     // State component for actuator configuration
     this.state = {
       openActuatorModal: false,
+      patterns: [],
     };
+    this.getChannelPatterns = this.getChannelPatterns.bind(this);
+    this.handleStop = this.handleStop.bind(this);
 
-    this.handleDrop = this.handleDrop.bind(this);
-    this.handleDragOver = this.handleDragOver.bind(this);
-    this.handleDragLeave = this.handleDragLeave.bind(this);
     this.handleRemoveChannel = this.handleRemoveChannel.bind(this);
     this.handleRemovePattern = this.handleRemovePattern.bind(this);
     this.handleAddActuatorToChannel = this.handleAddActuatorToChannel.bind(
@@ -82,6 +86,31 @@ class Channel extends React.Component {
     this.handleOpenInEditor = this.handleOpenInEditor.bind(this);
     this.handleActuatorModal = this.handleActuatorModal.bind(this);
     this.handleAddPatternToChannel = this.handleAddPatternToChannel.bind(this);
+  }
+
+  componentDidMount() {
+    this.getChannelPatterns();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.patterns !== prevProps.patterns) {
+      this.getChannelPatterns();
+    }
+  }
+
+  getChannelPatterns() {
+    let filteredPatterns = [];
+    let pattern = this.props.patterns;
+    for (let index = 0; index < pattern.length; index++) {
+      if (pattern[index].channelID === this.props.id) {
+        filteredPatterns.push({
+          patternID: pattern[index].patternID,
+          area: pattern[index].area,
+          index: index,
+        });
+      }
+    }
+    this.setState({ patterns: filteredPatterns });
   }
 
   // -------------- Actuator and channel functions -------------------------
@@ -112,59 +141,47 @@ class Channel extends React.Component {
   // Add default pattern to timeline
 
   handleAddPatternToChannel() {
-    // TODO: Position
-
     let pattern = Util.defaultPattern();
-    let patternID = pattern.patternID;
 
-    // Add pattern to pattern list
+    pattern.channelID = this.props.id;
 
-    console.log(pattern);
-
+    // Add pattern to pattern list and channel id
     this.props.addPatternToList(pattern);
 
     // // Add pattern id to this channel list
-    this.props.addPatternToChannel(patternID, this.props.id);
-
-    this.props.setCurrentPattern(this.props.patternList.length);
-    this.props.setDisplayPattern();
+    this.props.setCurrentPattern(this.props.patterns.length);
+    this.props.setDisplayPattern(true);
   }
 
-  handleRemovePattern(index) {
-    this.props.removePatternFromTimeline(index, this.props.id);
+  handleRemovePattern(patternListIndex) {
+    this.props.removePatternFromList(patternListIndex);
+    this.props.setDisplayPattern(false);
     this.props.setRemovePatternFromTimelineNotification();
     this.props.showNotification();
   }
 
-  handleOpenInEditor(index) {}
-  handleDrop(event) {}
-  handleDragOver(event) {}
-  handleDragLeave(event) {}
+  handleOpenInEditor(patternListIndex) {
+    this.props.setCurrentPattern(patternListIndex);
+    this.props.setDisplayPattern(true);
+  }
+
+  handleStop(event, data, index) {
+    let coords = {
+      x: data.x,
+      y: 0,
+    };
+    this.props.updatePatternPosition(this.props.id, index, coords);
+  }
 
   render() {
     return (
       <React.Fragment>
         <Row className="channel-row no-gutters flex-column">
-          <div className="channel-id border rounded">
-            <Button
-              className="remove-channel"
-              onClick={this.handleRemoveChannel}
-              variant="light"
-              size="sm"
-            >
-              <FontAwesomeIcon icon={faTimesCircle} size="xs" />
-            </Button>
-            <div className="channel-id-column">
-              <p>Channel {this.props.id + 1}</p>
-              <Button
-                variant="link"
-                size="sm"
-                onClick={this.handleActuatorModal}
-              >
-                Actuators
-              </Button>
-            </div>
-          </div>
+          <ChannelHeader
+            id={this.props.id}
+            handleRemoveChannel={this.handleRemoveChannel}
+            handleActuatorModal={this.handleActuatorModal}
+          ></ChannelHeader>
           <div
             className="channel-track border rounded no-gutters"
             onDrop={this.handleDrop}
@@ -172,11 +189,11 @@ class Channel extends React.Component {
             onDragOver={this.handleDragOver}
             ref={"drop"}
           >
-            {this.props.timeline.channel[this.props.id].pattern.length ? (
+            {this.state.patterns.length > 0 ? (
               <ChannelItems
-                patternList={this.props.patternList}
-                channel={this.props.timeline.channel[this.props.id].pattern}
+                patternList={this.state.patterns}
                 {...this.props}
+                handleStop={this.handleStop}
                 removePattern={this.handleRemovePattern}
                 openInEditor={this.handleOpenInEditor}
                 addNewPattern={this.handleAddPatternToChannel}

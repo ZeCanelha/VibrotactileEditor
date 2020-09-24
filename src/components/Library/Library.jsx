@@ -5,10 +5,18 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import LibraryFilter from "./LibrayItems";
+import LibraryItems from "./LibrayItems";
 import Search from "./LibrarySearch";
+import Database from "../../utils/database";
 
 import { showNotification } from "../../stores/gui/guiActions";
+
+import { addPatternToChannel } from "../../stores/timeline/timelineActions";
+import {
+  addPatternToList,
+  setDisplayPattern,
+  setCurrentPattern,
+} from "../../stores/pattern/patternActions";
 import {
   updateSearchQuery,
   setPatterns,
@@ -17,13 +25,19 @@ import { setImportPatternNotification } from "../../stores/notification/notifica
 
 const mapStateToPros = (state) => ({
   setShowLibraryModal: state.gui.isLibraryModalOpen,
+  patternList: state.pattern.patterns,
   patterns: state.library.patterns,
   channels: state.timeline.channel,
+  library: state.library,
 });
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      addPatternToChannel,
+      addPatternToList,
+      setDisplayPattern,
+      setCurrentPattern,
       setPatterns,
       updateSearchQuery,
       showNotification,
@@ -37,14 +51,31 @@ class Library extends React.Component {
     super();
     this.state = {
       openLibraryModal: false,
+      connection: true,
       searchParameters: {},
     };
-
     this.handleImportPattern = this.handleImportPattern.bind(this);
     this.handleLibraryModal = this.handleLibraryModal.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.getAllPatterns = this.getAllPatterns.bind(this);
   }
+
+  componentDidMount() {
+    this.getAllPatterns();
+  }
+
+  getAllPatterns() {
+    Database.fetchData("/patterns", "GET").then((data) => {
+      if (!data) {
+        this.setState({ connection: false });
+      } else {
+        this.props.setPatterns(data);
+      }
+    });
+  }
+
+  componentDidUpdate() {}
 
   searchPatternById(id) {
     for (let index = 0; index < this.props.patterns.length; index++) {
@@ -53,11 +84,26 @@ class Library extends React.Component {
     }
   }
 
-  handleImportPattern(patternObject) {
+  handleImportPattern(eventKey, properties) {
+    console.log(eventKey, properties);
+
+    let patternProperties = {
+      patternID: properties.id,
+      datapoints: properties.datapoints,
+      area: properties.path,
+      channelID: parseInt(eventKey),
+    };
+
+    // Import pattern to patternList
+    this.props.addPatternToList(patternProperties);
+
+    this.props.setCurrentPattern(this.props.patternList.length);
+    this.props.setDisplayPattern(true);
+
     this.props.setImportPatternNotification();
     this.props.showNotification();
 
-    this.setState({ openPatternDetails: false });
+    this.setState({ openLibraryModal: false });
   }
 
   handleLibraryModal() {
@@ -84,9 +130,8 @@ class Library extends React.Component {
         <Modal
           show={this.state.openLibraryModal}
           onHide={this.handleLibraryModal}
-          size="lg"
           backdrop="static"
-          dialogClassName="modal-90w"
+          size="xl"
           aria-labelledby="example-custom-modal-styling-title"
         >
           <Modal.Header closeButton>
@@ -96,16 +141,23 @@ class Library extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Container fluid className="library-modal-container">
-              <Row>
-                <Search
-                  handleSearch={this.handleSearch}
-                  handleReset={this.handleReset}
-                ></Search>
-                <LibraryFilter
-                  searchParameters={this.state.searchParameters}
-                  channels={this.props.channels}
-                ></LibraryFilter>
-              </Row>
+              {this.state.connection ? (
+                <Row>
+                  <Search
+                    handleSearch={this.handleSearch}
+                    handleReset={this.handleReset}
+                  ></Search>
+                  <LibraryItems
+                    searchParameters={this.state.searchParameters}
+                    channels={this.props.channels}
+                    handleImport={this.handleImportPattern}
+                  ></LibraryItems>
+                </Row>
+              ) : (
+                <div className="d-flex align-self-center">
+                  <p>Something went wrong</p>
+                </div>
+              )}
             </Container>
           </Modal.Body>
         </Modal>
