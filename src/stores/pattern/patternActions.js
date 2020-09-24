@@ -68,3 +68,14 @@ export function setLoadedPatterns(patterns) {
     payload: patterns,
   };
 }
+
+export function updatePatternPosition(_patternIndex, coords) {
+  return {
+    type: "UPDATE_PATTERN_POSITION",
+    payload: {
+      patternIndex: _patternIndex,
+      x: coords.x,
+      y: coords.y,
+    },
+  };
+}

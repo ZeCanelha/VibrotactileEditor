@@ -3,6 +3,7 @@ import update from "immutability-helper";
 const INITIAL_STATE = {
   timelineDbInstance: "",
   timelineID: "",
+  timelineTime: 2000,
   channel: [
     {
       _id: 0,
@@ -62,24 +63,6 @@ export default function (state = INITIAL_STATE, action) {
         channel: {
           [action.payload.channelID]: {
             pattern: { $splice: [[action.payload.index, 1]] },
-          },
-        },
-      });
-    case "UPDATE_PATTERN_POSITION":
-      return update(state, {
-        channel: {
-          [action.payload.channelIndex]: {
-            pattern: {
-              [action.payload.patternIndex]: {
-                $set: {
-                  ...state.channel[action.payload.channelIndex].pattern[
-                    action.payload.patternIndex
-                  ],
-                  x: action.payload.x,
-                  y: action.payload.y,
-                },
-              },
-            },
           },
         },
       });

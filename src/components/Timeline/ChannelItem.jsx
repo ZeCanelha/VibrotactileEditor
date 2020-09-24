@@ -8,13 +8,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
-//TODO: If display == true verificar o selected
 
 function isSelected(props, index) {
-  console.log("not called");
   if (props.currentShowing === index && props.isPatternDisplayed)
     return "timeline-display selected";
   return "timeline-display";
+}
+
+function setPatternWidth(props, patternDuration) {
+  const width =
+    (patternDuration * props.timelineWidth) / props.timeline.timelineTime;
+
+  return width;
 }
 
 const renderChannelItemsToTimeline = (props) => {
@@ -24,22 +29,28 @@ const renderChannelItemsToTimeline = (props) => {
       id: pattern.patternID,
       path: pattern.area,
     };
-
-    let patternListIndex = pattern.index;
-    let className = isSelected(props, patternListIndex);
+    const patternListIndex = pattern.index;
+    const className = isSelected(props, patternListIndex);
+    const patternDuration = Math.max.apply(
+      Math,
+      pattern.datapoints.map((d) => d.time)
+    );
+    const patternWidth = setPatternWidth(props, patternDuration);
+    console.log(patternWidth);
     return (
       <Draggable
         key={index}
         axis="x"
         bounds="parent"
         handle=".timeline-display"
-        defaultPosition={{ x: 0, y: 0 }}
         position={{ x: pattern.x, y: pattern.y }}
         grid={[5, 5]}
         scale={1}
         onStart={props.handleStart}
         onDrag={props.handleDrag}
-        onStop={(event, data) => props.handleStop(event, data, index)}
+        onStop={(event, data) =>
+          props.handleStop(event, data, patternListIndex)
+        }
       >
         <Col
           className={className}

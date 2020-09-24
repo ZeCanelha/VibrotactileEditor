@@ -76,15 +76,3 @@ export function setRemoveActuatorFromChannel(channelID, index) {
     payload: { channelID: channelID, index: index },
   };
 }
-
-export function updatePatternPosition(_channelIndex, _patternIndex, coords) {
-  return {
-    type: "UPDATE_PATTERN_POSITION",
-    payload: {
-      channelIndex: _channelIndex,
-      patternIndex: _patternIndex,
-      x: coords.x,
-      y: coords.y,
-    },
-  };
-}

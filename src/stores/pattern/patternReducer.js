@@ -45,6 +45,18 @@ export default function (state = INITIAL_STATE, action) {
           $splice: [[action.payload, 1]],
         },
       });
+    case "UPDATE_PATTERN_POSITION":
+      return update(state, {
+        patterns: {
+          [action.payload.patternIndex]: {
+            $set: {
+              ...state.patterns[action.payload.patternIndex],
+              x: action.payload.x,
+              y: action.payload.y,
+            },
+          },
+        },
+      });
     case "SET_DISPLAY_PATTERN":
       return { ...state, isPatternDisplayed: action.payload };
     case "SET_CURRENT_PATTERN":

@@ -15,7 +15,6 @@ import {
   removePatternFromChannel,
   setRemoveActuatorFromChannel,
   setAddActuatorToChannel,
-  updatePatternPosition,
 } from "../../stores/timeline/timelineActions";
 
 import {
@@ -23,6 +22,7 @@ import {
   removePatternFromList,
   setDisplayPattern,
   setCurrentPattern,
+  updatePatternPosition,
 } from "../../stores/pattern/patternActions";
 import {
   setAddPatternToTimelineNotification,
@@ -74,10 +74,12 @@ class Channel extends React.Component {
     this.state = {
       openActuatorModal: false,
       patterns: [],
+      containerWidth: null,
+      nextPostition: 0,
     };
+    this.getContainerSize = this.getContainerSize.bind(this);
     this.getChannelPatterns = this.getChannelPatterns.bind(this);
     this.handleStop = this.handleStop.bind(this);
-
     this.handleRemoveChannel = this.handleRemoveChannel.bind(this);
     this.handleRemovePattern = this.handleRemovePattern.bind(this);
     this.handleAddActuatorToChannel = this.handleAddActuatorToChannel.bind(
@@ -90,11 +92,29 @@ class Channel extends React.Component {
 
   componentDidMount() {
     this.getChannelPatterns();
+    this.getContainerSize();
+    window.addEventListener("resize", this.getContainerSize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.getContainerSize);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.patterns !== prevProps.patterns) {
       this.getChannelPatterns();
+    }
+  }
+
+  getContainerSize() {
+    const { containerWidth } = this.state;
+    const currentContainerWidth = this.refs.channel.getBoundingClientRect()
+      .width;
+    const shouldResize = containerWidth !== currentContainerWidth;
+
+    if (shouldResize) {
+      this.setState({
+        containerWidth: currentContainerWidth,
+      });
     }
   }
 
@@ -106,7 +126,10 @@ class Channel extends React.Component {
         filteredPatterns.push({
           patternID: pattern[index].patternID,
           area: pattern[index].area,
+          datapoints: pattern[index].datapoints,
           index: index,
+          x: pattern[index].x,
+          y: pattern[index].y,
         });
       }
     }
@@ -170,7 +193,7 @@ class Channel extends React.Component {
       x: data.x,
       y: 0,
     };
-    this.props.updatePatternPosition(this.props.id, index, coords);
+    this.props.updatePatternPosition(index, coords);
   }
 
   render() {
@@ -184,14 +207,12 @@ class Channel extends React.Component {
           ></ChannelHeader>
           <div
             className="channel-track border rounded no-gutters"
-            onDrop={this.handleDrop}
-            onDragLeave={this.handleDragLeave}
-            onDragOver={this.handleDragOver}
-            ref={"drop"}
+            ref={"channel"}
           >
             {this.state.patterns.length > 0 ? (
               <ChannelItems
                 patternList={this.state.patterns}
+                timelineWidth={this.state.containerWidth}
                 {...this.props}
                 handleStop={this.handleStop}
                 removePattern={this.handleRemovePattern}
