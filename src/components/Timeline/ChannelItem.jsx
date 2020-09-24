@@ -10,7 +10,12 @@ import { faTimesCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 //TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
 //TODO: If display == true verificar o selected
 
-function isSelected(currentDisplaying, patternListIndex) {}
+function isSelected(props, index) {
+  console.log("not called");
+  if (props.currentShowing === index && props.isPatternDisplayed)
+    return "timeline-display selected";
+  return "timeline-display";
+}
 
 const renderChannelItemsToTimeline = (props) => {
   return (pattern, index) => {
@@ -21,6 +26,7 @@ const renderChannelItemsToTimeline = (props) => {
     };
 
     let patternListIndex = pattern.index;
+    let className = isSelected(props, patternListIndex);
     return (
       <Draggable
         key={index}
@@ -36,7 +42,7 @@ const renderChannelItemsToTimeline = (props) => {
         onStop={(event, data) => props.handleStop(event, data, index)}
       >
         <Col
-          className={"timeline-display"}
+          className={className}
           key={index}
           xs={6}
           md={4}

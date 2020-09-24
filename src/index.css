@@ -270,7 +270,7 @@ strong {
 }
 
 .selected {
-  border: 1px solid red;
+  border: 2px solid red;
 }
 
 /* Library CSS */
