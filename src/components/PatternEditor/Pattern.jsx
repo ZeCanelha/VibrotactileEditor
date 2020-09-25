@@ -46,6 +46,7 @@ class Pattern extends React.Component {
       let coords = d3.mouse(this);
       theobject.addDatapoint(coords);
     });
+    this.addEventListeners();
   }
 
   componentDidUpdate(prevProps) {
@@ -66,6 +67,7 @@ class Pattern extends React.Component {
 
   removeDatapoint(d, i) {
     if (d3.event.shiftKey) {
+      console.log("shift");
       this.props.removeDatapoint(this.props.index, i);
     }
   }

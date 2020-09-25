@@ -3,7 +3,7 @@ import update from "immutability-helper";
 const INITIAL_STATE = {
   timelineDbInstance: "",
   timelineID: "",
-  timelineTime: 2000,
+  timelineTime: 1000,
   channel: [
     {
       _id: 0,

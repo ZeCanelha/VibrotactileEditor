@@ -1,19 +1,13 @@
 import React from "react";
 import Display from "../DisplayPattern";
-import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Draggable from "react-draggable";
+import classNames from "classnames";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //TODO: Initial position on the timeline. Add start time and end time according to X and end time according to max(time)%width container row
-
-function isSelected(props, index) {
-  if (props.currentShowing === index && props.isPatternDisplayed)
-    return "timeline-display selected";
-  return "timeline-display";
-}
 
 function setPatternWidth(props, patternDuration) {
   const width =
@@ -30,13 +24,24 @@ const renderChannelItemsToTimeline = (props) => {
       path: pattern.area,
     };
     const patternListIndex = pattern.index;
-    const className = isSelected(props, patternListIndex);
     const patternDuration = Math.max.apply(
       Math,
       pattern.datapoints.map((d) => d.time)
     );
     const patternWidth = setPatternWidth(props, patternDuration);
-    console.log(patternWidth);
+
+    const className = classNames({
+      "timeline-display": true,
+      selected:
+        props.currentShowing === patternListIndex && props.isPatternDisplayed,
+    });
+
+    const itemClass = classNames({
+      "channel-hover-info": true,
+      xs: patternWidth < 200,
+      s: patternWidth < 400,
+    });
+
     return (
       <Draggable
         key={index}
@@ -49,20 +54,19 @@ const renderChannelItemsToTimeline = (props) => {
         onStart={props.handleStart}
         onDrag={props.handleDrag}
         onStop={(event, data) =>
-          props.handleStop(event, data, patternListIndex)
+          props.handleStop(event, data, patternListIndex, patternWidth)
         }
       >
-        <Col
+        <div
           className={className}
           key={index}
-          xs={6}
-          md={4}
           onDoubleClick={() => props.openInEditor(patternListIndex)}
+          style={{ width: patternWidth }}
         >
           <div className="timeline-display-hover">
-            <div className="channel-hover-info">
+            <div className={itemClass}>
               <Button
-                className="channel-hover-remove"
+                className="btn channel-hover-remove"
                 variant="light"
                 size="sm"
                 onClick={() => props.removePattern(patternListIndex)}
@@ -72,13 +76,17 @@ const renderChannelItemsToTimeline = (props) => {
               <span>Double click to edit</span>
             </div>
             <div className="channel-hover-add">
-              <Button variant="outline-dark" onClick={props.addNewPattern}>
+              <Button
+                variant="outline-dark"
+                size="sm"
+                onClick={props.addNewPattern}
+              >
                 <FontAwesomeIcon icon={faPlus} />
               </Button>
             </div>
           </div>
           <Display {...properties}></Display>
-        </Col>
+        </div>
       </Draggable>
     );
   };

@@ -228,6 +228,13 @@ strong {
   align-items: center;
   justify-content: center;
 }
+.xs {
+  font-size: 0.6rem;
+}
+s {
+  font-size: 0.75rem;
+}
+
 .channel-hover-add {
   position: absolute;
   right: 0;
@@ -236,7 +243,7 @@ strong {
   justify-content: center;
   width: 20%;
   height: 100%;
-  transition: background-color 1s;
+  transition: background-color 0.45s;
 }
 
 .channel-hover-add:hover {
@@ -270,7 +277,7 @@ strong {
 }
 
 .selected {
-  border: 2px solid red;
+  border: 1.5px solid #6ed8f8;
 }
 
 /* Library CSS */
