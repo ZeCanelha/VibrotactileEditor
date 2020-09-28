@@ -58,6 +58,22 @@ class PatternUtils {
         return "AREA_TYPE_ERROR";
     }
   }
+
+  static patternToString(pathElement, timeMax = 350) {
+    console.log(pathElement.getTotalLength());
+    const patthLength = Math.floor(pathElement.getTotalLength());
+
+    const readingValue = 5; // Arduino takes a value every 5ms
+
+    let iterator = Math.round((readingValue * patthLength) / timeMax);
+    console.log(iterator);
+
+    let points = [];
+    for (let index = 0; index < patthLength; index += iterator) {
+      points.push(pathElement.getPointAtLength(index));
+    }
+    return points;
+  }
 }
 
 export default PatternUtils;

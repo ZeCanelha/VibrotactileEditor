@@ -47,6 +47,22 @@ class Pattern extends React.Component {
       theobject.addDatapoint(coords);
     });
     this.addEventListeners();
+    let path = d3.select(this.refs.pathEl);
+    let points = PatternUtils.patternToString(path.node());
+    this.datapointsToString(points);
+  }
+
+  datapointsToString(points, timeMax = 350) {
+    let array = [];
+    points.forEach((element) => {
+      let object = {
+        time: Math.floor(this.xScale().invert(element.x)),
+        intensity: Math.floor(this.yScale().invert(element.y)),
+      };
+      array.push(object);
+    });
+
+    console.log(array);
   }
 
   componentDidUpdate(prevProps) {
@@ -62,6 +78,13 @@ class Pattern extends React.Component {
         newArea(this.props.pattern[this.props.index].datapoints)
       );
       this.addEventListeners();
+      let scaleMax = d3.max(
+        this.props.pattern[this.props.index].datapoints,
+        (d) => d.time
+      );
+      let path = d3.select(this.refs.pathEl);
+      let points = PatternUtils.patternToString(path.node());
+      this.datapointsToString(points, scaleMax);
     }
   }
 
@@ -180,6 +203,7 @@ class Pattern extends React.Component {
         preserveAspectRatio="xMidYMid meet"
       >
         <path
+          ref={"pathEl"}
           className="svg-editor-area"
           d={this.props.pattern[this.props.index].area}
         ></path>

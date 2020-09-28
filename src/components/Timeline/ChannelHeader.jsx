@@ -15,7 +15,7 @@ export default (props) => {
         <FontAwesomeIcon icon={faTimesCircle} size="xs" />
       </Button>
       <div className="channel-id-column">
-        <p>Channel {props.id + 1}</p>
+        <span>Channel {props.id + 1}</span>
         <Button variant="link" size="sm" onClick={props.handleActuatorModal}>
           Actuators
         </Button>

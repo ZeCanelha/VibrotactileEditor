@@ -171,6 +171,11 @@ strong {
 
 .channel-id-column {
   text-align: center;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .toolbar-size {
@@ -181,8 +186,8 @@ strong {
 
 .remove-channel {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: 0;
+  right: 0;
 }
 
 .channel-track {

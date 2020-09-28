@@ -41,6 +41,11 @@ class Toolbar extends React.Component {
 
     this.handleAddActuator = this.handleAddActuator.bind(this);
     this.handleAddChannel = this.handleAddChannel.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
+  }
+
+  handlePlay() {
+    console.log("play");
   }
 
   handleAddActuator() {
