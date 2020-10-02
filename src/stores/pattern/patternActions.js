@@ -79,3 +79,13 @@ export function updatePatternPosition(_patternIndex, coords) {
     },
   };
 }
+
+export function updateDataString(_patternIndex, _points) {
+  return {
+    type: "UPDATE_DATA_STRING",
+    payload: {
+      patternIndex: _patternIndex,
+      points: _points,
+    },
+  };
+}

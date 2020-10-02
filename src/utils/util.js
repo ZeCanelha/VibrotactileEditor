@@ -46,6 +46,7 @@ class Util {
       area: "",
       x: 0,
       y: 0,
+      dataString: "",
     };
   }
 }

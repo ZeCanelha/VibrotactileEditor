@@ -57,6 +57,14 @@ export default function (state = INITIAL_STATE, action) {
           },
         },
       });
+    case "UPDATE_DATA_STRING":
+      return update(state, {
+        patterns: {
+          [action.payload.patternIndex]: {
+            dataString: { $set: action.payload.points },
+          },
+        },
+      });
     case "SET_DISPLAY_PATTERN":
       return { ...state, isPatternDisplayed: action.payload };
     case "SET_CURRENT_PATTERN":

@@ -1,4 +1,5 @@
 import React from "react";
+import Database from "../utils/database";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -45,7 +46,10 @@ class Toolbar extends React.Component {
   }
 
   handlePlay() {
-    console.log("play");
+    const body = {
+      dataString: "bytes",
+    };
+    Database.postData("/arduino", body, "POST");
   }
 
   handleAddActuator() {

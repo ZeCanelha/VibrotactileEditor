@@ -12,10 +12,12 @@ import {
   updateAreaChart,
   updateDataPoints,
   removeDatapoint,
+  updateDataString,
 } from "../../stores/pattern/patternActions";
 
 const PATTERN_OFFSET = 25;
 let thisObject = null;
+let pathRef = null;
 
 const mapStateToProps = (state) => ({
   pattern: state.pattern.patterns,
@@ -29,6 +31,7 @@ const mapDispatchToProps = (dispatch) =>
       updateAreaChart,
       updateDataPoints,
       removeDatapoint,
+      updateDataString,
     },
     dispatch
   );
@@ -36,6 +39,7 @@ const mapDispatchToProps = (dispatch) =>
 class Pattern extends React.Component {
   componentDidMount() {
     let theobject = this;
+    pathRef = d3.select(this.refs.pathEl);
     thisObject = theobject;
     let newArea = this.areaGenerator();
     this.props.updateAreaChart(
@@ -47,22 +51,24 @@ class Pattern extends React.Component {
       theobject.addDatapoint(coords);
     });
     this.addEventListeners();
-    let path = d3.select(this.refs.pathEl);
-    let points = PatternUtils.patternToString(path.node());
-    this.datapointsToString(points);
   }
 
   datapointsToString(points, timeMax = 350) {
-    let array = [];
-    points.forEach((element) => {
-      let object = {
-        time: Math.floor(this.xScale().invert(element.x)),
-        intensity: Math.floor(this.yScale().invert(element.y)),
-      };
-      array.push(object);
-    });
-
-    console.log(array);
+    let dataString = "";
+    for (let index = 0; index < points.length; index++) {
+      if (Math.ceil(this.xScale().invert(points[index].x)) >= timeMax) {
+        break;
+      } else {
+        dataString +=
+          "(" +
+          Math.floor(this.xScale().invert(points[index].x)) +
+          "," +
+          Math.floor(this.yScale().invert(points[index].y)) +
+          ")";
+      }
+    }
+    console.log(dataString);
+    return dataString;
   }
 
   componentDidUpdate(prevProps) {
@@ -73,18 +79,18 @@ class Pattern extends React.Component {
     ) {
       d3.select(".d3-tip").remove();
       let newArea = this.areaGenerator();
+
+      let points = PatternUtils.patternToString(pathRef.node());
+      this.props.updateDataString(
+        this.props.index,
+        this.datapointsToString(points)
+      );
       this.props.updateAreaChart(
         this.props.index,
-        newArea(this.props.pattern[this.props.index].datapoints)
+        newArea(this.props.pattern[this.props.index].datapoints),
+        this.datapointsToString(points)
       );
       this.addEventListeners();
-      let scaleMax = d3.max(
-        this.props.pattern[this.props.index].datapoints,
-        (d) => d.time
-      );
-      let path = d3.select(this.refs.pathEl);
-      let points = PatternUtils.patternToString(path.node());
-      this.datapointsToString(points, scaleMax);
     }
   }
 
