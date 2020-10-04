@@ -96,7 +96,6 @@ class Pattern extends React.Component {
 
   removeDatapoint(d, i) {
     if (d3.event.shiftKey) {
-      console.log("shift");
       this.props.removeDatapoint(this.props.index, i);
     }
   }

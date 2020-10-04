@@ -2,6 +2,7 @@ const INITIAL_STATE = {
   dbInstance: "",
   projectId: "",
   projectName: "New Project",
+  serialPort: ""
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -16,6 +17,7 @@ export default function (state = INITIAL_STATE, action) {
         dbInstance: action.payload.dbInstanceId,
         projectId: action.payload.projectId,
         projectName: action.payload.projectName,
+        serialPort: action.payload.serialPort,
       };
     case "SET_DB_INSTANCE_ID":
       return {

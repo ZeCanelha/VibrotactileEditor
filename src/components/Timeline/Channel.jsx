@@ -15,6 +15,7 @@ import {
   removePatternFromChannel,
   setRemoveActuatorFromChannel,
   setAddActuatorToChannel,
+  updateTimelineTime,
 } from "../../stores/timeline/timelineActions";
 
 import {
@@ -39,6 +40,7 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
       addPatternToList,
+      updateTimelineTime,
       removePatternFromList,
       setDisplayPattern,
       setCurrentPattern,
@@ -120,9 +122,14 @@ class Channel extends React.Component {
 
   getChannelPatterns() {
     let filteredPatterns = [];
+    let currentTime = 0;
     let pattern = this.props.patterns;
     for (let index = 0; index < pattern.length; index++) {
       if (pattern[index].channelID === this.props.id) {
+        currentTime += Math.max.apply(
+          Math,
+          pattern[index].datapoints.map((d) => d.time)
+        );
         filteredPatterns.push({
           patternID: pattern[index].patternID,
           area: pattern[index].area,
@@ -132,6 +139,9 @@ class Channel extends React.Component {
           y: pattern[index].y,
         });
       }
+    }
+    if (currentTime >= this.props.timeline.timelineTime) {
+      this.props.updateTimelineTime(currentTime + 100);
     }
     this.setState({ patterns: filteredPatterns });
   }

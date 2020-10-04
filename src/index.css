@@ -9,10 +9,13 @@ strong {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   background-color: white;
   position: relative;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 0;
 }
 
 /* Editor CSS */
@@ -142,6 +145,49 @@ strong {
 }
 
 /* ------------------------ TIMELINE ------------------------ ------------------------ */
+
+.tick {
+  position: relative;
+  border-left: 1px solid black;
+  height: 10%;
+}
+.medium {
+  height: 25%;
+}
+
+.large {
+  height: 50%;
+}
+
+.ruler {
+  background-color: rgb(201, 229, 245);
+  position: relative;
+  left: 15%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 85%;
+  height: 10%;
+}
+
+.tick-container {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  width: 10%;
+  height: 90%;
+}
+/* .tick-container:last-child {
+  justify-content: flex-start;
+} */
+.label-large {
+  position: absolute;
+  font-size: 0.5rem;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+}
+
 .timeline {
   width: 100%;
   height: 50%;
@@ -155,7 +201,7 @@ strong {
 
 .channel-row {
   width: 100%;
-  height: 33%;
+  height: 30%;
 }
 
 .channel-id {
@@ -180,6 +226,14 @@ strong {
 
 .toolbar-size {
   width: 17.5% !important;
+}
+
+.toolbar-div {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 /* Timeline and Channel: onDragOver  */

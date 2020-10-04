@@ -84,6 +84,7 @@ class StartConfig extends React.Component {
 
     this.state = {
       isLoading: false,
+      ports: []
     };
 
     this.isProjectLoading = this.isProjectLoading.bind(this);
@@ -91,11 +92,23 @@ class StartConfig extends React.Component {
     this.fetchConfigurations = this.fetchConfigurations.bind(this);
     this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
+    this.getSerialPortsAvailable = this.getSerialPortsAvailable.bind(this);
   }
 
   componentDidMount() {
+    this.getSerialPortsAvailable();
     this.props.setProjectId();
     this.props.setTimelineID();
+  }
+
+  getSerialPortsAvailable() {
+    Database.fetchData("/arduino", "GET").then((data) => {
+      if (!data) {
+        this.props.setAddWarningNotification(
+          "Network Error! Failed fetching project settings!"
+        );
+      }
+    });
   }
 
   isProjectLoading() {
@@ -242,6 +255,7 @@ class StartConfig extends React.Component {
               projectName: "",
               nActuators: "",
               deviceImage: "",
+              serialPort: "",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -298,6 +312,22 @@ class StartConfig extends React.Component {
                   </Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Please select the number of actuators.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="exampleForm.ControlSelect1">
+                  <Form.Label>Serial port</Form.Label>
+                  <Form.Control
+                    name="serialPort"
+                    value={values.serialPort}
+                    onChange={handleChange}
+                    as="select"
+                    isValid={touched.serialPort && errors.serialPort}
+                    isInvalid={!!errors.serialPort}
+                  >
+                    <option>1</option>
+                  </Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    Please select the serial port.
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.File

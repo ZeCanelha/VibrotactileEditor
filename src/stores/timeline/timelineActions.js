@@ -76,3 +76,10 @@ export function setRemoveActuatorFromChannel(channelID, index) {
     payload: { channelID: channelID, index: index },
   };
 }
+
+export function updateTimelineTime(time) {
+  return {
+    type: "UPDATE_TIMELINE_TIME",
+    payload: time,
+  };
+}

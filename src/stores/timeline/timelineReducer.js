@@ -66,6 +66,10 @@ export default function (state = INITIAL_STATE, action) {
           },
         },
       });
+    case "UPDATE_TIMELINE_TIME":
+      return update(state, {
+        timelineTime: { $set: action.payload },
+      });
     case "SET_TIMELINE_ID":
       return { ...state, timelineID: action.payload };
     case "SET_TIMELINE_DB_INSTANCE":

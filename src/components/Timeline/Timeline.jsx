@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Row from "react-bootstrap/Row";
 
 import Channel from "./Channel";
+import Ruler from "./Ruler";
 
 const mapStateToProps = (state) => ({
   timeline_list: state.timeline,
@@ -28,6 +29,7 @@ class Timeline extends React.Component {
   render() {
     return (
       <Row className="timeline-container no-gutters">
+        <Ruler {...this.props}></Ruler>
         {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
       </Row>
     );

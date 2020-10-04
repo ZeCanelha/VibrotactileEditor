@@ -26,9 +26,9 @@ class Editor extends React.Component {
             <PatternEditor></PatternEditor>
           </Row>
 
-          <Row className="timeline flex-column align-items-center justify-content-end">
+          <Row className="timeline flex-column align-items-center justify-content-around">
             <Timeline></Timeline>
-            <Row className="h-25 w-100 justify-content-around align-items-center">
+            <Row className="toolbar-div">
               <Library></Library>
               <Toolbar></Toolbar>
               <Save></Save>
