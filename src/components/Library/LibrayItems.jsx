@@ -17,7 +17,7 @@ class LibraryFilter extends React.Component {
   }
   componentDidMount() {
     this.setState({
-      items: this.filterSearch(this.props.searchParameters),
+      items: this.props.patterns,
     });
   }
   componentDidUpdate(prevProps) {
@@ -34,7 +34,11 @@ class LibraryFilter extends React.Component {
         return (
           item.name
             .toLowerCase()
-            .indexOf(searchParameters.patternName.toLowerCase()) > -1
+            .indexOf(searchParameters.patternName.toLowerCase()) > -1 &&
+          Math.max.apply(
+            Math,
+            item.keyframes.map((d) => d.time)
+          ) <= searchParameters.rangeInput
         );
       return item;
     });
@@ -42,7 +46,7 @@ class LibraryFilter extends React.Component {
 
   render() {
     return (
-      <Col className="libray-item-display" lg={8}>
+      <Col className="libray-item-display">
         <Items {...this.props} patterns={this.state.items}></Items>
       </Col>
     );

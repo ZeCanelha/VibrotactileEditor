@@ -1,6 +1,5 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { Formik } from "formik";
 
@@ -9,10 +8,12 @@ const keywords = ["Vibration", "Strength", "Actuators", "ERM"];
 
 export default (props) => {
   return (
-    <Col className="library-search-form">
+    <div className="library-search-form">
       <Formik
+        enableReinitialize
         initialValues={{
           patternName: "",
+          rangeInput: 300,
         }}
         onSubmit={props.handleSearch}
         onReset={props.handleReset}
@@ -53,6 +54,7 @@ export default (props) => {
                     name={item}
                     onChange={handleChange}
                     inline
+                    value=""
                     type={"checkbox"}
                     id={"default-checkbox"}
                     label={item}
@@ -63,12 +65,14 @@ export default (props) => {
 
             <Form.Group controlId="patternDuration">
               <Form.Label>Pattern Duration</Form.Label>
+              <span>: {props.rangeValue}</span>
               <Form.Control
                 name="rangeInput"
                 type="range"
                 min="0"
-                max="5000"
-                onChange={handleChange}
+                value={props.rangeValue}
+                max="700"
+                onChange={props.handleChangeRange}
               />
             </Form.Group>
             <Button variant="primary" block type="submit">
@@ -80,6 +84,6 @@ export default (props) => {
           </Form>
         )}
       </Formik>
-    </Col>
+    </div>
   );
 };

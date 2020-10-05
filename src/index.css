@@ -359,6 +359,8 @@ s {
 }
 
 .library-search-form {
+  padding: 10px;
+  width: 30%;
   font-size: 0.95rem;
   background-color: #f7f7f7;
 }
@@ -367,12 +369,13 @@ s {
   overflow-y: scroll;
   display: flex;
   flex-wrap: wrap;
-  min-height: 100%;
+  width: 70%;
+  height: 100vh;
 }
 
 .card-item {
   width: 48%;
-  height: auto;
+  height: max-content;
   margin: 0 0.5rem 0.5rem 0;
 }
 

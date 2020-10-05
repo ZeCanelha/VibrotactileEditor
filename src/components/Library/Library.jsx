@@ -53,7 +53,9 @@ class Library extends React.Component {
       openLibraryModal: false,
       connection: true,
       searchParameters: {},
+      rangeValue: 350,
     };
+    this.handleChangeRange = this.handleChangeRange.bind(this);
     this.handleImportPattern = this.handleImportPattern.bind(this);
     this.handleLibraryModal = this.handleLibraryModal.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -65,6 +67,9 @@ class Library extends React.Component {
     this.getAllPatterns();
   }
 
+  handleChangeRange(event) {
+    this.setState({ rangeValue: parseInt(event.target.value) });
+  }
   getAllPatterns() {
     Database.fetchData("/patterns", "GET").then((data) => {
       if (!data) {
@@ -111,10 +116,12 @@ class Library extends React.Component {
   }
 
   handleSearch(values) {
+    values["rangeInput"] = this.state.rangeValue;
+    console.log(values);
     this.setState({ searchParameters: values });
   }
   handleReset() {
-    this.setState({ searchParameters: {} });
+    this.setState({ searchParameters: {}, rangeValue: 350 });
   }
 
   render() {
@@ -142,10 +149,12 @@ class Library extends React.Component {
           <Modal.Body>
             <Container fluid className="library-modal-container">
               {this.state.connection ? (
-                <Row>
+                <Row className="w-100">
                   <Search
                     handleSearch={this.handleSearch}
                     handleReset={this.handleReset}
+                    handleChangeRange={this.handleChangeRange}
+                    rangeValue={this.state.rangeValue}
                   ></Search>
                   <LibraryItems
                     searchParameters={this.state.searchParameters}

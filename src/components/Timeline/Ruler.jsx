@@ -2,7 +2,7 @@ import React from "react";
 
 const renderTicks = (large) => {
   let ticks = (
-    <div className={"tick-container"}>
+    <div className={"tick-container"} key={large}>
       <label className={"label-large"}>{large}</label>
       <div className={"tick large"}></div>
       <div className={"tick"}></div>
