@@ -23,7 +23,8 @@ const schema = yup.object({
 });
 
 const mapStateToProps = (state) => ({
-  pattern: state.pattern,
+  pattern: state.pattern.patterns,
+  index: state.pattern.currentPatternIndex,
 });
 
 const mapDispatchToProps = (dispatch) =>
@@ -70,16 +71,16 @@ class SaveToLibrary extends React.Component {
 
   handleSaveUpdatedPattern() {
     const body = {
-      patternID: this.props.pattern.patternID,
-      keyframes: this.props.pattern.datapoints,
-      path: this.props.pattern.area,
+      patternID: this.props.pattern[this.props.index].patternID,
+      keyframes: this.props.pattern[this.props.index].datapoints,
+      path: this.props.pattern[this.props.index].area,
     };
 
     Database.fetchData("/patterns", "GET", "?patternID=" + body.patternID).then(
       (data) => {
-        if (!data) {
+        if (data.length === 0) {
           this.props.setAddWarningNotification(
-            "Could not save the pattern in the Library!"
+            "Could not find the pattern in the Library! Try saving it as new!"
           );
         } else {
           Database.postData("/patterns", body, "PUT", "/" + data[0]._id).then(
@@ -90,11 +91,11 @@ class SaveToLibrary extends React.Component {
                 );
               } else this.props.setAddSavePatternNotification();
 
-              this.props.showNotification();
               this.setState({ isSaveModalOpen: false });
             }
           );
         }
+        this.props.showNotification();
       }
     );
   }
@@ -106,9 +107,9 @@ class SaveToLibrary extends React.Component {
   handleFormSubmission(values) {
     this.isProjectSaving();
     const body = {
-      patternID: this.props.pattern.patternID,
-      keyframes: this.props.pattern.datapoints,
-      path: this.props.pattern.area,
+      patternID: this.props.pattern[this.props.index].patternID,
+      keyframes: this.props.pattern[this.props.index].datapoints,
+      path: this.props.pattern[this.props.index].area,
       name: values.patternName,
       description: values.patternDescription,
       usage: values.patternUsage,
