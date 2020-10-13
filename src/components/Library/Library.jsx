@@ -90,13 +90,14 @@ class Library extends React.Component {
   }
 
   handleImportPattern(eventKey, properties) {
-    console.log(eventKey, properties);
-
+    
     let patternProperties = {
       patternID: properties.id,
       datapoints: properties.datapoints,
       area: properties.path,
       channelID: parseInt(eventKey),
+      x: 0,
+      emptyTime: 0
     };
 
     // Import pattern to patternList

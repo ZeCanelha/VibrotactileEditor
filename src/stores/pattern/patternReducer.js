@@ -52,7 +52,7 @@ export default function (state = INITIAL_STATE, action) {
             $set: {
               ...state.patterns[action.payload.patternIndex],
               x: action.payload.x,
-              y: action.payload.y,
+              emptyTime: action.payload.emptyTime,
             },
           },
         },

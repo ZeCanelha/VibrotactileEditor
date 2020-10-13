@@ -36,6 +36,12 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
+const mapStateToPorps = (state) => ({
+  patterns: state.pattern.patterns,
+  channels: state.timeline.channels,
+  actuators: state.device.actuators,
+});
+
 class Toolbar extends React.Component {
   constructor(props) {
     super(props);
@@ -46,10 +52,17 @@ class Toolbar extends React.Component {
   }
 
   handlePlay() {
+    const channels = this.props.channels.length;
+    const actuators = this.props.actuators;
+
+    let actuatorValues = new Array(actuators).fill(1); // Default value for all actuators
+
+    for (let i = 0; i < channels; i++) {}
+
     const body = {
       dataString: "bytes",
     };
-    Database.postData("/arduino", body, "POST");
+    Database.postData("/actuate", body, "POST");
   }
 
   handleAddActuator() {
@@ -83,7 +96,7 @@ class Toolbar extends React.Component {
             <Button variant="light">
               <FontAwesomeIcon icon={faBackward} />
             </Button>
-            <Button variant="light">
+            <Button variant="light" onClick={this.handlePlay}>
               <FontAwesomeIcon size="2x" icon={faPlayCircle} />
             </Button>
             <Button variant="light">
@@ -104,4 +117,4 @@ class Toolbar extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Toolbar);
+export default connect(mapStateToPorps, mapDispatchToProps)(Toolbar);

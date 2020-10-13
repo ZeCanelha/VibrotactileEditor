@@ -9,16 +9,19 @@ const INITIAL_STATE = {
       _id: 0,
       pattern: [],
       actuators: [],
+      dataString: ""
     },
     {
       _id: 1,
       pattern: [],
       actuators: [],
+      dataString: ""
     },
     {
       _id: 2,
       pattern: [],
       actuators: [],
+      dataString: ""
     },
   ],
 };
@@ -70,6 +73,15 @@ export default function (state = INITIAL_STATE, action) {
       return update(state, {
         timelineTime: { $set: action.payload },
       });
+    case "UPDATE_CHANNEL_DATA":
+      return update(state, {
+        channel: {
+          [action.payload.channelID]: {
+            dataString: { $set: action.payload.dataString}
+          }
+
+        }
+      })
     case "SET_TIMELINE_ID":
       return { ...state, timelineID: action.payload };
     case "SET_TIMELINE_DB_INSTANCE":

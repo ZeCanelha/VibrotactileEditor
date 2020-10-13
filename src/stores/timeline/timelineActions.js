@@ -5,6 +5,7 @@ export function addChannelToTimeline() {
     _id: Util.generateUUI(),
     pattern: [],
     actuators: [],
+    dataString: "",
   };
   return {
     type: "ADD_CHANNEL_TO_TIMELINE",
@@ -82,4 +83,15 @@ export function updateTimelineTime(time) {
     type: "UPDATE_TIMELINE_TIME",
     payload: time,
   };
+}
+
+
+export function updateChannelData(_channelID, _dataString){
+  return {
+    type: "UPDATE_CHANNEL_DATA",
+    payload: {
+      channelID: _channelID,
+      dataString: _dataString
+    }
+  }
 }

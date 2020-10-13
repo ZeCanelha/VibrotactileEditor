@@ -48,7 +48,7 @@ const renderChannelItemsToTimeline = (props) => {
         axis="x"
         bounds="parent"
         handle=".timeline-display"
-        position={{ x: pattern.x, y: pattern.y }}
+        position={{ x: pattern.x, y: 0 }}
         grid={[5, 5]}
         scale={1}
         onStart={props.handleStart}

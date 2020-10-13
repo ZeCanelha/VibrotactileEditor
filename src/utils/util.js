@@ -26,6 +26,21 @@ class Util {
     });
   }
 
+  static parseDataString(dataString) {
+    const delimiter = ";";
+    const splitValues = dataString.split(delimiter);
+
+    let returnObject = [];
+    splitValues.forEach((element) => {
+      const values = element.split(",");
+      returnObject.push({
+        time: parseInt(values[0]),
+        intensity: parseInt(values[1]),
+      });
+    });
+    return returnObject;
+  }
+
   static defaultPattern() {
     return {
       patternID: Util.generateUUI(),
@@ -45,7 +60,7 @@ class Util {
       ],
       area: "",
       x: 0,
-      y: 0,
+      emptyTime: 0,
       dataString: "",
     };
   }

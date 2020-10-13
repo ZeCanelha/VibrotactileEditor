@@ -59,18 +59,30 @@ class PatternUtils {
     }
   }
 
-  static patternToString(pathElement, timeMax = 350) {
-    const patthLength = Math.floor(pathElement.getTotalLength());
-    const readingValue = 5; // Arduino takes a value every 5ms
-    const iterator = Math.round((readingValue * patthLength) / timeMax);
-    let points = [];
-    let position = 0;
-    while (position < patthLength) {
-      points.push(pathElement.getPointAtLength(position));
-      position = position + iterator;
+  static patternToString(datapoints) {
+    //TODO: verificar o caso de 1 ponto no array
+
+    // Get values every 5ms
+
+    const timeConstant = 5;
+    let patternString = "";
+
+    for (let index = 1; index < datapoints.length; index++) {
+      console.log(index);
+      const interpolater = d3.interpolate(
+        datapoints[index - 1],
+        datapoints[index]
+      );
+      const timeDiference = datapoints[index].time - datapoints[index - 1].time;
+      const nInterpolation = timeDiference / timeConstant;
+
+      for (let j = 1; j <= nInterpolation; j++) {
+        const element = interpolater(j * (1 / nInterpolation));
+        patternString += Math.round(element.intensity) + ";";
+      }
     }
-    console.log(points);
-    return points;
+
+    return patternString;
   }
 }
 

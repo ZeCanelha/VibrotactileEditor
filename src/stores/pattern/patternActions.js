@@ -75,7 +75,7 @@ export function updatePatternPosition(_patternIndex, coords) {
     payload: {
       patternIndex: _patternIndex,
       x: coords.x,
-      y: coords.y,
+      emptyTime: coords.emptyTime,
     },
   };
 }
