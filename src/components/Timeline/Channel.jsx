@@ -158,7 +158,7 @@ class Channel extends React.Component {
         );
       }
 
-      this.props.updateChannelData(this.props.id, channelString);
+      this.props.updateChannelData(this.props.id, channelString.split(";"));
     }
   }
 

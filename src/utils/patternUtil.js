@@ -68,7 +68,6 @@ class PatternUtils {
     let patternString = "";
 
     for (let index = 1; index < datapoints.length; index++) {
-      console.log(index);
       const interpolater = d3.interpolate(
         datapoints[index - 1],
         datapoints[index]
@@ -78,7 +77,9 @@ class PatternUtils {
 
       for (let j = 1; j <= nInterpolation; j++) {
         const element = interpolater(j * (1 / nInterpolation));
-        patternString += Math.round(element.intensity) + ";";
+        if (index === datapoints.length - 1 && j === nInterpolation)
+          patternString += Math.round(element.intensity);
+        else patternString += Math.round(element.intensity) + ";";
       }
     }
 

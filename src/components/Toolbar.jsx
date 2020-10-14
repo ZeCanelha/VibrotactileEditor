@@ -38,8 +38,9 @@ const mapDispatchToProps = (dispatch) =>
 
 const mapStateToPorps = (state) => ({
   patterns: state.pattern.patterns,
-  channels: state.timeline.channels,
-  actuators: state.device.actuators,
+  channels: state.timeline.channel,
+  actuators: state.device.actuators_coords,
+  timelineTime: state.timeline.timelineTime,
 });
 
 class Toolbar extends React.Component {
@@ -51,18 +52,53 @@ class Toolbar extends React.Component {
     this.handlePlay = this.handlePlay.bind(this);
   }
 
-  handlePlay() {
-    const channels = this.props.channels.length;
+  getIndexById(id) {
+    for (let i = 0; i < this.props.actuators.length; i++) {
+      if (this.props.actuators[i].id === id) return i;
+    }
+  }
+
+  async handlePlay() {
+    const channels = this.props.channels;
     const actuators = this.props.actuators;
 
-    let actuatorValues = new Array(actuators).fill(1); // Default value for all actuators
+    let maxLenght = 0;
+    for (let index = 0; index < channels.length; index++) {
+      if (channels[index].dataString) {
+        if (channels[index].dataString.length > maxLenght) {
+          maxLenght = channels[index].dataString.length;
+        }
+      }
+    }
 
-    for (let i = 0; i < channels; i++) {}
+    for (let k = 0; k < maxLenght; k++) {
+      let actuatorArray = new Array(actuators.length).fill(0.01);
+      for (let i = 0; i < channels.length; i++) {
+        if (channels[i].dataString) {
+          if (typeof channels[i].dataString[k] === "undefined") {
+            continue;
+          } else {
+            let value = parseInt(channels[i].dataString[k]) / 100;
+            let currentActuators = channels[i].actuators;
+            if (value !== 1) {
+              for (let j = 0; j < currentActuators.length; j++) {
+                let actuatorSelected = this.getIndexById(currentActuators[j]);
+                actuatorArray[actuatorSelected] = value;
+              }
+            }
+          }
+        } else continue;
+      }
+      const body = {
+        dataString: actuatorArray,
+      };
+      Database.postData("/actuate", body, "POST");
+      this.sleep(5);
+    }
+  }
 
-    const body = {
-      dataString: "bytes",
-    };
-    Database.postData("/actuate", body, "POST");
+  sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   handleAddActuator() {
