@@ -67,6 +67,12 @@ class Library extends React.Component {
     this.getAllPatterns();
   }
 
+  componentDidUpdate(prevState) {
+    if (this.state.openLibraryModal !== prevState.openLibraryModal) {
+      this.getAllPatterns();
+    }
+  }
+
   handleChangeRange(event) {
     this.setState({ rangeValue: parseInt(event.target.value) });
   }
@@ -80,8 +86,6 @@ class Library extends React.Component {
     });
   }
 
-  componentDidUpdate() {}
-
   searchPatternById(id) {
     for (let index = 0; index < this.props.patterns.length; index++) {
       if (this.props.patterns[index].patternID === id)
@@ -90,14 +94,13 @@ class Library extends React.Component {
   }
 
   handleImportPattern(eventKey, properties) {
-    
     let patternProperties = {
       patternID: properties.id,
       datapoints: properties.datapoints,
       area: properties.path,
       channelID: parseInt(eventKey),
       x: 0,
-      emptyTime: 0
+      emptyTime: 0,
     };
 
     // Import pattern to patternList
