@@ -108,7 +108,7 @@ class Channel extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.patterns !== prevProps.patterns) {
       this.getChannelPatterns();
-      this.createChannelString();
+      //this.createChannelString();
     }
   }
 
@@ -127,6 +127,7 @@ class Channel extends React.Component {
     // get starting positions
     if (patterns.length > 0) {
       console.log(patterns);
+      console.log(channelPatterns);
       channelPatterns.forEach((element, i) => {
         const startingX = element.offsetLeft + patterns[i].x;
         let convert = Math.floor(
@@ -227,12 +228,37 @@ class Channel extends React.Component {
 
   // ----------------- Channel Items functions ---------------------------
 
+  // Calculate timeline position for the next pattern
+
+  calculatePosition() {
+    const parentChannel = this.refs.channel;
+    const channelDOMPatterns = Array.from(parentChannel.children);
+
+    let position = 0;
+
+    channelDOMPatterns.forEach((element, i) => {
+      const nextPosition =
+        element.offsetLeft + this.state.patterns[i].x + element.clientWidth;
+      if (nextPosition > position) {
+        position = nextPosition;
+      }
+    });
+    return position;
+  }
+
   // Add default pattern to timeline
 
   handleAddPatternToChannel() {
     let pattern = Util.defaultPattern();
-
     pattern.channelID = this.props.id;
+
+    // Calculate positions.
+
+    if (this.state.patterns.length > 0) {
+      pattern.x = this.calculatePosition();
+    } else {
+      pattern.x = 0;
+    }
 
     // Add pattern to pattern list and channel id
     this.props.addPatternToList(pattern);
@@ -281,6 +307,7 @@ class Channel extends React.Component {
           >
             {this.state.patterns.length > 0 ? (
               <ChannelItems
+                parent={this.refs.channel}
                 patternList={this.state.patterns}
                 timelineWidth={this.state.containerWidth}
                 {...this.props}

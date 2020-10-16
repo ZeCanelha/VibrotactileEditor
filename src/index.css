@@ -263,7 +263,7 @@ strong {
 
 .timeline-display {
   height: 100%;
-  position: relative;
+  position: absolute;
   display: flex;
 }
 

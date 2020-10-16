@@ -67,10 +67,9 @@ class Library extends React.Component {
     this.getAllPatterns();
   }
 
-  componentDidUpdate(prevState) {
-    if (this.state.openLibraryModal !== prevState.openLibraryModal) {
-      this.getAllPatterns();
-    }
+  shouldComponentUpdate(nextState, nextProps) {
+    if (this.props.patterns !== nextProps.patterns) return true;
+    return false;
   }
 
   handleChangeRange(event) {
@@ -116,6 +115,7 @@ class Library extends React.Component {
   }
 
   handleLibraryModal() {
+    this.getAllPatterns();
     this.setState({ openLibraryModal: !this.state.openLibraryModal });
   }
 
