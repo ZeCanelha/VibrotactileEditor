@@ -16,6 +16,13 @@ function setPatternWidth(props, patternDuration) {
   return width;
 }
 
+function timeToPixels(props, startingTime) {
+  const startingCoord =
+    (startingTime * props.timelineWidth) / props.timeline.timelineTime;
+
+  return startingCoord;
+}
+
 const renderChannelItemsToTimeline = (props) => {
   return (pattern, index) => {
     const properties = {
@@ -48,7 +55,7 @@ const renderChannelItemsToTimeline = (props) => {
         axis="x"
         bounds="parent"
         handle=".timeline-display"
-        position={{ x: pattern.x, y: 0 }}
+        position={{ x: timeToPixels(props, pattern.x), y: 0 }}
         offsetParent={props.parent}
         grid={[5, 5]}
         scale={1}
