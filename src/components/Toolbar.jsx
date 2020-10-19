@@ -1,5 +1,6 @@
 import React from "react";
 import Database from "../utils/database";
+import PatternUtils from "../utils/patternUtil";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -50,6 +51,7 @@ class Toolbar extends React.Component {
     this.handleAddActuator = this.handleAddActuator.bind(this);
     this.handleAddChannel = this.handleAddChannel.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
+    this.timelinePlay = this.timelinePlay.bind(this);
   }
 
   getIndexById(id) {
@@ -58,42 +60,107 @@ class Toolbar extends React.Component {
     }
   }
 
-  async handlePlay() {
+  getChannelData() {
     const channels = this.props.channels;
+    const patterns = this.props.patterns;
+
+    let timelineData = [];
+
+    channels.forEach((channel) => {
+      let channelPatterns = [];
+      patterns.forEach((pattern, i) => {
+        if (pattern.channelID === channel._id) channelPatterns.push(pattern);
+      });
+
+      channelPatterns.sort((a, b) => a.x - b.x);
+
+      let channelString = "";
+      let maxTime = 0;
+      channelPatterns.forEach((pattern) => {
+        let patternPoints = PatternUtils.patternToString(pattern.datapoints);
+        console.log(patternPoints);
+        let startTime = pattern.x;
+        let fillTime = startTime - maxTime;
+        let fillIntensity = fillTime / 5;
+        console.log(startTime, fillTime, maxTime);
+        channelString += "1;".repeat(fillIntensity);
+        channelString += patternPoints;
+        console.log(channelString);
+
+        maxTime += Math.max.apply(
+          Math,
+          pattern.datapoints.map((d) => d.time)
+        );
+      });
+      timelineData.push(channelString.split(";"));
+    });
+    return timelineData;
+  }
+
+  timelinePlay() {
+    const timelineData = this.getChannelData();
+    const projectActuators = this.props.actuators.length;
+    const channels = this.props.channels;
+
+    let channelData = [];
+    channels.forEach((channel) => {
+      let actuators = [];
+      for (let index = 0; index < channel.actuators.length; index++) {
+        actuators.push(this.getIndexById(channel.actuators[index]));
+      }
+      channelData.push(actuators);
+    });
+
+    console.log(timelineData);
+
+    const body = {
+      timelineData: timelineData,
+      projectActuators: projectActuators,
+      channelData: channelData,
+    };
+
+    Database.postData("/play", body, "POST");
+  }
+
+  async handlePlay() {
+    const timelineData = this.getChannelData();
+
     const actuators = this.props.actuators;
+    const channels = this.props.channels;
 
     let maxLenght = 0;
-    for (let index = 0; index < channels.length; index++) {
-      if (channels[index].dataString) {
-        if (channels[index].dataString.length > maxLenght) {
-          maxLenght = channels[index].dataString.length;
-        }
+    for (let index = 0; index < timelineData.length; index++) {
+      if (timelineData[index].length > maxLenght) {
+        maxLenght = timelineData[index].length;
       }
     }
 
     for (let k = 0; k < maxLenght; k++) {
       let actuatorArray = new Array(actuators.length).fill(0.01);
-      for (let i = 0; i < channels.length; i++) {
-        if (channels[i].dataString) {
-          if (typeof channels[i].dataString[k] === "undefined") {
+      for (let i = 0; i < timelineData.length; i++) {
+        if (timelineData[i].length > 1) {
+          if (typeof timelineData[i][k] === "undefined") {
             continue;
           } else {
-            let value = parseInt(channels[i].dataString[k]) / 100;
+            let value = parseInt(timelineData[i][k]) / 100;
             let currentActuators = channels[i].actuators;
-            if (value !== 1) {
-              for (let j = 0; j < currentActuators.length; j++) {
-                let actuatorSelected = this.getIndexById(currentActuators[j]);
-                actuatorArray[actuatorSelected] = value;
+            if (value !== 0) {
+              if (k !== maxLenght - 1) {
+                for (let j = 0; j < currentActuators.length; j++) {
+                  let actuatorSelected = this.getIndexById(currentActuators[j]);
+                  actuatorArray[actuatorSelected] = value;
+                }
               }
             }
           }
         } else continue;
       }
+      console.log(actuatorArray);
       const body = {
         dataString: actuatorArray,
       };
       Database.postData("/actuate", body, "POST");
-      this.sleep(5);
+      await this.sleep(5);
     }
   }
 
@@ -132,7 +199,7 @@ class Toolbar extends React.Component {
             <Button variant="light">
               <FontAwesomeIcon icon={faBackward} />
             </Button>
-            <Button variant="light" onClick={this.handlePlay}>
+            <Button variant="light" onClick={this.timelinePlay}>
               <FontAwesomeIcon size="2x" icon={faPlayCircle} />
             </Button>
             <Button variant="light">

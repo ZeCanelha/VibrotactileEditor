@@ -8,7 +8,6 @@ import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Util from "../../utils/util";
-import PatternUtils from "../../utils/patternUtil";
 
 import {
   removeChannel,
@@ -92,7 +91,6 @@ class Channel extends React.Component {
     this.handleOpenInEditor = this.handleOpenInEditor.bind(this);
     this.handleActuatorModal = this.handleActuatorModal.bind(this);
     this.handleAddPatternToChannel = this.handleAddPatternToChannel.bind(this);
-    this.createChannelString = this.createChannelString.bind(this);
   }
 
   componentDidMount() {
@@ -108,58 +106,6 @@ class Channel extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.patterns !== prevProps.patterns) {
       this.getChannelPatterns();
-      //this.createChannelString();
-    }
-  }
-
-  createChannelString() {
-    const patterns = this.props.patterns.filter((pattern) => {
-      return pattern.channelID === this.props.id;
-    });
-
-    // const emptySpace = Math.floor(this.props.timeline.timelineTime * data.x / this.state.containerWidth)
-    const parentChannel = this.refs.channel;
-    const channelPatterns = Array.from(parentChannel.children);
-    let startTime = [];
-    let patternMaxTime = 0;
-    let channelString = "";
-
-    // get starting positions
-    if (patterns.length > 0) {
-      console.log(patterns);
-      console.log(channelPatterns);
-      channelPatterns.forEach((element, i) => {
-        const startingX = element.offsetLeft + patterns[i].x;
-        let convert = Math.floor(
-          (this.props.timeline.timelineTime * startingX) /
-            this.state.containerWidth
-        );
-        if (convert < 0) {
-          convert = 0;
-        }
-        startTime.push({
-          time: convert,
-          pattern: i,
-        });
-      });
-
-      startTime.sort((a, b) => a.time > b.time);
-      for (let i = 0; i < startTime.length; i++) {
-        const patternPoints = PatternUtils.patternToString(
-          patterns[startTime[i].pattern].datapoints
-        );
-
-        let fillTime = startTime[i].time - patternMaxTime;
-        let fillIntensity = fillTime / 5;
-        channelString += "1;".repeat(fillIntensity);
-        channelString += patternPoints;
-        patternMaxTime = Math.max.apply(
-          Math,
-          patterns[startTime[i].pattern].datapoints.map((d) => d.time)
-        );
-      }
-
-      this.props.updateChannelData(this.props.id, channelString.split(";"));
     }
   }
 

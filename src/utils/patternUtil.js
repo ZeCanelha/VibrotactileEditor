@@ -78,7 +78,7 @@ class PatternUtils {
       for (let j = 1; j <= nInterpolation; j++) {
         const element = interpolater(j * (1 / nInterpolation));
         if (index === datapoints.length - 1 && j === nInterpolation)
-          patternString += Math.round(element.intensity);
+          patternString += Math.round(element.intensity) + ";";
         else patternString += Math.round(element.intensity) + ";";
       }
     }
