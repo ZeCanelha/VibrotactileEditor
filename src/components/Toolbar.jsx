@@ -78,14 +78,12 @@ class Toolbar extends React.Component {
       let maxTime = 0;
       channelPatterns.forEach((pattern) => {
         let patternPoints = PatternUtils.patternToString(pattern.datapoints);
-        console.log(patternPoints);
         let startTime = pattern.x;
         let fillTime = startTime - maxTime;
         let fillIntensity = fillTime / 5;
-        console.log(startTime, fillTime, maxTime);
+
         channelString += "1;".repeat(fillIntensity);
         channelString += patternPoints;
-        console.log(channelString);
 
         maxTime += Math.max.apply(
           Math,

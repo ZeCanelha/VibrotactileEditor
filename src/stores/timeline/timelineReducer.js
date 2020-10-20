@@ -9,19 +9,16 @@ const INITIAL_STATE = {
       _id: 0,
       pattern: [],
       actuators: [],
-      dataString: [],
     },
     {
       _id: 1,
       pattern: [],
       actuators: [],
-      dataString: [],
     },
     {
       _id: 2,
       pattern: [],
       actuators: [],
-      dataString: [],
     },
   ],
 };

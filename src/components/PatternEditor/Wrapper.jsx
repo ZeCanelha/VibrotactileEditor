@@ -78,7 +78,9 @@ class PatternWrapper extends React.Component {
           </React.Fragment>
         ) : (
           <div className="pattern-text-editor ">
-            <p>Select pattern to edit</p>
+            <p>
+              Select a <strong>pattern</strong> to edit
+            </p>
           </div>
         )}
       </div>

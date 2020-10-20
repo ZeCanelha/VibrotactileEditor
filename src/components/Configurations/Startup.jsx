@@ -41,6 +41,7 @@ import {
   setTimelineID,
   setTimelineDBInstance,
   setLoadedDataToTimeline,
+  updateTimelineTime,
 } from "../../stores/timeline/timelineActions";
 
 import { setLoadedPatterns } from "../../stores/pattern/patternActions";
@@ -73,6 +74,7 @@ const mapDispatchToProps = (dispatch) =>
       setDBInstance,
       setTimelineDBInstance,
       setLoadedDataToTimeline,
+      updateTimelineTime,
       setAddWarningNotification,
     },
     dispatch
@@ -84,7 +86,7 @@ class StartConfig extends React.Component {
 
     this.state = {
       isLoading: false,
-      ports: []
+      ports: [],
     };
 
     this.isProjectLoading = this.isProjectLoading.bind(this);
@@ -161,6 +163,7 @@ class StartConfig extends React.Component {
           else {
             this.props.setTimelineDBInstance(data[0]._id);
             this.props.setLoadedDataToTimeline(data[0].channel);
+            this.props.updateTimelineTime(data[0].timelineTime);
             this.props.setLoadConfigurationsNotification();
           }
         });
@@ -198,6 +201,7 @@ class StartConfig extends React.Component {
           {
             timelineID: this.props.timeline.timelineID,
             channel: this.props.timeline.channel,
+            timelineTime: this.props.timeline.timelineTime,
           },
           "POST"
         ).then((data) => {

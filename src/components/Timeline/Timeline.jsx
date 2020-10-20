@@ -15,7 +15,9 @@ class Timeline extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (
       this.props.timeline_list.channel !== nextProps.timeline_list.channel ||
-      this.props.pattern.patterns !== nextProps.pattern.patterns
+      this.props.pattern.patterns !== nextProps.pattern.patterns ||
+      this.props.timeline_list.timelineTime !==
+        nextProps.timeline_list.timelineTime
     )
       return true;
     return false;

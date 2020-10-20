@@ -110,11 +110,22 @@ strong {
 /* SVG */
 
 .pattern-text-editor {
+  position: absolute;
   display: flex;
   align-self: center;
+
+  align-items: center;
+  justify-content: center;
+  width: inherit;
+  height: inherit;
 }
 
-.svg-editor-area {
+.pattern-text-editor p {
+  padding: 1.5em;
+  border: 2px dashed #5bc0de;
+}
+
+.pattern-text-editor bold .svg-editor-area {
   fill: #5bc0de;
   stroke: #0275d8;
   stroke-width: 1.5px;

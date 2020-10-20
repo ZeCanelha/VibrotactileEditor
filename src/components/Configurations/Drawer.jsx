@@ -126,7 +126,10 @@ class Drawer extends React.Component {
       } else {
         Database.postData(
           "/timeline",
-          { channel: this.props.timeline.channel },
+          {
+            channel: this.props.timeline.channel,
+            timelineTime: this.props.timeline.timelineTime,
+          },
           "PUT",
           "/" + this.props.timeline.timelineDbInstance
         )
