@@ -124,8 +124,7 @@ strong {
   padding: 1.5em;
   border: 2px dashed #5bc0de;
 }
-
-.pattern-text-editor bold .svg-editor-area {
+.svg-editor-area {
   fill: #5bc0de;
   stroke: #0275d8;
   stroke-width: 1.5px;
