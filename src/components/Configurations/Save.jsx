@@ -1,4 +1,5 @@
 import React from "react";
+import { saveAs } from "file-saver";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -48,10 +49,59 @@ class SaveModal extends React.Component {
 
     this.isProjectSaving = this.isProjectSaving.bind(this);
     this.saveProjectConfigurations = this.saveProjectConfigurations.bind(this);
+    this.exportProject = this.exportProject.bind(this);
   }
 
   isProjectSaving() {
     this.setState({ isLoading: !this.state.isLoading });
+  }
+
+  getIndexById(id) {
+    for (let i = 0; i < this.props.device.actuators_coords.length; i++) {
+      if (this.props.device.actuators_coords[i].id === id) return i;
+    }
+  }
+
+  exportProject() {
+    this.isProjectSaving();
+
+    const patterns = this.props.patternList;
+    const channels = this.props.timeline.channel;
+    const FPS = 5;
+    const saveFilename = this.props.config.projectName + ".json";
+
+    let timelineData = [];
+    channels.forEach((channel) => {
+      let channelPatterns = [];
+      let channelActuators = [];
+
+      channel.actuators.forEach((id) => {
+        channelActuators.push(this.getIndexById(id));
+      });
+
+      patterns.forEach((pattern, i) => {
+        if (pattern.channelID === channel._id) {
+          channelPatterns.push({
+            datapoints: pattern.datapoints,
+            startingTime: pattern.x,
+          });
+        }
+      });
+      timelineData.push({
+        pattern: channelPatterns,
+        actuators: channelActuators,
+      });
+    });
+
+    let exportFile = { FPS: FPS, channels: timelineData };
+
+    let blob = new Blob([JSON.stringify(exportFile)], {
+      type: "text/json;charset=utf-8",
+    });
+    saveAs(blob, saveFilename);
+
+    this.props.closeSaveModal();
+    this.isProjectSaving();
   }
 
   saveProjectConfigurations() {
@@ -128,7 +178,25 @@ class SaveModal extends React.Component {
               Save Options
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body></Modal.Body>
+          <Modal.Body>
+            <p>
+              Save or export project. Project exported can be used with @Unity
+              and @Aframe. See documentation
+            </p>
+            <Button variant="primary" block onClick={this.exportProject}>
+              {this.state.isLoading ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                "Export Project"
+              )}
+            </Button>
+          </Modal.Body>
           <Modal.Footer>
             <Button
               variant="primary"
