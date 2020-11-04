@@ -1,0 +1,180 @@
+.tick {
+  position: relative;
+  border-left: 1px solid black;
+  height: 10%;
+}
+.medium {
+  height: 25%;
+}
+
+.large {
+  height: 50%;
+}
+
+.ruler {
+  background-color: rgb(201, 229, 245);
+  position: relative;
+  left: 15%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 85%;
+  height: 10%;
+}
+
+.tick-container {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  width: 10%;
+  height: 90%;
+}
+/* .tick-container:last-child {
+  justify-content: flex-start;
+} */
+.label-large {
+  position: absolute;
+  font-size: 0.5rem;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+}
+
+.timeline {
+  width: 100%;
+  height: 50%;
+}
+
+.timeline-container {
+  width: 75%;
+  height: 75%;
+  overflow-y: scroll;
+}
+
+.channel-row {
+  width: 100%;
+  height: 30%;
+}
+
+.channel-id {
+  position: relative;
+  background-color: #f8f9fa;
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.channel-id-column {
+  text-align: center;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Timeline and Channel: onDragOver  */
+
+.remove-channel {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.channel-track {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+  height: 100%;
+  background-color: #f8f9fa;
+  position: relative;
+}
+
+.dropzone-content {
+  left: 35%;
+  top: 35%;
+  position: absolute;
+  color: #5bc0de;
+  font-size: 1rem;
+}
+
+.timeline-display {
+  height: 100%;
+  position: absolute;
+  display: flex;
+}
+
+.timeline-display-hover {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background-color: white;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1s;
+  transition-delay: 0.5s;
+}
+
+.channel-hover-info {
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xs {
+  font-size: 0.6rem;
+}
+s {
+  font-size: 0.75rem;
+}
+
+.channel-hover-add {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+  transition: background-color 0.45s;
+}
+
+.channel-hover-add:hover {
+  background-color: #2e3c42;
+}
+
+.timeline-display-hover:hover {
+  opacity: 0.85;
+  border: 1.5px solid #5bc0de;
+  border-radius: 2.5px;
+  cursor: pointer;
+}
+
+.channel-hover-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.empty-channel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-channel p {
+  margin: 0;
+}
+
+.selected {
+  border: 1.5px solid #6ed8f8;
+}

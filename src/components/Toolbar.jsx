@@ -1,6 +1,5 @@
 import React from "react";
 import Database from "../utils/database";
-import PatternUtils from "../utils/patternUtil";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -12,6 +11,7 @@ import { showNotification } from "../stores/gui/guiActions";
 import {
   setAddActuatorNotification,
   setAddChannelNotification,
+  setCustomNotifications,
 } from "../stores/notification/notificationAction";
 
 import { addChannelToTimeline } from "../stores/timeline/timelineActions";
@@ -31,6 +31,7 @@ const mapDispatchToProps = (dispatch) =>
       showNotification,
       setAddActuatorNotification,
       setAddChannelNotification,
+      setCustomNotifications,
       addChannelToTimeline,
       addNewActuator,
     },
@@ -50,8 +51,53 @@ class Toolbar extends React.Component {
 
     this.handleAddActuator = this.handleAddActuator.bind(this);
     this.handleAddChannel = this.handleAddChannel.bind(this);
-    this.handlePlay = this.handlePlay.bind(this);
-    this.timelinePlay = this.timelinePlay.bind(this);
+    this.playVibration = this.playVibration.bind(this);
+    // this.handlePlay = this.handlePlay.bind(this);
+    // this.timelinePlay = this.timelinePlay.bind(this);
+  }
+
+  playVibration() {
+    const patterns = this.props.patterns;
+    const channels = this.props.channels;
+    const fps = 5;
+
+    let timelineData = [];
+    channels.forEach((channel) => {
+      let channelPatterns = [];
+      let channelActuators = [];
+
+      channel.actuators.forEach((id) => {
+        channelActuators.push(this.getIndexById(id));
+      });
+
+      patterns.forEach((pattern) => {
+        if (pattern.channelID === channel._id) {
+          channelPatterns.push({
+            datapoints: pattern.datapoints,
+            startingTime: pattern.x,
+          });
+        }
+      });
+      timelineData.push({
+        pattern: channelPatterns,
+        actuators: channelActuators,
+      });
+    });
+
+    const requestBody = {
+      fps: fps,
+      projectActuators: this.props.actuators.length,
+      channels: timelineData,
+    };
+
+    Database.postData("/vibrate", requestBody, "POST").then((data) => {
+      if (data.status === 200) {
+        this.props.setCustomNotifications(data.message, "Vibrotactile API");
+      } else {
+        this.props.setCustomNotifications(data.message, "Vibrotactile API");
+      }
+      this.props.showNotification();
+    });
   }
 
   getIndexById(id) {
@@ -60,111 +106,111 @@ class Toolbar extends React.Component {
     }
   }
 
-  getChannelData() {
-    const channels = this.props.channels;
-    const patterns = this.props.patterns;
+  // getChannelData() {
+  //   const channels = this.props.channels;
+  //   const patterns = this.props.patterns;
 
-    let timelineData = [];
+  //   let timelineData = [];
 
-    channels.forEach((channel) => {
-      let channelPatterns = [];
-      patterns.forEach((pattern, i) => {
-        if (pattern.channelID === channel._id) channelPatterns.push(pattern);
-      });
+  //   channels.forEach((channel) => {
+  //     let channelPatterns = [];
+  //     patterns.forEach((pattern, i) => {
+  //       if (pattern.channelID === channel._id) channelPatterns.push(pattern);
+  //     });
 
-      channelPatterns.sort((a, b) => a.x - b.x);
+  //     channelPatterns.sort((a, b) => a.x - b.x);
 
-      let channelString = "";
-      let maxTime = 0;
-      channelPatterns.forEach((pattern) => {
-        let patternPoints = PatternUtils.patternToString(pattern.datapoints);
-        let startTime = pattern.x;
-        let fillTime = startTime - maxTime;
-        let fillIntensity = fillTime / 5;
+  //     let channelString = "";
+  //     let maxTime = 0;
+  //     channelPatterns.forEach((pattern) => {
+  //       let patternPoints = PatternUtils.patternToString(pattern.datapoints);
+  //       let startTime = pattern.x;
+  //       let fillTime = startTime - maxTime;
+  //       let fillIntensity = fillTime / 5;
 
-        channelString += "1;".repeat(fillIntensity);
-        channelString += patternPoints;
+  //       channelString += "1;".repeat(fillIntensity);
+  //       channelString += patternPoints;
 
-        maxTime += Math.max.apply(
-          Math,
-          pattern.datapoints.map((d) => d.time)
-        );
-      });
-      timelineData.push(channelString.split(";"));
-    });
-    return timelineData;
-  }
+  //       maxTime += Math.max.apply(
+  //         Math,
+  //         pattern.datapoints.map((d) => d.time)
+  //       );
+  //     });
+  //     timelineData.push(channelString.split(";"));
+  //   });
+  //   return timelineData;
+  // }
 
-  timelinePlay() {
-    const timelineData = this.getChannelData();
-    const projectActuators = this.props.actuators.length;
-    const channels = this.props.channels;
+  // timelinePlay() {
+  //   const timelineData = this.getChannelData();
+  //   const projectActuators = this.props.actuators.length;
+  //   const channels = this.props.channels;
 
-    let channelData = [];
-    channels.forEach((channel) => {
-      let actuators = [];
-      for (let index = 0; index < channel.actuators.length; index++) {
-        actuators.push(this.getIndexById(channel.actuators[index]));
-      }
-      channelData.push(actuators);
-    });
+  //   let channelData = [];
+  //   channels.forEach((channel) => {
+  //     let actuators = [];
+  //     for (let index = 0; index < channel.actuators.length; index++) {
+  //       actuators.push(this.getIndexById(channel.actuators[index]));
+  //     }
+  //     channelData.push(actuators);
+  //   });
 
-    console.log(timelineData);
+  //   console.log(timelineData);
 
-    const body = {
-      timelineData: timelineData,
-      projectActuators: projectActuators,
-      channelData: channelData,
-    };
+  //   const body = {
+  //     timelineData: timelineData,
+  //     projectActuators: projectActuators,
+  //     channelData: channelData,
+  //   };
 
-    Database.postData("/play", body, "POST");
-  }
+  //   Database.postData("/play", body, "POST");
+  // }
 
-  async handlePlay() {
-    const timelineData = this.getChannelData();
+  // async handlePlay() {
+  //   const timelineData = this.getChannelData();
 
-    const actuators = this.props.actuators;
-    const channels = this.props.channels;
+  //   const actuators = this.props.actuators;
+  //   const channels = this.props.channels;
 
-    let maxLenght = 0;
-    for (let index = 0; index < timelineData.length; index++) {
-      if (timelineData[index].length > maxLenght) {
-        maxLenght = timelineData[index].length;
-      }
-    }
+  //   let maxLenght = 0;
+  //   for (let index = 0; index < timelineData.length; index++) {
+  //     if (timelineData[index].length > maxLenght) {
+  //       maxLenght = timelineData[index].length;
+  //     }
+  //   }
 
-    for (let k = 0; k < maxLenght; k++) {
-      let actuatorArray = new Array(actuators.length).fill(0.01);
-      for (let i = 0; i < timelineData.length; i++) {
-        if (timelineData[i].length > 1) {
-          if (typeof timelineData[i][k] === "undefined") {
-            continue;
-          } else {
-            let value = parseInt(timelineData[i][k]) / 100;
-            let currentActuators = channels[i].actuators;
-            if (value !== 0) {
-              if (k !== maxLenght - 1) {
-                for (let j = 0; j < currentActuators.length; j++) {
-                  let actuatorSelected = this.getIndexById(currentActuators[j]);
-                  actuatorArray[actuatorSelected] = value;
-                }
-              }
-            }
-          }
-        } else continue;
-      }
-      console.log(actuatorArray);
-      const body = {
-        dataString: actuatorArray,
-      };
-      Database.postData("/actuate", body, "POST");
-      await this.sleep(5);
-    }
-  }
+  //   for (let k = 0; k < maxLenght; k++) {
+  //     let actuatorArray = new Array(actuators.length).fill(0.01);
+  //     for (let i = 0; i < timelineData.length; i++) {
+  //       if (timelineData[i].length > 1) {
+  //         if (typeof timelineData[i][k] === "undefined") {
+  //           continue;
+  //         } else {
+  //           let value = parseInt(timelineData[i][k]) / 100;
+  //           let currentActuators = channels[i].actuators;
+  //           if (value !== 0) {
+  //             if (k !== maxLenght - 1) {
+  //               for (let j = 0; j < currentActuators.length; j++) {
+  //                 let actuatorSelected = this.getIndexById(currentActuators[j]);
+  //                 actuatorArray[actuatorSelected] = value;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       } else continue;
+  //     }
+  //     console.log(actuatorArray);
+  //     const body = {
+  //       dataString: actuatorArray,
+  //     };
+  //     Database.postData("/actuate", body, "POST");
+  //     await this.sleep(5);
+  //   }
+  // }
 
-  sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  // sleep(ms) {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // }
 
   handleAddActuator() {
     this.props.addNewActuator();
@@ -197,7 +243,7 @@ class Toolbar extends React.Component {
             <Button variant="light">
               <FontAwesomeIcon icon={faBackward} />
             </Button>
-            <Button variant="light" onClick={this.timelinePlay}>
+            <Button variant="light" onClick={this.playVibration}>
               <FontAwesomeIcon size="2x" icon={faPlayCircle} />
             </Button>
             <Button variant="light">

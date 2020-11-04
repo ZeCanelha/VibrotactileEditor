@@ -72,3 +72,10 @@ export function setAddSavePatternNotification() {
     type: "SET_ADD_PATTERN_TO_LIBRARY_NOTIFICATION",
   };
 }
+
+export function setCustomNotifications(notificationBody, notificationTitle) {
+  return {
+    type: "SET_CUSTOM_NOTIFICATION",
+    payload: { notificationBody, notificationTitle },
+  };
+}

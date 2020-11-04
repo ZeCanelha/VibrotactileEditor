@@ -6,9 +6,10 @@ import {
   updateActuatorCoords,
   removeActuator,
 } from "../../stores/device/deviceActions";
-
 import Image from "react-bootstrap/Image";
 import Actuators from "./Actuator";
+
+import "../../css/device.css";
 
 const mapStateToProps = (state) => ({
   deviceImage: state.device.deviceImage,

@@ -1,0 +1,51 @@
+.display-container {
+  height: 55vh;
+}
+.display-row {
+  height: 50%;
+  overflow-y: scroll;
+  flex-wrap: nowrap;
+}
+
+.library-modal-container {
+  display: flex;
+
+  width: 100%;
+
+  flex-direction: row;
+}
+
+.library-search-form {
+  padding: 10px;
+  width: 30%;
+  font-size: 0.95rem;
+  background-color: #f7f7f7;
+}
+
+.libray-item-display {
+  overflow-y: scroll;
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+  height: 100vh;
+}
+
+.card-item {
+  width: 48%;
+  height: max-content;
+  margin: 0 0.5rem 0.5rem 0;
+}
+
+.library-pattern-display {
+  width: 100%;
+  height: 30%;
+}
+.library-display {
+  cursor: pointer;
+  border: 1px solid #292b2c;
+  margin: 2px;
+}
+
+.library-display:hover {
+  border: 2px solid #3b3e3f;
+}

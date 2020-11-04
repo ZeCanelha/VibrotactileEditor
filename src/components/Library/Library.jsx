@@ -8,9 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import LibraryItems from "./LibrayItems";
 import Search from "./LibrarySearch";
 import Database from "../../utils/database";
-
 import { showNotification } from "../../stores/gui/guiActions";
-
 import { addPatternToChannel } from "../../stores/timeline/timelineActions";
 import {
   addPatternToList,
@@ -22,6 +20,7 @@ import {
   setPatterns,
 } from "../../stores/library/libraryActions";
 import { setImportPatternNotification } from "../../stores/notification/notificationAction";
+import "../../css/library.css";
 
 const mapStateToPros = (state) => ({
   setShowLibraryModal: state.gui.isLibraryModalOpen,

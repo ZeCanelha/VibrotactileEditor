@@ -175,6 +175,7 @@ class Pattern extends React.Component {
 
     return (
       <svg
+        className="pattern-editor-area"
         width={this.props.width}
         height={this.props.height}
         ref={"svg"}

@@ -98,7 +98,7 @@ class StartConfig extends React.Component {
   }
 
   componentDidMount() {
-    this.getSerialPortsAvailable();
+    // this.getSerialPortsAvailable();
     this.props.setProjectId();
     this.props.setTimelineID();
   }
@@ -316,22 +316,6 @@ class StartConfig extends React.Component {
                   </Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Please select the number of actuators.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Label>Serial port</Form.Label>
-                  <Form.Control
-                    name="serialPort"
-                    value={values.serialPort}
-                    onChange={handleChange}
-                    as="select"
-                    isValid={touched.serialPort && errors.serialPort}
-                    isInvalid={!!errors.serialPort}
-                  >
-                    <option>1</option>
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    Please select the serial port.
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.File

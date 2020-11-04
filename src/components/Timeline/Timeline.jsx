@@ -1,10 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import Row from "react-bootstrap/Row";
-
 import Channel from "./Channel";
 import Ruler from "./Ruler";
+import "../../css/timeline.css";
 
 const mapStateToProps = (state) => ({
   timeline_list: state.timeline,

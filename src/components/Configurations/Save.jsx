@@ -1,6 +1,5 @@
 import React from "react";
 import { saveAs } from "file-saver";
-
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
@@ -8,17 +7,15 @@ import {
   openSaveModal,
   showNotification,
 } from "../../stores/gui/guiActions";
-
 import {
   setSaveNotification,
   setAddWarningNotification,
 } from "../../stores/notification/notificationAction";
-
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-
 import Database from "../../utils/database";
+import "../../css/toolbar.css";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
@@ -93,15 +90,19 @@ class SaveModal extends React.Component {
       });
     });
 
-    let exportFile = { FPS: FPS, channels: timelineData };
+    let exportFile = {
+      fps: FPS,
+      projectActuators: this.props.device.actuators_coords.length,
+      channels: timelineData,
+    };
 
     let blob = new Blob([JSON.stringify(exportFile)], {
       type: "text/json;charset=utf-8",
     });
     saveAs(blob, saveFilename);
 
-    this.props.closeSaveModal();
     this.isProjectSaving();
+    this.props.closeSaveModal();
   }
 
   saveProjectConfigurations() {

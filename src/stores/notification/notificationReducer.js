@@ -133,6 +133,11 @@ export default function (state = INITIAL_STATE, action) {
         actionTitle: ADD_SAVE_PATTERN_NOTIFICATION.title,
         actionBody: ADD_SAVE_PATTERN_NOTIFICATION.body,
       };
+    case "SET_CUSTOM_NOTIFICATION":
+      return {
+        actionTitle: action.payload.notificationTitle,
+        actionBody: action.payload.notificationBody,
+      };
     default:
       return state;
   }

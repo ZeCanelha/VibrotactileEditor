@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik } from "formik";
 import Util from "../../utils/util";
+import "../../css/drawer.css";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";

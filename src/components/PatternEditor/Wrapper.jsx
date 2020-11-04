@@ -5,6 +5,7 @@ import SaveToLibrary from "./SaveToLibrary";
 import { bindActionCreators } from "redux";
 import { setDragActive, setDragFalse } from "../../stores/gui/guiActions";
 import { connect } from "react-redux";
+import "../../css/pattern.css";
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
