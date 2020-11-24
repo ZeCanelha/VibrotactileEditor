@@ -94,8 +94,8 @@ class Channel extends React.Component {
   }
 
   componentDidMount() {
-    console.log("called after:");
     this.getChannelPatterns();
+
     this.getContainerSize();
     window.addEventListener("resize", this.getContainerSize);
   }
@@ -124,6 +124,7 @@ class Channel extends React.Component {
 
   getChannelPatterns() {
     let filteredPatterns = [];
+    let timeMax = 0;
     let pattern = this.props.patterns;
     for (let index = 0; index < pattern.length; index++) {
       if (pattern[index].channelID === this.props.id) {
@@ -135,8 +136,19 @@ class Channel extends React.Component {
           x: pattern[index].x,
           y: pattern[index].y,
         });
+
+        const patternTime = Math.max.apply(
+          Math,
+          pattern[index].datapoints.map((d) => d.time)
+        );
+        const totalTime = pattern[index].x + patternTime;
+
+        if (totalTime > timeMax) timeMax = totalTime;
       }
     }
+
+    // if (this.props.timeline.timelineTime - totalTime >)
+
     this.setState({ patterns: filteredPatterns });
   }
 
@@ -180,16 +192,15 @@ class Channel extends React.Component {
       if (totalTime > currentTime) currentTime = totalTime;
     });
 
-    if (this.props.timeline.timelineTime - currentTime <= 350) {
-      this.updateTimeline();
-    }
     return currentTime;
   }
 
   // Update Timeline
 
   updateTimeline() {
-    this.props.updateTimelineTime(this.props.timeline.timelineTime * 1.25);
+    const patterns = this.state.patterns;
+    console.log(patterns);
+    //this.props.updateTimelineTime(this.props.timeline.timelineTime * 1.25);
   }
 
   // Add default pattern to timeline
