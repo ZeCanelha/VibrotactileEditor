@@ -16,6 +16,8 @@ import {
   setAddWarningNotification,
 } from "../../stores/notification/notificationAction";
 import { showNotification } from "../../stores/gui/guiActions";
+import { setPatterns } from "../../stores/library/libraryActions";
+
 const schema = yup.object({
   patternName: yup.string().required(),
   patternDescription: yup.string().required(),
@@ -33,6 +35,7 @@ const mapDispatchToProps = (dispatch) =>
       setAddSavePatternNotification,
       setAddWarningNotification,
       showNotification,
+      setPatterns,
     },
     dispatch
   );
@@ -54,6 +57,18 @@ class SaveToLibrary extends React.Component {
 
   handleModal() {
     this.setState({ isSaveModalOpen: !this.state.isSaveModalOpen });
+  }
+
+  updatePatterns() {
+    Database.fetchData("/patterns", "GET").then((data) => {
+      if (!data) {
+        this.props.setAddWarningNotification(
+          "Could not save the pattern in the Library!"
+        );
+      } else {
+        this.props.setPatterns(data);
+      }
+    });
   }
 
   handleSelectedSave(eventKey) {
@@ -89,7 +104,10 @@ class SaveToLibrary extends React.Component {
                 this.props.setAddWarningNotification(
                   "Could not save the pattern in the Library!"
                 );
-              } else this.props.setAddSavePatternNotification();
+              } else {
+                this.props.setAddSavePatternNotification();
+                this.updatePatterns();
+              }
 
               this.setState({ isSaveModalOpen: false });
             }
@@ -120,7 +138,10 @@ class SaveToLibrary extends React.Component {
         this.props.setAddWarningNotification(
           "Could not save the pattern in the Library!"
         );
-      } else this.props.setAddSavePatternNotification();
+      } else {
+        this.props.setAddSavePatternNotification();
+        this.updatePatterns();
+      }
 
       this.props.showNotification();
       this.setState({

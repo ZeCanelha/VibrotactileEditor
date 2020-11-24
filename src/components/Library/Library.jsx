@@ -15,10 +15,7 @@ import {
   setDisplayPattern,
   setCurrentPattern,
 } from "../../stores/pattern/patternActions";
-import {
-  updateSearchQuery,
-  setPatterns,
-} from "../../stores/library/libraryActions";
+import { setPatterns } from "../../stores/library/libraryActions";
 import { setImportPatternNotification } from "../../stores/notification/notificationAction";
 import "../../css/library.css";
 
@@ -38,7 +35,6 @@ const mapDispatchToProps = (dispatch) =>
       setDisplayPattern,
       setCurrentPattern,
       setPatterns,
-      updateSearchQuery,
       showNotification,
       setImportPatternNotification,
     },

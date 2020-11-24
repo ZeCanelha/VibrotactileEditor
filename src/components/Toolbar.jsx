@@ -79,14 +79,14 @@ class Toolbar extends React.Component {
         }
       });
       timelineData.push({
-        pattern: channelPatterns,
+        patterns: channelPatterns,
         actuators: channelActuators,
       });
     });
 
     const requestBody = {
-      fps: fps,
-      projectActuators: this.props.actuators.length,
+      samplingRate: fps,
+      numberOfActuators: this.props.actuators.length,
       channels: timelineData,
     };
 
@@ -105,112 +105,6 @@ class Toolbar extends React.Component {
       if (this.props.actuators[i].id === id) return i;
     }
   }
-
-  // getChannelData() {
-  //   const channels = this.props.channels;
-  //   const patterns = this.props.patterns;
-
-  //   let timelineData = [];
-
-  //   channels.forEach((channel) => {
-  //     let channelPatterns = [];
-  //     patterns.forEach((pattern, i) => {
-  //       if (pattern.channelID === channel._id) channelPatterns.push(pattern);
-  //     });
-
-  //     channelPatterns.sort((a, b) => a.x - b.x);
-
-  //     let channelString = "";
-  //     let maxTime = 0;
-  //     channelPatterns.forEach((pattern) => {
-  //       let patternPoints = PatternUtils.patternToString(pattern.datapoints);
-  //       let startTime = pattern.x;
-  //       let fillTime = startTime - maxTime;
-  //       let fillIntensity = fillTime / 5;
-
-  //       channelString += "1;".repeat(fillIntensity);
-  //       channelString += patternPoints;
-
-  //       maxTime += Math.max.apply(
-  //         Math,
-  //         pattern.datapoints.map((d) => d.time)
-  //       );
-  //     });
-  //     timelineData.push(channelString.split(";"));
-  //   });
-  //   return timelineData;
-  // }
-
-  // timelinePlay() {
-  //   const timelineData = this.getChannelData();
-  //   const projectActuators = this.props.actuators.length;
-  //   const channels = this.props.channels;
-
-  //   let channelData = [];
-  //   channels.forEach((channel) => {
-  //     let actuators = [];
-  //     for (let index = 0; index < channel.actuators.length; index++) {
-  //       actuators.push(this.getIndexById(channel.actuators[index]));
-  //     }
-  //     channelData.push(actuators);
-  //   });
-
-  //   console.log(timelineData);
-
-  //   const body = {
-  //     timelineData: timelineData,
-  //     projectActuators: projectActuators,
-  //     channelData: channelData,
-  //   };
-
-  //   Database.postData("/play", body, "POST");
-  // }
-
-  // async handlePlay() {
-  //   const timelineData = this.getChannelData();
-
-  //   const actuators = this.props.actuators;
-  //   const channels = this.props.channels;
-
-  //   let maxLenght = 0;
-  //   for (let index = 0; index < timelineData.length; index++) {
-  //     if (timelineData[index].length > maxLenght) {
-  //       maxLenght = timelineData[index].length;
-  //     }
-  //   }
-
-  //   for (let k = 0; k < maxLenght; k++) {
-  //     let actuatorArray = new Array(actuators.length).fill(0.01);
-  //     for (let i = 0; i < timelineData.length; i++) {
-  //       if (timelineData[i].length > 1) {
-  //         if (typeof timelineData[i][k] === "undefined") {
-  //           continue;
-  //         } else {
-  //           let value = parseInt(timelineData[i][k]) / 100;
-  //           let currentActuators = channels[i].actuators;
-  //           if (value !== 0) {
-  //             if (k !== maxLenght - 1) {
-  //               for (let j = 0; j < currentActuators.length; j++) {
-  //                 let actuatorSelected = this.getIndexById(currentActuators[j]);
-  //                 actuatorArray[actuatorSelected] = value;
-  //               }
-  //             }
-  //           }
-  //         }
-  //       } else continue;
-  //     }
-  //     console.log(actuatorArray);
-  //     const body = {
-  //       dataString: actuatorArray,
-  //     };
-  //     Database.postData("/actuate", body, "POST");
-  //     await this.sleep(5);
-  //   }
-  // }
-
-  // sleep(ms) {
-  //   return new Promise((resolve) => setTimeout(resolve, ms));
-  // }
 
   handleAddActuator() {
     this.props.addNewActuator();
