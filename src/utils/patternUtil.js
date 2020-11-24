@@ -85,6 +85,23 @@ class PatternUtils {
 
     return patternString;
   }
+
+  static calculatePatternPosition(patterns, channelID) {
+    let currentTime = 0;
+
+    for (let index = 0; index < patterns.length; index++) {
+      if (patterns[index].channelID === channelID) {
+        const startingTime = patterns[index].x;
+        const patternTime = Math.max.apply(
+          Math,
+          patterns[index].datapoints.map((d) => d.time)
+        );
+        const totalTime = startingTime + patternTime;
+        if (totalTime > currentTime) currentTime = totalTime;
+      }
+    }
+    return currentTime;
+  }
 }
 
 export default PatternUtils;

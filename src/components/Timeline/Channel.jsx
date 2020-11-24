@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Util from "../../utils/util";
+import PatternUtils from "../../utils/patternUtil";
 
 import {
   removeChannel,
@@ -94,8 +95,8 @@ class Channel extends React.Component {
   }
 
   componentDidMount() {
+    console.log("called after:");
     this.getChannelPatterns();
-
     this.getContainerSize();
     window.addEventListener("resize", this.getContainerSize);
   }
@@ -124,7 +125,6 @@ class Channel extends React.Component {
 
   getChannelPatterns() {
     let filteredPatterns = [];
-    let timeMax = 0;
     let pattern = this.props.patterns;
     for (let index = 0; index < pattern.length; index++) {
       if (pattern[index].channelID === this.props.id) {
@@ -136,19 +136,9 @@ class Channel extends React.Component {
           x: pattern[index].x,
           y: pattern[index].y,
         });
-
-        const patternTime = Math.max.apply(
-          Math,
-          pattern[index].datapoints.map((d) => d.time)
-        );
-        const totalTime = pattern[index].x + patternTime;
-
-        if (totalTime > timeMax) timeMax = totalTime;
       }
     }
-
-    // if (this.props.timeline.timelineTime - totalTime >)
-
+    this.updateTimeline(filteredPatterns);
     this.setState({ patterns: filteredPatterns });
   }
 
@@ -179,8 +169,9 @@ class Channel extends React.Component {
 
   // Calculate timeline position for the next pattern
 
-  calculatePosition() {
-    const patterns = this.state.patterns;
+  // Update Timeline
+
+  updateTimeline(patterns) {
     let currentTime = 0;
     patterns.forEach((element) => {
       const startingTime = element.x;
@@ -192,15 +183,9 @@ class Channel extends React.Component {
       if (totalTime > currentTime) currentTime = totalTime;
     });
 
-    return currentTime;
-  }
-
-  // Update Timeline
-
-  updateTimeline() {
-    const patterns = this.state.patterns;
-    console.log(patterns);
-    //this.props.updateTimelineTime(this.props.timeline.timelineTime * 1.25);
+    if (this.props.timeline.timelineTime - currentTime <= 150) {
+      this.props.updateTimelineTime(this.props.timeline.timelineTime * 1.3);
+    }
   }
 
   // Add default pattern to timeline
@@ -212,7 +197,10 @@ class Channel extends React.Component {
     // Calculate positions.
 
     if (this.state.patterns.length > 0) {
-      pattern.x = this.calculatePosition();
+      pattern.x = PatternUtils.calculatePatternPosition(
+        this.props.patterns,
+        this.props.id
+      );
     } else {
       pattern.x = 0;
     }

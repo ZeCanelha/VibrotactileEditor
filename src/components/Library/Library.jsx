@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import LibraryItems from "./LibrayItems";
 import Search from "./LibrarySearch";
 import Database from "../../utils/database";
+import PatternUtils from "../../utils/patternUtil";
 import { showNotification } from "../../stores/gui/guiActions";
 import { addPatternToChannel } from "../../stores/timeline/timelineActions";
 import {
@@ -93,7 +94,10 @@ class Library extends React.Component {
       datapoints: properties.datapoints,
       area: properties.path,
       channelID: parseInt(eventKey),
-      x: 0,
+      x: PatternUtils.calculatePatternPosition(
+        this.props.patternList,
+        parseInt(eventKey)
+      ),
       emptyTime: 0,
     };
 
