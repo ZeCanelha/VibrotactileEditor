@@ -79,20 +79,24 @@ class SaveModal extends React.Component {
       patterns.forEach((pattern, i) => {
         if (pattern.channelID === channel._id) {
           channelPatterns.push({
-            datapoints: pattern.datapoints,
             startingTime: pattern.x,
+            duration: Math.max.apply(
+              Math,
+              pattern.datapoints.map((d) => d.time)
+            ),
+            datapoints: pattern.datapoints,
           });
         }
       });
       timelineData.push({
-        pattern: channelPatterns,
+        patterns: channelPatterns,
         actuators: channelActuators,
       });
     });
 
     let exportFile = {
-      fps: FPS,
-      projectActuators: this.props.device.actuators_coords.length,
+      samplingRate: FPS,
+      numberOfActuators: this.props.device.actuators_coords.length,
       channels: timelineData,
     };
 

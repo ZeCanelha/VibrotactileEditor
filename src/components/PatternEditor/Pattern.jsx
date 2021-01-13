@@ -44,9 +44,11 @@ class Pattern extends React.Component {
       this.props.index,
       newArea(this.props.pattern[this.props.index].datapoints)
     );
-    d3.select(this.refs.svg).on("dblclick", function () {
-      let coords = d3.mouse(this);
-      theobject.addDatapoint(coords);
+    d3.select(this.refs.svg).on("click", function () {
+      if (!d3.event.shiftKey) {
+        let coords = d3.mouse(this);
+        theobject.addDatapoint(coords);
+      }
     });
     this.addEventListeners();
   }
