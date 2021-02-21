@@ -33,8 +33,10 @@ class Timeline extends React.Component {
       <Row className="timeline-container no-gutters">
         {/* <Row className="channel-row"></Row> */}
         {/* <Ruler {...this.props}></Ruler> */}
-        {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
-        <Row className="channel-row no-gutters">
+        <div className="channel-container">
+          {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
+        </div>
+        <Row className="toolbar-row no-gutters">
           <Toolbar></Toolbar>
         </Row>
       </Row>

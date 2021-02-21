@@ -131,8 +131,9 @@ class Library extends React.Component {
     return (
       <>
         <Button
-          className="toolbar-size border rounded"
-          variant="light"
+          className="sl-btn"
+          variant="primary"
+          size="sm"
           onClick={this.handleLibraryModal}
         >
           Library

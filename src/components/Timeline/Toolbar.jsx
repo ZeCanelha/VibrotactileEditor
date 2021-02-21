@@ -1,7 +1,9 @@
 import React from "react";
 import Database from "../../utils/database";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Library from "../Library/Library";
+import Save from "../Configurations/Save";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { connect } from "react-redux";
@@ -102,22 +104,24 @@ class Toolbar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="channel-id">
-          <Button className="add-channel-btn" variant="primary" size="sm">
+        <div className="channel-id no-gutters">
+          <Button
+            onClick={this.handleAddChannel}
+            className="add-channel-btn"
+            variant="primary"
+            size="sm"
+          >
             Add Channel
           </Button>
         </div>
-        <div className="channel-track toolbar-channel">
-          <button className="play-btn">
+
+        <div className="channel-track no-gutters toolbar-channel">
+          <button className="play-btn" onClick={this.playVibration}>
             <FontAwesomeIcon icon={faPlay} size={"lg"} />
           </button>
           <div className="toolbar-buttons">
-            <Button className="sl-btn" variant="primary" size="sm">
-              Library
-            </Button>
-            <Button className="sl-btn" variant="primary" size="sm">
-              Save
-            </Button>
+            <Library></Library>
+            <Save></Save>
           </div>
         </div>
       </React.Fragment>

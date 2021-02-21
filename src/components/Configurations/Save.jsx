@@ -165,8 +165,9 @@ class SaveModal extends React.Component {
     return (
       <React.Fragment>
         <Button
-          className="toolbar-size border rounded"
-          variant="light"
+          className="sl-btn"
+          variant="primary"
+          size="sm"
           onClick={this.props.openSaveModal}
         >
           Save

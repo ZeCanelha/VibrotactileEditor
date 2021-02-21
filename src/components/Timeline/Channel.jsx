@@ -158,7 +158,6 @@ class Channel extends React.Component {
     this.setState({ openActuatorModal: !this.state.openActuatorModal });
   }
 
-  // TODO:  Removable if not the only channel.
   handleRemoveChannel() {
     this.props.removeChannel(this.props.id);
     this.props.setRemoveChannelNotification();
@@ -243,6 +242,8 @@ class Channel extends React.Component {
         <Row className="channel-row no-gutters">
           <ChannelHeader
             id={this.props.id}
+            list={this.props.device.actuators_coords}
+            actuators={this.props.timeline.channel[this.props.id].actuators}
             handleRemoveChannel={this.handleRemoveChannel}
             handleActuatorModal={this.handleActuatorModal}
           ></ChannelHeader>
