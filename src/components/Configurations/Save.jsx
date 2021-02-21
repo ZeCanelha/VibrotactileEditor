@@ -15,7 +15,6 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Database from "../../utils/database";
-import "../../css/toolbar.css";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,

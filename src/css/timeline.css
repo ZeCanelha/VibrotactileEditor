@@ -41,30 +41,43 @@
 }
 
 .timeline {
-  width: 100%;
+  width: 95%;
   height: 50%;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .timeline-container {
-  width: 75%;
-  height: 75%;
+  width: 100%;
+  height: 100%;
   overflow-y: scroll;
 }
 
 .channel-row {
   width: 100%;
-  height: 30%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-row:last-child {
+  width: 100%;
+  height: 15%;
 }
 
 .channel-id {
   position: relative;
-  background-color: #f8f9fa;
+  color: #e8ebe2;
   width: 15%;
-  height: 100%;
+  height: 97.5%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-size: 0.85rem;
+  background-color: #212121;
 }
 
 .channel-id-column {
@@ -76,6 +89,33 @@
   justify-content: center;
 }
 
+.add-channel-btn {
+  position: absolute;
+  left: 5%;
+  width: 65%;
+}
+
+.toolbar-buttons {
+  position: absolute;
+  right: 1%;
+  width: 35%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.sl-btn {
+  width: 45%;
+}
+.play-btn {
+  color: #e8ebe2;
+  background-color: #212121;
+  border: none;
+}
+.play-btn:hover {
+  opacity: 0.8;
+}
 /* Timeline and Channel: onDragOver  */
 
 .remove-channel {
@@ -87,10 +127,14 @@
 .channel-track {
   display: flex;
   flex-direction: row;
-  width: 85%;
+  width: 82.5%;
   height: 100%;
-  background-color: #f8f9fa;
+  background-color: #212121;
   position: relative;
+  color: #e8ebe2;
+}
+.toolbar-channel {
+  justify-content: center;
 }
 
 .dropzone-content {
@@ -111,7 +155,7 @@
   display: flex;
   align-items: center;
   position: absolute;
-  background-color: white;
+
   opacity: 0;
   width: 100%;
   height: 100%;

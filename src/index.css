@@ -13,7 +13,7 @@ strong {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: white;
+  background-color: #121212;
   position: relative;
   box-sizing: content-box;
   margin: 0;
@@ -21,8 +21,8 @@ strong {
 }
 
 .pattern-editor {
-  width: 75%;
-  height: 40%;
+  width: 95%;
+  height: 45%;
   flex-direction: column;
 }
 

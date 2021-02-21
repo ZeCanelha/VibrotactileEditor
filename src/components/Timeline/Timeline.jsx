@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Row from "react-bootstrap/Row";
 import Channel from "./Channel";
 import Ruler from "./Ruler";
+import Toolbar from "./Toolbar";
 import "../../css/timeline.css";
 
 const mapStateToProps = (state) => ({
@@ -30,8 +31,12 @@ class Timeline extends React.Component {
   render() {
     return (
       <Row className="timeline-container no-gutters">
-        <Ruler {...this.props}></Ruler>
+        {/* <Row className="channel-row"></Row> */}
+        {/* <Ruler {...this.props}></Ruler> */}
         {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
+        <Row className="channel-row no-gutters">
+          <Toolbar></Toolbar>
+        </Row>
       </Row>
     );
   }
