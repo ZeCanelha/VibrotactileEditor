@@ -26,6 +26,13 @@ strong {
   flex-direction: column;
 }
 
+/* Startup Modal */
+
+.startup-modal {
+  color: #e8ebe2;
+  background: #212121;
+}
+
 /* All patterns displays -> timeline and library */
 
 .display-pattern-container {

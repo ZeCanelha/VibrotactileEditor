@@ -240,7 +240,6 @@ class StartConfig extends React.Component {
     return (
       <Modal
         dialogClassName="modal-20w"
-        aria-labelledby="contained-modal-title-vcenter"
         backdrop="static"
         show={this.props.setShow}
         centered

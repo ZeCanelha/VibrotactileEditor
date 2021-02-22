@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const channelActuators = (props) => {
-  console.log(props);
   return (actuator, index) => {
     if (props.actuators.includes(actuator.id))
       return " " + actuator.number + " ";
