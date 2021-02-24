@@ -2,7 +2,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-around;
 
   width: 57.5%;
   height: 100%;
@@ -10,21 +11,15 @@
   color: #e8ebe2;
 }
 .pattern-container {
-  width: 95%;
-  height: 95%;
+  width: 97.5%;
+  height: 85%;
   position: relative;
-}
-
-.save-pattern-container {
-  display: flex;
-  position: absolute;
-  top: 0;
 }
 
 /* SVG */
 
 .pattern-editor-area {
-  cursor: pointer;
+  cursor: crosshair;
 }
 
 .pattern-text-editor {
@@ -60,7 +55,7 @@
 .svg-editor-y-label {
   position: absolute;
   top: 45%;
-  left: -5%;
+  left: -4%;
   transform: rotate(-90deg);
   font-size: 0.75rem;
 }
@@ -97,4 +92,64 @@
 .pattern-display-text {
   font-size: 12px;
   font-weight: bold;
+}
+
+.pattern-toolbar {
+  width: 100%;
+  height: 15%;
+  color: #e8ebe2;
+  background-color: #212121;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid #121212;
+}
+
+.toolbar-tools {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.toolbar-button {
+  width: 20%;
+  height: 100%;
+  display: flex;
+
+  align-items: center;
+}
+
+.tool-container {
+  height: 100%;
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tool-container span {
+  font-size: 0.5rem;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20%;
+  height: 60%;
+  cursor: pointer;
+}
+
+.coordinates {
+  text-anchor: middle;
+  fill: #e8ebe2;
+  font-size: 0.75em;
+}
+.hidden {
+  display: none;
 }

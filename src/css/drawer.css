@@ -25,9 +25,10 @@
 }
 
 .sidebar-toggle {
+  cursor: pointer;
   position: absolute;
-  top: 0;
-  left: 25vw;
+  top: 1vh;
+  left: 25.5vw;
   z-index: 1;
 }
 

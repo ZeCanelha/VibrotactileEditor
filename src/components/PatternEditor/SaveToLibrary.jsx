@@ -154,9 +154,10 @@ class SaveToLibrary extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="save-pattern-container">
+        <div>
           <DropdownButton
-            variant={"outline-info"}
+            variant="primary"
+            className="save-to-library-btn"
             id="dropdown-item-button"
             title="Save to Library"
             size="sm"

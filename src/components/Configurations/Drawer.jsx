@@ -265,13 +265,12 @@ class Drawer extends React.Component {
               )}
             </Formik>
           </div>
-          <Button
-            variant="light"
+
+          <FontAwesomeIcon
             onClick={() => this.handleToogle()}
             className="sidebar-toggle"
-          >
-            <FontAwesomeIcon icon={iconRender} />
-          </Button>
+            icon={iconRender}
+          />
         </div>
       </React.Fragment>
     );
