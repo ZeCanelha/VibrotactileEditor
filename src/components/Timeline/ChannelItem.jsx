@@ -1,6 +1,5 @@
 import React from "react";
 import Display from "../DisplayPattern";
-import Button from "react-bootstrap/Button";
 import Draggable from "react-draggable";
 import classNames from "classnames";
 

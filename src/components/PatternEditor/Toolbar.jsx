@@ -2,6 +2,7 @@ import React from "react";
 import SaveToLibrary from "./SaveToLibrary";
 import Overlay from "react-bootstrap/Overlay";
 import Popover from "react-bootstrap/Popover";
+import classNames from "classnames";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,9 +10,10 @@ import {
   faPlusCircle,
   faCut,
 } from "@fortawesome/free-solid-svg-icons";
+
 export default class Toolbar extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       showPopOver: false,
       target: null,
@@ -28,17 +30,29 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
+    const activeAddContainer = classNames({
+      "tool-container": true,
+      active: this.props.activeTool === "add",
+    });
+    const activeDeleteContainer = classNames({
+      "tool-container": true,
+      active: this.props.activeTool === "delete",
+    });
+
     return (
       <div className="pattern-toolbar">
         <div className="toolbar-tools">
-          <div className="tool-container">
-            <div className="icon-container">
+          <div className={activeAddContainer}>
+            <div className="icon-container" onClick={this.props.updateAddTool}>
               <FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon>
             </div>
             <span>Add Datapoint</span>
           </div>
-          <div className="tool-container">
-            <div className="icon-container">
+          <div className={activeDeleteContainer}>
+            <div
+              className="icon-container"
+              onClick={this.props.updateDeleteTool}
+            >
               <FontAwesomeIcon icon={faCut}></FontAwesomeIcon>
             </div>
             <span>Delete Datapoint</span>

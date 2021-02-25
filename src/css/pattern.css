@@ -153,3 +153,13 @@
 .hidden {
   display: none;
 }
+
+.toolbar-btn {
+  background-color: #212121;
+  color: #e8ebe2;
+  border: none;
+}
+
+.active {
+  border-bottom: 1.5px solid #e8ebe2;
+}

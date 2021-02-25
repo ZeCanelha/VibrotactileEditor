@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   patterns: [],
   isPatternDisplayed: false,
   currentPatternIndex: 0,
+  activeTool: "add",
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -71,6 +72,8 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, currentPatternIndex: action.payload };
     case "SET_LOADED_PATTERNS":
       return { ...state, patterns: action.payload };
+    case "UPDATE_EDITING_TOOL":
+      return { ...state, activeTool: action.payload };
     default:
       return state;
   }

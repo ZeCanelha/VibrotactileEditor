@@ -3,21 +3,21 @@ import Pattern from "./Pattern";
 import Toolbar from "./Toolbar";
 
 import { bindActionCreators } from "redux";
-import { setDragActive, setDragFalse } from "../../stores/gui/guiActions";
+import { updateEditingTool } from "../../stores/pattern/patternActions";
 import { connect } from "react-redux";
 import "../../css/pattern.css";
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setDragActive,
-      setDragFalse,
+      updateEditingTool,
     },
     dispatch
   );
 
 const mapStateToProps = (state) => ({
   patternInEditor: state.pattern.isPatternDisplayed,
+  activeTool: state.pattern.activeTool,
 });
 
 //TODO: patter in display ternary
@@ -30,6 +30,8 @@ class PatternWrapper extends React.Component {
       height: null,
     };
 
+    this.updateAddTool = this.updateAddTool.bind(this);
+    this.updateDeleteTool = this.updateDeleteTool.bind(this);
     this.getParentSize = this.getParentSize.bind(this);
   }
 
@@ -66,6 +68,13 @@ class PatternWrapper extends React.Component {
     }
   }
 
+  updateDeleteTool() {
+    this.props.updateEditingTool("delete");
+  }
+  updateAddTool() {
+    this.props.updateEditingTool("add");
+  }
+
   render() {
     const shouldRender = this.state.width !== null;
     const margin = { top: 10, right: 30, bottom: 30, left: 40 };
@@ -73,12 +82,22 @@ class PatternWrapper extends React.Component {
       <div className="pattern-wrapper" ref={"patternContainer"}>
         {this.props.patternInEditor ? (
           <React.Fragment>
-            <Toolbar />
+            <Toolbar
+              updateAddTool={this.updateAddTool}
+              updateDeleteTool={this.updateDeleteTool}
+              activeTool={this.props.activeTool}
+            />
             <div className="pattern-container">
               <span className={"svg-editor-y-label"}>Intensity(%)</span>
               <span className={"svg-editor-x-label"}>Time(ms)</span>
 
-              {shouldRender && <Pattern {...this.state} {...margin}></Pattern>}
+              {shouldRender && (
+                <Pattern
+                  {...this.state}
+                  {...margin}
+                  editTool={this.props.activeTool}
+                ></Pattern>
+              )}
             </div>
           </React.Fragment>
         ) : (

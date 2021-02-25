@@ -39,10 +39,9 @@ const mapDispatchToProps = (dispatch) =>
 class Pattern extends React.Component {
   initPatternEditor() {
     let theobject = this;
-    thisObject = theobject;
     d3.select(this.refs.svg)
       .on("click", function () {
-        if (!d3.event.shiftKey) {
+        if (!d3.event.shiftKey && theobject.props.editTool === "add") {
           let coords = d3.mouse(this);
           theobject.addDatapoint(coords);
         }
@@ -92,7 +91,7 @@ class Pattern extends React.Component {
   }
 
   removeDatapoint(d, i) {
-    if (d3.event.shiftKey) {
+    if (d3.event.shiftKey || this.props.editTool === "delete") {
       this.props.removeDatapoint(this.props.index, i);
     }
   }
@@ -171,9 +170,6 @@ class Pattern extends React.Component {
       time: Math.round(this.xScale().invert(coords[0])),
       intensity: Math.round(this.yScale().invert(coords[1])),
     };
-
-    console.log(coords);
-
     coordSystem
       .classed("hidden", false)
       .attr("x", coords[0])
