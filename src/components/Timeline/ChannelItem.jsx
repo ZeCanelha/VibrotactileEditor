@@ -1,6 +1,5 @@
 import React from "react";
 import Display from "../DisplayPattern";
-import Button from "react-bootstrap/Button";
 import Draggable from "react-draggable";
 import classNames from "classnames";
 
@@ -73,24 +72,21 @@ const renderChannelItemsToTimeline = (props) => {
         >
           <div className="timeline-display-hover">
             <div className={itemClass}>
-              <Button
-                className="btn channel-hover-remove"
+              <FontAwesomeIcon
+                className="channel-hover-remove"
                 variant="light"
-                size="sm"
                 onClick={() => props.removePattern(patternListIndex)}
-              >
-                <FontAwesomeIcon icon={faTimesCircle} />
-              </Button>
-              <span>Double click to edit</span>
-            </div>
-            <div className="channel-hover-add">
-              <Button
-                variant="outline-dark"
-                size="sm"
+                icon={faTimesCircle}
+              />
+
+              <FontAwesomeIcon
+                className="channel-add-pattern"
+                size="2x"
                 onClick={props.addNewPattern}
-              >
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
+                icon={faPlus}
+              ></FontAwesomeIcon>
+
+              <span>Double click to edit</span>
             </div>
           </div>
           <Display {...properties}></Display>

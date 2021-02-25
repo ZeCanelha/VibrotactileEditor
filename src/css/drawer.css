@@ -7,11 +7,13 @@
   height: 100vh !important;
   width: 25vw;
   transition: left 0.3s ease-in-out;
-  background-color: #e2e6ea;
+  background-color: #212121;
+  color: #e8ebe2;
+  border: 2px solid #121212;
 }
 
 .sidebar-header {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .sidebar-body {
@@ -23,9 +25,10 @@
 }
 
 .sidebar-toggle {
+  cursor: pointer;
   position: absolute;
-  top: 0;
-  left: 25vw;
+  top: 1vh;
+  left: 25.5vw;
   z-index: 1;
 }
 

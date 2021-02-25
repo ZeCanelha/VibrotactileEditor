@@ -40,8 +40,21 @@ const renderRuler = (timelineTime) => {
 
 export default (props) => {
   return (
-    <div className={"ruler"}>
-      {renderRuler(props.timeline_list.timelineTime)}
-    </div>
+    <React.Fragment>
+      <div className="ruler-range no-gutters">
+        <input
+          type="range"
+          value={props.timeline_list.timelineTime}
+          onChange={props.onTimelineChange}
+          min={"1000"}
+          max={"5000"}
+        ></input>
+      </div>
+      <div className="channel-track no gutters">
+        <div className={"ruler"}>
+          {renderRuler(props.timeline_list.timelineTime)}
+        </div>
+      </div>
+    </React.Fragment>
   );
 };

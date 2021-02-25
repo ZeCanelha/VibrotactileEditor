@@ -89,3 +89,10 @@ export function updateDataString(_patternIndex, _points) {
     },
   };
 }
+
+export function updateEditingTool(tool) {
+  return {
+    type: "UPDATE_EDITING_TOOL",
+    payload: tool,
+  };
+}

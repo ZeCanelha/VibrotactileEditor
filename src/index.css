@@ -13,7 +13,7 @@ strong {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: white;
+  background-color: #121212;
   position: relative;
   box-sizing: content-box;
   margin: 0;
@@ -21,9 +21,16 @@ strong {
 }
 
 .pattern-editor {
-  width: 75%;
-  height: 40%;
+  width: 95%;
+  height: 45%;
   flex-direction: column;
+}
+
+/* Startup Modal */
+
+.startup-modal {
+  color: #e8ebe2;
+  background: #212121;
 }
 
 /* All patterns displays -> timeline and library */
@@ -31,4 +38,5 @@ strong {
 .display-pattern-container {
   width: 100%;
   height: 100%;
+  z-index: -1;
 }

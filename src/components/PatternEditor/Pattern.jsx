@@ -17,6 +17,7 @@ import {
 
 const PATTERN_OFFSET = 25;
 let thisObject = null;
+let coordSystem = null;
 
 const mapStateToProps = (state) => ({
   pattern: state.pattern.patterns,
@@ -36,6 +37,32 @@ const mapDispatchToProps = (dispatch) =>
   );
 
 class Pattern extends React.Component {
+  initPatternEditor() {
+    let theobject = this;
+    d3.select(this.refs.svg)
+      .on("click", function () {
+        if (!d3.event.shiftKey && theobject.props.editTool === "add") {
+          let coords = d3.mouse(this);
+          theobject.addDatapoint(coords);
+        }
+      })
+      .on("mousemove", function () {
+        theobject.showCoordinates(d3.mouse(this));
+      })
+      .on("mouseleave", function () {
+        theobject.removeCoords();
+      });
+
+    coordSystem = d3
+      .select(this.refs.svg)
+      .append("text")
+      .attr("class", "coordinates")
+      .attr("dy", "1.66em")
+      .classed("hidden", true);
+
+    this.addEventListeners();
+  }
+
   componentDidMount() {
     let theobject = this;
     thisObject = theobject;
@@ -44,13 +71,7 @@ class Pattern extends React.Component {
       this.props.index,
       newArea(this.props.pattern[this.props.index].datapoints)
     );
-    d3.select(this.refs.svg).on("click", function () {
-      if (!d3.event.shiftKey) {
-        let coords = d3.mouse(this);
-        theobject.addDatapoint(coords);
-      }
-    });
-    this.addEventListeners();
+    this.initPatternEditor();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,7 +91,7 @@ class Pattern extends React.Component {
   }
 
   removeDatapoint(d, i) {
-    if (d3.event.shiftKey) {
+    if (d3.event.shiftKey || this.props.editTool === "delete") {
       this.props.removeDatapoint(this.props.index, i);
     }
   }
@@ -125,7 +146,6 @@ class Pattern extends React.Component {
   }
 
   addDatapoint(coords) {
-    console.log(coords);
     let newPoints = {
       time: Math.round(this.xScale().invert(coords[0])),
       intensity: Math.round(this.yScale().invert(coords[1])),
@@ -144,6 +164,23 @@ class Pattern extends React.Component {
     datapoints.splice(index, 0, newPoints);
     this.props.updateDataPoints(this.props.index, datapoints);
   }
+
+  showCoordinates(coords) {
+    var coordsInverted = {
+      time: Math.round(this.xScale().invert(coords[0])),
+      intensity: Math.round(this.yScale().invert(coords[1])),
+    };
+    coordSystem
+      .classed("hidden", false)
+      .attr("x", coords[0])
+      .attr("y", coords[1])
+      .text(coordsInverted.time + "," + coordsInverted.intensity);
+  }
+
+  removeCoords() {
+    coordSystem.classed("hidden", true);
+  }
+
   areaGenerator() {
     return PatternUtils.createChart(
       "area",

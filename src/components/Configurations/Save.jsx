@@ -15,7 +15,6 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Database from "../../utils/database";
-import "../../css/toolbar.css";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
@@ -166,8 +165,9 @@ class SaveModal extends React.Component {
     return (
       <React.Fragment>
         <Button
-          className="toolbar-size border rounded"
-          variant="light"
+          className="sl-btn"
+          variant="primary"
+          size="sm"
           onClick={this.props.openSaveModal}
         >
           Save

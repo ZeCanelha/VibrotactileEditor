@@ -36,7 +36,7 @@ import {
 import { showNotification } from "../../stores/gui/guiActions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
@@ -158,7 +158,6 @@ class Channel extends React.Component {
     this.setState({ openActuatorModal: !this.state.openActuatorModal });
   }
 
-  // TODO:  Removable if not the only channel.
   handleRemoveChannel() {
     this.props.removeChannel(this.props.id);
     this.props.setRemoveChannelNotification();
@@ -240,16 +239,15 @@ class Channel extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Row className="channel-row no-gutters flex-column">
+        <Row className="channel-row no-gutters">
           <ChannelHeader
             id={this.props.id}
+            list={this.props.device.actuators_coords}
+            actuators={this.props.timeline.channel[this.props.id].actuators}
             handleRemoveChannel={this.handleRemoveChannel}
             handleActuatorModal={this.handleActuatorModal}
           ></ChannelHeader>
-          <div
-            className="channel-track border rounded no-gutters"
-            ref={"channel"}
-          >
+          <div className="channel-track no-gutters" ref={"channel"}>
             {this.state.patterns.length > 0 ? (
               <ChannelItems
                 parent={this.refs.channel}
@@ -264,14 +262,13 @@ class Channel extends React.Component {
             ) : (
               <div className="empty-channel">
                 <Button
-                  variant="primary"
+                  variant="dark"
+                  size="sm"
                   onClick={this.handleAddPatternToChannel}
                 >
-                  <FontAwesomeIcon icon={faPlusCircle} size="lg" />
+                  <FontAwesomeIcon icon={faPlus} size="sm" />
                 </Button>
-                <p>
-                  Click to add a <strong>pattern</strong>
-                </p>
+                <p>Add pattern</p>
               </div>
             )}
           </div>

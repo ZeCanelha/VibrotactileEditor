@@ -5,8 +5,13 @@ import { bindActionCreators } from "redux";
 import {
   updateActuatorCoords,
   removeActuator,
+  addNewActuator,
 } from "../../stores/device/deviceActions";
+
+import { showNotification } from "../../stores/gui/guiActions";
+import { setAddActuatorNotification } from "../../stores/notification/notificationAction";
 import Image from "react-bootstrap/Image";
+import Button from "react-bootstrap/Button";
 import Actuators from "./Actuator";
 
 import "../../css/device.css";
@@ -19,7 +24,16 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ updateActuatorCoords, removeActuator }, dispatch);
+  bindActionCreators(
+    {
+      updateActuatorCoords,
+      removeActuator,
+      addNewActuator,
+      showNotification,
+      setAddActuatorNotification,
+    },
+    dispatch
+  );
 
 class PatternEditor extends React.Component {
   constructor(props) {
@@ -27,6 +41,7 @@ class PatternEditor extends React.Component {
 
     this.updateActuatorPosition = this.updateActuatorPosition.bind(this);
     this.removeActuator = this.removeActuator.bind(this);
+    this.handleAddActuator = this.handleAddActuator.bind(this);
   }
 
   updateActuatorPosition(event, data, index) {
@@ -43,6 +58,12 @@ class PatternEditor extends React.Component {
     this.props.removeActuator(index);
   }
 
+  handleAddActuator() {
+    this.props.addNewActuator();
+    this.props.setAddActuatorNotification();
+    this.props.showNotification();
+  }
+
   render() {
     let imagePreview;
     if (this.props.deviceImage && !this.props.setShow) {
@@ -50,7 +71,7 @@ class PatternEditor extends React.Component {
       imagePreview = <Image src={this.props.deviceImage} fluid />;
     }
     return (
-      <div className="hardware-container bg-light border rounded">
+      <div className="hardware-container">
         {this.props.deviceImage ? imagePreview : null}
         <Actuators
           {...this.props}
@@ -58,6 +79,14 @@ class PatternEditor extends React.Component {
           handleStop={this.updateActuatorPosition}
           removeActuator={this.removeActuator}
         ></Actuators>
+        <Button
+          className="add-actuator-btn"
+          size="sm"
+          variant="primary"
+          onClick={this.handleAddActuator}
+        >
+          Add Actuator
+        </Button>
       </div>
     );
   }
