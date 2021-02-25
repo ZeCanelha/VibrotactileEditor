@@ -56,7 +56,7 @@ class Toolbar extends React.Component {
       let channelActuators = [];
 
       channel.actuators.forEach((id) => {
-        channelActuators.push(this.getIndexById(id));
+        channelActuators.push(id);
       });
 
       patterns.forEach((pattern) => {
@@ -79,6 +79,7 @@ class Toolbar extends React.Component {
       channels: timelineData,
     };
 
+    console.log(requestBody);
     Database.postData("/vibrate", requestBody, "POST").then((data) => {
       if (data.status === 200) {
         this.props.setCustomNotifications(data.message, "Vibrotactile API");

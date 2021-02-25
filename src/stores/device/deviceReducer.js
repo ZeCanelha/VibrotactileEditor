@@ -20,7 +20,7 @@ export default function (state = INITIAL_STATE, action) {
     case "ADD_NEW_ACTUATOR":
       return update(state, {
         actuators: { $set: state.actuators + 1 },
-        actuators_coords: { $push: [action.payload] },
+        actuators_coords: { $set: action.payload },
       });
     case "REMOVE_ACTUATOR":
       return update(state, {

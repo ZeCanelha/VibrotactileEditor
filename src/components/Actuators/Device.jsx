@@ -59,7 +59,7 @@ class PatternEditor extends React.Component {
   }
 
   handleAddActuator() {
-    this.props.addNewActuator();
+    this.props.addNewActuator(this.props.actuators_coords);
     this.props.setAddActuatorNotification();
     this.props.showNotification();
   }

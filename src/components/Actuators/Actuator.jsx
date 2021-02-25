@@ -21,7 +21,7 @@ class Actuator extends React.Component {
           onStop={(e, d) => this.props.handleStop(e, d, index)}
         >
           <div className="handle actuator-circle">
-            <span>{actuator.number}</span>
+            <span>{actuator.id + 1}</span>
 
             <FontAwesomeIcon
               className="actuator-hover-remove"
