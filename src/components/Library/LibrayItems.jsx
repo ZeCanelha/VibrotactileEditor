@@ -29,6 +29,7 @@ class LibraryFilter extends React.Component {
   }
 
   filterSearch(searchParameters) {
+    console.log(searchParameters.rangeInput);
     return this.props.patterns.filter(function (item) {
       if (searchParameters.hasOwnProperty("patternName"))
         return (

@@ -1,8 +1,8 @@
 import React from "react";
 import Draggable from "react-draggable";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 // Recebe como props o número de actuadores
 class Actuator extends React.Component {
@@ -23,12 +23,12 @@ class Actuator extends React.Component {
           <div className="handle actuator-circle">
             <span>{actuator.id + 1}</span>
 
-            <FontAwesomeIcon
+            {/* <FontAwesomeIcon
               className="actuator-hover-remove"
               icon={faTimesCircle}
               size="lg"
               onClick={() => this.props.removeActuator(index)}
-            />
+            /> */}
           </div>
         </Draggable>
       );

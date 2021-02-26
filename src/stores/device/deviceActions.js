@@ -72,7 +72,10 @@ export function addNewActuator(oldArray) {
 
   return {
     type: "ADD_NEW_ACTUATOR",
-    payload: actuatorArray,
+    payload: {
+      actuators: actuatorArray,
+      numberOfActuators: actuatorArray.length,
+    },
   };
 }
 

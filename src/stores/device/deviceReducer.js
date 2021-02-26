@@ -19,12 +19,12 @@ export default function (state = INITIAL_STATE, action) {
       };
     case "ADD_NEW_ACTUATOR":
       return update(state, {
-        actuators: { $set: state.actuators + 1 },
-        actuators_coords: { $set: action.payload },
+        actuators: { $set: action.payload.numberOfActuators },
+        actuators_coords: { $set: action.payload.actuators },
       });
     case "REMOVE_ACTUATOR":
       return update(state, {
-        actuators: { $set: state.actuators - 1 },
+        // actuators: { $set: state.actuators - 1 },
         actuators_coords: { $splice: [[action.payload, 1]] },
       });
     case "ACTUATOR_COORDS_UPDATED":

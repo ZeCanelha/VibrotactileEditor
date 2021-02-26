@@ -34,12 +34,10 @@ class Timeline extends React.Component {
   }
   renderTimelineChannels() {
     return (channel, index) => {
-      console.log(channel);
       return <Channel key={index} id={index}></Channel>;
     };
   }
   handleChangeTimelineTime(event) {
-    console.log(event);
     this.props.updateTimelineTime(event.target.value);
   }
   render() {
