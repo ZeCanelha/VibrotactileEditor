@@ -52,12 +52,6 @@ class SaveModal extends React.Component {
     this.setState({ isLoading: !this.state.isLoading });
   }
 
-  getIndexById(id) {
-    for (let i = 0; i < this.props.device.actuators_coords.length; i++) {
-      if (this.props.device.actuators_coords[i].id === id) return i;
-    }
-  }
-
   exportProject() {
     this.isProjectSaving();
 
@@ -72,7 +66,7 @@ class SaveModal extends React.Component {
       let channelActuators = [];
 
       channel.actuators.forEach((id) => {
-        channelActuators.push(this.getIndexById(id));
+        channelActuators.push(id);
       });
 
       patterns.forEach((pattern, i) => {

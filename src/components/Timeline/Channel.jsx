@@ -95,7 +95,6 @@ class Channel extends React.Component {
   }
 
   componentDidMount() {
-    console.log("called after:");
     this.getChannelPatterns();
     this.getContainerSize();
     window.addEventListener("resize", this.getContainerSize);
@@ -122,6 +121,21 @@ class Channel extends React.Component {
       });
     }
   }
+
+  // updateChannelActuators() {
+  //   const channelId = this.props.id;
+  //   const actuatorList = this.props.device.actuators_coords;
+  //   const channelActuators = this.props.timeline.channel[channelId].actuators;
+
+  //   for (let i = 0; i < channelActuators.length; i++) {
+  //     const element = channelActuators[i];
+  //     if (!actuatorList.includes(element))
+  //       this.props.setRemoveActuatorFromChannel(
+  //         channelId,
+  //         channelActuators.indexOf(element)
+  //       );
+  //   }
+  // }
 
   getChannelPatterns() {
     let filteredPatterns = [];

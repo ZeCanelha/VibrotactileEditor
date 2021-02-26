@@ -142,6 +142,7 @@ class Library extends React.Component {
           show={this.state.openLibraryModal}
           onHide={this.handleLibraryModal}
           backdrop="static"
+          scrollable={true}
           size="xl"
           aria-labelledby="example-custom-modal-styling-title"
         >

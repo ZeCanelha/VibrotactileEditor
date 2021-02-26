@@ -25,7 +25,7 @@ const renderRadioButtons = (props) => {
         checked={isChecked(props, actuator.id)}
         onChange={(e) => addActuatorToChannel(props, actuator.id)}
       >
-        {actuator.number}
+        {actuator.id + 1}
       </ToggleButton>
     );
   };

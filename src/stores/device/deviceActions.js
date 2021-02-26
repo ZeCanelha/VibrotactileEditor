@@ -1,7 +1,3 @@
-import Util from "../../utils/util";
-
-let newID = 1;
-
 export function changeProjectDevice(hardwareDevice) {
   return {
     type: "SET_HARDWARE_DEVICE",
@@ -21,10 +17,9 @@ export function changeProjectActuator(nActuators) {
 
   for (let index = 0; index < nActuators; index++) {
     const actuator = {
-      number: index + 1,
+      id: index,
       cx: 40 * index,
       cy: 0,
-      id: Util.generateUUI(),
     };
     actuatorArray.push(actuator);
   }
@@ -48,17 +43,39 @@ export function loadDeviceConfigurations(configs) {
   };
 }
 
-export function addNewActuator() {
-  const actuator = {
-    number: "#" + newID++,
-    cx: 0,
-    cy: 0,
-    id: Util.generateUUI(),
-  };
+export function addNewActuator(oldArray) {
+  // Always returning an ordered array
+  let actuatorArray = oldArray;
+  let newPosition = false;
+
+  for (let index = 0; index < actuatorArray.length; index++) {
+    const element = actuatorArray[index].id;
+    if (element > index) {
+      newPosition = index;
+      break;
+    }
+  }
+
+  if (newPosition === false) {
+    actuatorArray.push({
+      cx: 0,
+      cy: 0,
+      id: actuatorArray.length,
+    });
+  } else {
+    actuatorArray.splice(newPosition, 0, {
+      cx: 0,
+      cy: 0,
+      id: newPosition,
+    });
+  }
 
   return {
     type: "ADD_NEW_ACTUATOR",
-    payload: actuator,
+    payload: {
+      actuators: actuatorArray,
+      numberOfActuators: actuatorArray.length,
+    },
   };
 }
 

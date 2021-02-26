@@ -133,6 +133,7 @@ class StartConfig extends React.Component {
           "Network Error! Failed fetching project settings!"
         );
       } else {
+        console.log(data);
         let configs = {
           dbInstanceId: data[0]._id,
           projectId: data[0].projectID,

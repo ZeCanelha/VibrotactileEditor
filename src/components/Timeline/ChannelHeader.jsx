@@ -4,23 +4,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const channelActuators = (props) => {
-  return (actuator, index) => {
+  return (actuator) => {
     if (props.actuators.includes(actuator.id))
-      return " " + actuator.number + " ";
+      return " " + (actuator.id + 1) + " ";
   };
 };
 
 export default (props) => {
   return (
     <div className="channel-id">
-      {/* <Button
-        className="remove-channel"
-        onClick={props.handleRemoveChannel}
-        variant="light"
-        size="sm"
-      >
-        <FontAwesomeIcon icon={faTimesCircle} size="xs" />
-      </Button> */}
+      {props.id > 2 ? (
+        <FontAwesomeIcon
+          className="remove-channel"
+          onClick={props.handleRemoveChannel}
+          icon={faTimesCircle}
+          size="1x"
+        />
+      ) : null}
+
       <div className="channel-id-column">
         <span>Channel {props.id + 1}</span>
         <Button variant="link" size="sm" onClick={props.handleActuatorModal}>
