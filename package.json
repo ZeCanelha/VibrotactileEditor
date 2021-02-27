@@ -2,6 +2,7 @@
   "name": "react-vibrotactile-editor",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://vteditor-f.herokuapp.com/"
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
