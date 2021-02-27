@@ -17,6 +17,7 @@
     "d3.js": "0.0.2-security",
     "file-saver": "^2.0.5",
     "formik": "^2.1.5",
+    "http-server": "^0.12.3",
     "immutability-helper": "^3.0.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
