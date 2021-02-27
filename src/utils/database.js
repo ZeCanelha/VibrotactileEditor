@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3003/api";
+const baseUrl = "https://vteditor.herokuapp.com/api";
 
 class Database {
   // Manage requests to database
