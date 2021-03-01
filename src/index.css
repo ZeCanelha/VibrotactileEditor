@@ -40,3 +40,7 @@ strong {
   height: 100%;
   z-index: -1;
 }
+
+.loaded-projects {
+  width: 100%;
+}
