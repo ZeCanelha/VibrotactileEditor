@@ -86,7 +86,9 @@ class StartConfig extends React.Component {
 
     this.state = {
       isLoading: false,
-      ports: [],
+      load: false,
+      projectsData: [],
+      projectIndex: 0,
     };
 
     this.isProjectLoading = this.isProjectLoading.bind(this);
@@ -95,6 +97,8 @@ class StartConfig extends React.Component {
     this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
     this.getSerialPortsAvailable = this.getSerialPortsAvailable.bind(this);
+    this.handleLoadProject = this.handleLoadProject.bind(this);
+    this.handleProjectName = this.handleProjectName.bind(this);
   }
 
   componentDidMount() {
@@ -126,6 +130,7 @@ class StartConfig extends React.Component {
   }
 
   fetchConfigurations() {
+    let projectsData = [];
     this.isProjectLoading();
     Database.fetchData("/configs", "GET").then((data) => {
       if (!data) {
@@ -133,46 +138,57 @@ class StartConfig extends React.Component {
           "Network Error! Failed fetching project settings!"
         );
       } else {
-        console.log(data);
-        let configs = {
-          dbInstanceId: data[0]._id,
-          projectId: data[0].projectID,
-          projectName: data[0].projectName,
-        };
-        let device = {
-          hardwareDevice: data[0].device,
-          deviceImage: data[0].deviceImage,
-          actuators: data[0].actuatorCoords.length,
-          actuators_coords: data[0].actuatorCoords,
-        };
-
-        // Load and set IDs
-        this.props.setTimelineID(data[0].timelineID);
-        this.props.loadConfigs(configs);
-        this.props.setLoadedPatterns(data[0].patternList);
-        this.props.loadDeviceConfigurations(device);
-
-        Database.fetchData(
-          "/timeline",
-          "GET",
-          "?timelineID=" + data[0].timelineID
-        ).then((data) => {
-          if (!data)
-            this.props.setAddWarningNotification(
-              "Network Error! Failed fetching project settings!"
-            );
-          else {
-            this.props.setTimelineDBInstance(data[0]._id);
-            this.props.setLoadedDataToTimeline(data[0].channel);
-            this.props.updateTimelineTime(data[0].timelineTime);
-            this.props.setLoadConfigurationsNotification();
-          }
-        });
+        projectsData = data;
+        this.isProjectLoading();
+        this.setState({ load: true, projectsData: projectsData });
       }
-      this.props.closeInitialConfig();
-      this.isProjectLoading();
-      this.props.showNotification();
     });
+  }
+
+  handleProjectName(e) {
+    this.setState({ projectIndex: e.target.value });
+  }
+
+  handleLoadProject() {
+    let data = this.state.projectsData;
+    let index = this.state.projectIndex;
+
+    let configs = {
+      dbInstanceId: data[index]._id,
+      projectId: data[index].projectID,
+      projectName: data[index].projectName,
+    };
+    let device = {
+      hardwareDevice: data[index].device,
+      deviceImage: data[index].deviceImage,
+      actuators: data[index].actuatorCoords.length,
+      actuators_coords: data[index].actuatorCoords,
+    };
+
+    // Load and set IDs
+    this.props.setTimelineID(data[index].timelineID);
+    this.props.loadConfigs(configs);
+    this.props.setLoadedPatterns(data[index].patternList);
+    this.props.loadDeviceConfigurations(device);
+
+    Database.fetchData(
+      "/timeline",
+      "GET",
+      "?timelineID=" + data[index].timelineID
+    ).then((data) => {
+      if (!data)
+        this.props.setAddWarningNotification(
+          "Network Error! Failed fetching project settings!"
+        );
+      else {
+        this.props.setTimelineDBInstance(data[0]._id);
+        this.props.setLoadedDataToTimeline(data[0].channel);
+        this.props.updateTimelineTime(data[0].timelineTime);
+        this.props.setLoadConfigurationsNotification();
+      }
+    });
+    this.props.closeInitialConfig();
+    this.props.showNotification();
   }
 
   saveProject() {
@@ -251,117 +267,142 @@ class StartConfig extends React.Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Formik
-            validationSchema={Util.formValidationSchema()}
-            onSubmit={this.handleFormSubmission}
-            initialValues={{
-              hardwareDevice: "",
-              projectName: "",
-              nActuators: "",
-              deviceImage: "",
-              serialPort: "",
-            }}
-          >
-            {({ handleSubmit, handleChange, values, touched, errors }) => (
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group controlId="exampleForm.ControlInput1">
-                  <Form.Label>Hardware Device</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="hardwareDevice"
-                    value={values.hardwareDevice}
-                    placeholder="Type here your microcontroller"
-                    onChange={handleChange}
-                    isValid={touched.hardwareDevice && !errors.hardwareDevice}
-                    isInvalid={!!errors.hardwareDevice}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid device name.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlInput2">
-                  <Form.Label>Project Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="projectName"
-                    value={values.projectName}
-                    placeholder="Type here your project name"
-                    onChange={handleChange}
-                    isValid={touched.projectName && !errors.projectName}
-                    isInvalid={!!errors.projectName}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid project name.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                  <Form.Label>Number of actuators</Form.Label>
-                  <Form.Control
-                    name="nActuators"
-                    value={values.nActuators}
-                    onChange={handleChange}
-                    as="select"
-                    isValid={touched.nActuators && errors.nActuators}
-                    isInvalid={!!errors.nActuators}
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                  </Form.Control>
-                  <Form.Control.Feedback type="invalid">
-                    Please select the number of actuators.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.File
-                  id="custom-file"
-                  label="Upload your prototype image"
-                  onChange={this.handleImageUpload}
-                  name="deviceImage"
-                  value={values.deviceImage}
-                  custom
-                />
-                {imagePreview}
-                <Button className="mt-2" variant="primary" type="submit" block>
-                  {this.state.isLoading ? (
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
+          {this.state.load ? (
+            <Form className="loaded-projects">
+              <Form.Group>
+                <Form.Label>Select Project</Form.Label>
+                <Form.Control as="select" onChange={this.handleProjectName}>
+                  {this.state.projectsData.map((item, index) => (
+                    <option key={index} value={index}>
+                      {item.projectName}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Button variant="primary" block onClick={this.handleLoadProject}>
+                Load project
+              </Button>
+            </Form>
+          ) : (
+            <Formik
+              validationSchema={Util.formValidationSchema()}
+              onSubmit={this.handleFormSubmission}
+              initialValues={{
+                hardwareDevice: "",
+                projectName: "",
+                nActuators: "",
+                deviceImage: "",
+                serialPort: "",
+              }}
+            >
+              {({ handleSubmit, handleChange, values, touched, errors }) => (
+                <Form noValidate onSubmit={handleSubmit}>
+                  <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>Hardware Device</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="hardwareDevice"
+                      value={values.hardwareDevice}
+                      placeholder="Type here your microcontroller"
+                      onChange={handleChange}
+                      isValid={touched.hardwareDevice && !errors.hardwareDevice}
+                      isInvalid={!!errors.hardwareDevice}
                     />
-                  ) : (
-                    "Save configurations"
-                  )}
-                </Button>
-              </Form>
-            )}
-          </Formik>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid device name.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlInput2">
+                    <Form.Label>Project Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="projectName"
+                      value={values.projectName}
+                      placeholder="Type here your project name"
+                      onChange={handleChange}
+                      isValid={touched.projectName && !errors.projectName}
+                      isInvalid={!!errors.projectName}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid project name.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Label>Number of actuators</Form.Label>
+                    <Form.Control
+                      name="nActuators"
+                      value={values.nActuators}
+                      onChange={handleChange}
+                      as="select"
+                      isValid={touched.nActuators && errors.nActuators}
+                      isInvalid={!!errors.nActuators}
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                    </Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                      Please select the number of actuators.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.File
+                    id="custom-file"
+                    label="Upload your prototype image"
+                    onChange={this.handleImageUpload}
+                    name="deviceImage"
+                    value={values.deviceImage}
+                    custom
+                  />
+                  {imagePreview}
+                  <Button
+                    className="mt-2"
+                    variant="primary"
+                    type="submit"
+                    block
+                  >
+                    {this.state.isLoading ? (
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Save configurations"
+                    )}
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="outline-primary"
-            block
-            onClick={this.fetchConfigurations}
-          >
-            {this.state.isLoading ? (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            ) : (
-              "Load configuration"
-            )}
-          </Button>
+          {this.state.load ? null : (
+            <Button
+              variant="outline-primary"
+              block
+              onClick={this.fetchConfigurations}
+            >
+              {this.state.isLoading ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              ) : (
+                "Load Projects"
+              )}
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     );
