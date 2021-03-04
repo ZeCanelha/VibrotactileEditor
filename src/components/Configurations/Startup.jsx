@@ -90,13 +90,12 @@ class StartConfig extends React.Component {
       projectsData: [],
       projectIndex: 0,
     };
-
+    this.handleBack = this.handleBack.bind(this);
     this.isProjectLoading = this.isProjectLoading.bind(this);
     this.handleFormSubmission = this.handleFormSubmission.bind(this);
     this.fetchConfigurations = this.fetchConfigurations.bind(this);
     this.saveProject = this.saveProject.bind(this);
     this.handleImageUpload = this.handleImageUpload.bind(this);
-    this.getSerialPortsAvailable = this.getSerialPortsAvailable.bind(this);
     this.handleLoadProject = this.handleLoadProject.bind(this);
     this.handleProjectName = this.handleProjectName.bind(this);
   }
@@ -107,14 +106,8 @@ class StartConfig extends React.Component {
     this.props.setTimelineID();
   }
 
-  getSerialPortsAvailable() {
-    Database.fetchData("/arduino", "GET").then((data) => {
-      if (!data) {
-        this.props.setAddWarningNotification(
-          "Network Error! Failed fetching project settings!"
-        );
-      }
-    });
+  handleBack() {
+    this.setState({ load: false });
   }
 
   isProjectLoading() {
@@ -281,6 +274,9 @@ class StartConfig extends React.Component {
               </Form.Group>
               <Button variant="primary" block onClick={this.handleLoadProject}>
                 Load project
+              </Button>
+              <Button variant="primary" block onClick={this.handleBack}>
+                Back
               </Button>
             </Form>
           ) : (

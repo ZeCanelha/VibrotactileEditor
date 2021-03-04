@@ -83,7 +83,7 @@ export default class Toolbar extends React.Component {
                 </Popover>
               </Overlay>
             </div>
-            <span>Information</span>
+            <span>Help</span>
           </div>
         </div>
         <div className="toolbar-button">

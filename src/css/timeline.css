@@ -156,6 +156,14 @@
   justify-content: space-evenly;
   align-items: center;
 }
+.clear-tl-button {
+  position: absolute;
+  left: 1%;
+  width: 35%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 
 .sl-btn {
   width: 45%;

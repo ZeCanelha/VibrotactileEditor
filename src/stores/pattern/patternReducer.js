@@ -74,6 +74,8 @@ export default function (state = INITIAL_STATE, action) {
       return { ...state, patterns: action.payload };
     case "UPDATE_EDITING_TOOL":
       return { ...state, activeTool: action.payload };
+    case "CLEAR_PATTERNS":
+      return INITIAL_STATE;
     default:
       return state;
   }
