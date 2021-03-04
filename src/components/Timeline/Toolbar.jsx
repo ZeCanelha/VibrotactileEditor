@@ -117,6 +117,17 @@ class Toolbar extends React.Component {
         </div>
 
         <div className="channel-track no-gutters toolbar-channel">
+          <div className="clear-tl-button">
+            <Button
+              className="sl-btn"
+              size="sm"
+              variant="primary"
+              onClick={this.props.clearTimeline}
+            >
+              Clear Timeline
+            </Button>
+          </div>
+
           <button className="play-btn" onClick={this.playVibration}>
             <FontAwesomeIcon icon={faPlay} size={"lg"} />
           </button>

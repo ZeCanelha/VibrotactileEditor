@@ -96,3 +96,9 @@ export function updateEditingTool(tool) {
     payload: tool,
   };
 }
+
+export function clearPatterns() {
+  return {
+    type: "CLEAR_PATTERNS",
+  };
+}

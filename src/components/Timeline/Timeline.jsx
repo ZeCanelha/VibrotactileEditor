@@ -8,6 +8,7 @@ import Toolbar from "./Toolbar";
 import "../../css/timeline.css";
 
 import { updateTimelineTime } from "../../stores/timeline/timelineActions";
+import { clearPatterns } from "../../stores/pattern/patternActions";
 
 const mapStateToProps = (state) => ({
   timeline_list: state.timeline,
@@ -15,12 +16,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ updateTimelineTime }, dispatch);
+  bindActionCreators({ updateTimelineTime, clearPatterns }, dispatch);
 
 class Timeline extends React.Component {
   constructor() {
     super();
     this.handleChangeTimelineTime = this.handleChangeTimelineTime.bind(this);
+    this.clearTimeline = this.clearTimeline.bind(this);
   }
   shouldComponentUpdate(nextProps) {
     if (
@@ -40,6 +42,9 @@ class Timeline extends React.Component {
   handleChangeTimelineTime(event) {
     this.props.updateTimelineTime(event.target.value);
   }
+  clearTimeline() {
+    this.props.clearPatterns();
+  }
   render() {
     return (
       <Row className="timeline-container no-gutters">
@@ -54,7 +59,7 @@ class Timeline extends React.Component {
           {this.props.timeline_list.channel.map(this.renderTimelineChannels())}
         </div>
         <Row className="toolbar-row no-gutters">
-          <Toolbar></Toolbar>
+          <Toolbar clearTimeline={this.clearTimeline}></Toolbar>
         </Row>
       </Row>
     );
