@@ -1,5 +1,7 @@
 import React from "react";
 import { saveAs } from "file-saver";
+import audioEncoder from "audio-encoder";
+import * as d3 from "d3";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
@@ -15,6 +17,7 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Database from "../../utils/database";
+import Form from "react-bootstrap/Form";
 
 const mapStateToProps = (state) => ({
   setShow: state.gui.isSaveModalOpen,
@@ -41,18 +44,37 @@ class SaveModal extends React.Component {
     super();
     this.state = {
       isLoading: false,
+      wavModal: false,
+      samplingRate: 22000,
+      fileName: "sound",
     };
 
+    this.samplingRate = [22000, 24000, 32000, 44100];
+    this.handleChangeFileName = this.handleChangeFileName.bind(this);
+    this.handleWavModal = this.handleWavModal.bind(this);
+    this.handleSamplingRateChange = this.handleSamplingRateChange.bind(this);
     this.isProjectSaving = this.isProjectSaving.bind(this);
     this.saveProjectConfigurations = this.saveProjectConfigurations.bind(this);
     this.exportProject = this.exportProject.bind(this);
+    this.exportAsWavFile = this.exportAsWavFile.bind(this);
   }
 
   isProjectSaving() {
     this.setState({ isLoading: !this.state.isLoading });
   }
+  handleWavModal() {
+    this.setState({ wavModal: !this.state.wavModal });
+  }
 
-  exportProject() {
+  handleSamplingRateChange(e) {
+    this.setState({ samplingRate: e.target.value });
+  }
+
+  handleChangeFileName(e) {
+    this.setState({ fileName: e.target.value });
+  }
+
+  exportProject(toWave = null) {
     this.isProjectSaving();
 
     const patterns = this.props.patternList;
@@ -93,6 +115,10 @@ class SaveModal extends React.Component {
       channels: timelineData,
     };
 
+    if (toWave) {
+      this.isProjectSaving();
+      return exportFile;
+    }
     let blob = new Blob([JSON.stringify(exportFile)], {
       type: "text/json;charset=utf-8",
     });
@@ -100,6 +126,121 @@ class SaveModal extends React.Component {
 
     this.isProjectSaving();
     this.props.closeSaveModal();
+  }
+
+  fillEmptyTime(startTime, lastPatternTime, fps) {
+    let fillTime = startTime - lastPatternTime;
+
+    let fillTimeSamples = Math.round(fillTime * (fps / 1000));
+
+    let fillTimeArray = [];
+    for (let index = 0; index < fillTimeSamples; index++) {
+      fillTimeArray.push(0.01);
+    }
+
+    return fillTimeArray;
+  }
+
+  getPatternTime(pattern) {
+    return Math.max.apply(
+      Math,
+      pattern.map((d) => d.time)
+    );
+  }
+
+  interpolator(datapoints, samplingRate) {
+    let fps = samplingRate / 1000;
+    let interpolatedPoints = [];
+
+    for (let index = 1; index < datapoints.length; index++) {
+      const interpolator = d3.interpolate(
+        datapoints[index - 1],
+        datapoints[index]
+      );
+      let timeDiference = datapoints[index].time - datapoints[index - 1].time;
+
+      timeDiference = Math.round(timeDiference * fps);
+
+      for (let j = 1; j <= timeDiference; j++) {
+        const element = interpolator(j * (1 / timeDiference));
+        interpolatedPoints.push(element.intensity / 100);
+      }
+    }
+    return interpolatedPoints;
+  }
+
+  exportAsWavFile() {
+    const samplingRate = this.state.samplingRate;
+    const getTimeline = this.exportProject(true);
+    const vibrationData = getTimeline.channels;
+
+    let time = 0; // In seconds
+    let vibesArray = [];
+
+    try {
+      vibrationData.forEach((channel) => {
+        let channelPatterns = [];
+        let lastPatternTime = 0;
+
+        channel.patterns.sort((a, b) => a.startingTime - b.startingTime);
+
+        channel.patterns.forEach((pattern) => {
+          let toInterpolatePoints = [];
+          let interpolatedPoints = [];
+          let fillTime = this.fillEmptyTime(
+            pattern.startingTime,
+            lastPatternTime,
+            samplingRate
+          );
+
+          toInterpolatePoints = pattern.datapoints;
+          lastPatternTime += this.getPatternTime(pattern.datapoints);
+          if (lastPatternTime > time) time = lastPatternTime;
+          interpolatedPoints = this.interpolator(
+            toInterpolatePoints,
+            samplingRate
+          );
+
+          channelPatterns = channelPatterns.concat(
+            fillTime,
+            interpolatedPoints
+          );
+        });
+        vibesArray.push(channelPatterns);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Convert to seconds
+
+    time = time / 1000;
+
+    const audioContext = new AudioContext();
+    const audioBuffer = audioContext.createBuffer(
+      2,
+      samplingRate * time,
+      samplingRate
+    );
+
+    for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+      let nowBuffering = audioBuffer.getChannelData(i);
+      for (let j = 0; j < nowBuffering.length; j++) {
+        nowBuffering[j] = vibesArray[i][j];
+      }
+    }
+
+    let filename = this.state.fileName + ".wav";
+    try {
+      audioEncoder(audioBuffer, 0, null, function onComplete(blob) {
+        saveAs(blob, filename);
+      });
+      this.props.closeSaveModal();
+    } catch (error) {
+      console.log(error);
+      this.props.setAddWarningNotification(error.message);
+      this.props.showNotification();
+    }
   }
 
   saveProjectConfigurations() {
@@ -168,7 +309,7 @@ class SaveModal extends React.Component {
         </Button>
         <Modal
           show={this.props.setShow}
-          size="sm"
+          dialogClassName="modal-20vw"
           backdrop="static"
           aria-labelledby="example-custom-modal-styling-title"
         >
@@ -178,49 +319,113 @@ class SaveModal extends React.Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>
-              Save or export project. Project exported can be used with @Unity
-              and @Aframe. See documentation
-            </p>
-            <Button variant="primary" block onClick={this.exportProject}>
-              {this.state.isLoading ? (
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              ) : (
-                "Export Project"
-              )}
-            </Button>
+            {this.state.wavModal ? (
+              <Form className="export-wav">
+                <Form.Group>
+                  <Form.Label>File name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    onChange={this.handleChangeFileName}
+                  ></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Number of channels</Form.Label>
+                  <Form.Control as="select">
+                    <option>{this.props.timeline.channel.length}</option>
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Sampling Rate</Form.Label>
+                  <Form.Control
+                    onChange={this.handleSamplingRateChange}
+                    as="select"
+                  >
+                    {this.samplingRate.map((item, index) => (
+                      <option key={index} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            ) : (
+              <React.Fragment>
+                <p>
+                  Save or export project. Project can be exported to JSON format
+                  or WAV Format. JSON allows to use with @Unity and @A-Frame
+                  Components (See documentation).
+                </p>
+                <Button variant="primary" block onClick={this.exportProject}>
+                  {this.state.isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Export as JSON"
+                  )}
+                </Button>
+                <Button variant="primary" block onClick={this.handleWavModal}>
+                  {this.state.isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Export as WAV"
+                  )}
+                </Button>
+              </React.Fragment>
+            )}
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="primary"
-              block
-              onClick={this.saveProjectConfigurations}
-            >
-              {this.state.isLoading ? (
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              ) : (
-                "Save Project"
-              )}
-            </Button>
-            <Button
-              variant="outline-primary"
-              block
-              onClick={this.props.closeSaveModal}
-            >
-              Close
-            </Button>
+            {this.state.wavModal ? (
+              <React.Fragment>
+                <Button variant="primary" block onClick={this.exportAsWavFile}>
+                  Export
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  block
+                  onClick={this.handleWavModal}
+                >
+                  Back
+                </Button>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Button
+                  variant="primary"
+                  block
+                  onClick={this.saveProjectConfigurations}
+                >
+                  {this.state.isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Save Project"
+                  )}
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  block
+                  onClick={this.props.closeSaveModal}
+                >
+                  Close
+                </Button>
+              </React.Fragment>
+            )}
           </Modal.Footer>
         </Modal>
       </React.Fragment>
