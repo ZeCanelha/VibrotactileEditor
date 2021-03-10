@@ -216,29 +216,39 @@ class SaveModal extends React.Component {
 
     time = time / 1000;
 
-    const audioContext = new AudioContext();
-    const audioBuffer = audioContext.createBuffer(
-      2,
-      samplingRate * time,
-      samplingRate
-    );
+    let allCompleted = true;
+    let errorMessage = "";
 
-    for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
-      let nowBuffering = audioBuffer.getChannelData(i);
+    for (let i = 0; i < this.props.timeline.channel.length; i++) {
+      let audioContext = new AudioContext();
+      let audioBuffer = audioContext.createBuffer(
+        1,
+        samplingRate * time,
+        samplingRate
+      );
+      let nowBuffering = audioBuffer.getChannelData(0);
       for (let j = 0; j < nowBuffering.length; j++) {
         nowBuffering[j] = vibesArray[i][j];
       }
+
+      let filename = this.state.fileName + "_channel_" + i + ".wav";
+      try {
+        audioEncoder(audioBuffer, 0, null, function onComplete(blob) {
+          saveAs(blob, filename);
+        });
+      } catch (error) {
+        console.log(error);
+        errorMessage = error.message;
+        allCompleted = false;
+      }
     }
 
-    let filename = this.state.fileName + ".wav";
-    try {
-      audioEncoder(audioBuffer, 0, null, function onComplete(blob) {
-        saveAs(blob, filename);
-      });
+    if (allCompleted) {
+      this.props.setAddWarningNotification("Project exported with success!");
       this.props.closeSaveModal();
-    } catch (error) {
-      console.log(error);
-      this.props.setAddWarningNotification(error.message);
+      this.handleWavModal();
+    } else {
+      this.props.setAddWarningNotification(errorMessage);
       this.props.showNotification();
     }
   }
