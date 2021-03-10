@@ -14,12 +14,15 @@ The Vibrotactile Editor is a simple, flexible, and easy-to-use editor to create 
 - Multiple Actuators
 - Sample library
 - Visual representation of the device
+- Timeline export to _.wav_ format
+- Timeline export to JSON format for using with Unity and A-Frame through the Vibrotactile API
 
 ## Showcase
 
-| ![StartUp](https://www.dropbox.com/s/ctbrgw5m99c89hl/main.png?raw=1 "Editor main screen") | ![Startup](https://www.dropbox.com/s/t4gotie3yrt7z3p/captura%20de%20ecr%C3%A3%202021-02-26%2C%20%C3%A0s%2014.59.58.png?raw=1 "Initial configuration") |
-| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![Library](https://www.dropbox.com/s/hcd0wtcnjqufyn9/library.png?raw=1 "Sample Library")  | ![Save Pattern Menu](https://www.dropbox.com/s/uivnopgnvo9eabh/save%20pattern.png?raw=1)                                                              |
+| ![StartUp](https://www.dropbox.com/s/dj4ykjk2y54hcse/editor%20new.png?raw=1 "Editor main screen")    | ![Startup](https://www.dropbox.com/s/idalyrloit3ah0t/save.png?raw=1 "Initial configuration")               |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| ![Library](https://www.dropbox.com/s/hcd0wtcnjqufyn9/library.png?raw=1 "Sample Library")             | ![Save Pattern Menu](https://www.dropbox.com/s/uivnopgnvo9eabh/save%20pattern.png?raw=1)                   |
+| ![Save Project](https://www.dropbox.com/s/fvk0hu4mfxoi4fb/save%20menu.png?raw=1 "Save Project Menu") | ![Export to .wav](https://www.dropbox.com/s/aijkw7a6ivphbi2/export%20wave.png?raw=1 "Export to .wav menu") |
 
 ## Getting Started
 
